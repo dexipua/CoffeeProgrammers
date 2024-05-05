@@ -1,12 +1,6 @@
 package com.school.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,7 +26,10 @@ public class Subject {
     private Teacher teacher;
 
 
-    //TODO
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name="subjectAndStudents",
+            joinColumns=  @JoinColumn(name="subject_id", referencedColumnName="id"),
+            inverseJoinColumns= @JoinColumn(name="student_id", referencedColumnName="id") )
     List<Student> students;
 
 
