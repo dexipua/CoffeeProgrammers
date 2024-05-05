@@ -1,24 +1,51 @@
 package com.school.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Pattern;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
+@AllArgsConstructor
+@Table(name = "users")
 public class User {
     @Id
-    private int id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
+    @Pattern(regexp = "[A-Z][a-z]+",
+            message = "Must start with a capital letter followed by one or more lowercase letters")
     @Column(name = "username", nullable = false, unique = true)
     private String username;
-    @Column(name = "first_name", nullable = false, unique = true)
+
+    @Pattern(regexp = "[A-Z][a-z]+",
+            message = "Must start with a capital letter followed by one or more lowercase letters")
+    @Column(name = "first_name", nullable = false)
     private String firstName;
-    @Column(name = "last_name", nullable = false, unique = true)
+
+    @Pattern(regexp = "[A-Z][a-z]+",
+            message = "Must start with a capital letter followed by one or more lowercase letters")
+    @Column(name = "last_name", nullable = false)
     private String lastName;
+
+    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d).{6,}$",
+            message = "Must be minimum 6 symbols long, using digits and latin letters")
+    @Pattern(regexp = ".*\\d.*",
+            message = "Must contain at least one digit")
+    @Pattern(regexp = ".*[A-Z].*",
+            message = "Must contain at least one uppercase letter")
+    @Pattern(regexp = ".*[a-z].*",
+            message = "Must contain at least one lowercase letter")
     @Column(name = "password", nullable = false, unique = true)
     private String password;
+
+    @Pattern(regexp = "[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}", message = "Must be a valid e-mail address")
     @Column(name = "email", nullable = false, unique = true)
     private String email;
-    @ManyToOne
-    @JoinColumn(name = "role_id")
+
+    @Column(name = "role")
+    @Enumerated(EnumType.STRING)
     private Role role;
 }
