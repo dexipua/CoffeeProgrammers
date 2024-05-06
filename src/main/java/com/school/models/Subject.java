@@ -30,7 +30,7 @@ public class Subject {
     @JoinTable(name="subjectAndStudents",
             joinColumns=  @JoinColumn(name="subject_id", referencedColumnName="id"),
             inverseJoinColumns= @JoinColumn(name="student_id", referencedColumnName="id") )
-    List<Student> students;
+    private List<Student> students;
 
 
     @Override

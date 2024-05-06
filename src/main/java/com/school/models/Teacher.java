@@ -19,8 +19,8 @@ public class Teacher {
     @JoinColumn(name = "user_id")
     private User user;
 
-    //TODO
-    List<Subject> subjects;
+    @OneToMany(mappedBy = "teacher")
+    private List<Subject> subjects;
 
     @Override
     public boolean equals(Object o) {
