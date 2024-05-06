@@ -6,6 +6,6 @@ create table users
     last_name  varchar(255) not null,
     email      varchar(255) not null,
     password   varchar(255) not null,
-    role       varchar(255) not null,
+    role_id    int not null,
     primary key (id)
 );
