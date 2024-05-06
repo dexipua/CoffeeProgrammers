@@ -23,7 +23,7 @@ public class Student {
     @JoinTable(name = "subjectandstudents",
             joinColumns = @JoinColumn(name = "student_id"),
             inverseJoinColumns = @JoinColumn(name = "subject_id"))
-    private List<Student> subjects;
+    private List<Subject> subjects;
 
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
