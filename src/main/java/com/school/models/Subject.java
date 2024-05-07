@@ -21,7 +21,7 @@ public class Subject {
 
     @Pattern(regexp = "^[A-Za-z0-9\\s]+$",
             message = "Can contain only letters, numbers and spaces")
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", nullable = false, unique = true)
     private String name;
 
     @ManyToOne
