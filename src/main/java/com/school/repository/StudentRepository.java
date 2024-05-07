@@ -2,7 +2,6 @@ package com.school.repository;
 
 import com.school.models.Student;
 import com.school.models.Subject;
-import com.school.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
