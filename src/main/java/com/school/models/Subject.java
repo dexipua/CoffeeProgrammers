@@ -2,10 +2,7 @@ package com.school.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
@@ -14,6 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "subjects")
+@EqualsAndHashCode
 public class Subject {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,7 +28,7 @@ public class Subject {
 
 
     @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name="subjectandstudents",
+    @JoinTable(name="subject_students",
             joinColumns=  @JoinColumn(name="subject_id", referencedColumnName="id"),
             inverseJoinColumns= @JoinColumn(name="student_id", referencedColumnName="id") )
     private List<Student> students;
@@ -42,18 +40,5 @@ public class Subject {
                 "name='" + name + '\'' +
                 ", students=" + students +
                 '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Subject subject)) return false;
-
-        return id == subject.id;
-    }
-
-    @Override
-    public int hashCode() {
-        return (int) (id ^ (id >>> 32));
     }
 }

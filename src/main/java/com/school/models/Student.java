@@ -1,10 +1,7 @@
 package com.school.models;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
@@ -14,13 +11,14 @@ import java.util.List;
 @Setter
 @Getter
 @Table(name = "students")
+@EqualsAndHashCode
 public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToMany
-    @JoinTable(name = "subjectandstudents",
+    @JoinTable(name = "subject_students",
             joinColumns = @JoinColumn(name = "student_id"),
             inverseJoinColumns = @JoinColumn(name = "subject_id"))
     private List<Subject> subjects;
@@ -36,22 +34,5 @@ public class Student {
                 ", subjects=" + subjects +
                 ", user=" + user +
                 '}';
-    }
-
-    @Override
-    public boolean equals(Object o){
-        if(this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Student student = (Student)o;
-        return this.id == student.id && this.subjects.equals(student.subjects) && user.equals(student.user);
-    }
-
-    @Override
-    public int hashCode(){
-        int result = Long.hashCode(id);
-        result = 17 * result + subjects.hashCode();
-        result = 17 * result + user.hashCode();
-        return result;
     }
 }

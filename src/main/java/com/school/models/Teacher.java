@@ -2,10 +2,7 @@ package com.school.models;
 
 import jakarta.persistence.*;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
@@ -14,6 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
+@EqualsAndHashCode
 @Table(name = "teachers")
 public class Teacher {
     @Id
@@ -26,22 +24,6 @@ public class Teacher {
 
     @OneToMany(mappedBy = "teacher")
     private List<Subject> subjects;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Teacher teacher = (Teacher) o;
-        return user.getFirstName().equals(teacher.user.getFirstName())
-                && user.getLastName().equals(teacher.user.getLastName())
-                && id == teacher.id;
-    }
-
-    @Override
-    public int hashCode() {
-        return (int)(user.getFirstName().length() * 17 + user.getLastName().length() * 29 + id * 7);
-    }
 
     @Override
     public String toString() {
