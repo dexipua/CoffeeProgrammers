@@ -1,7 +1,6 @@
-package com.school.repository;
+package com.school.repositories;
 
 import com.school.models.Role;
-import com.school.models.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
