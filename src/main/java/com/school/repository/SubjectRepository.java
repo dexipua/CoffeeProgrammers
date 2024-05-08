@@ -1,6 +1,5 @@
-package com.school;
+package com.school.repository;
 
-import com.school.models.Role;
 import com.school.models.Student;
 import com.school.models.Subject;
 import org.springframework.data.jpa.repository.JpaRepository;
