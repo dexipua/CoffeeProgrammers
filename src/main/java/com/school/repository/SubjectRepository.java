@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface SubjectRepository extends JpaRepository<Subject, Long> {
-    Optional<Subject> findById(Long id);
     Optional<Subject> findByName(String name);
     Optional<List<Subject>> findAllByOrderByName();
     Optional<List<Subject>> findByTeacher_Id(long teacherId);
