@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -17,7 +18,7 @@ public class Teacher {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -31,5 +32,10 @@ public class Teacher {
                     ", lastName:" + user.getLastName() +
                     ", subjects:" + subjects +
                 "}";
+    }
+
+    public Teacher(User user) {
+        this.user = user;
+        this.subjects = new ArrayList<>();
     }
 }
