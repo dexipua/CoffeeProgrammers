@@ -1,4 +1,4 @@
-package com.school.repository;
+package com.school.repositories;
 
 import com.school.models.Teacher;
 import com.school.models.User;

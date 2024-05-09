@@ -22,7 +22,7 @@ public class Student {
             inverseJoinColumns = @JoinColumn(name = "subject_id"))
     private List<Subject> subjects;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     private User user;
 
