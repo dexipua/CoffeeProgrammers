@@ -13,5 +13,5 @@ public interface SubjectRepository extends JpaRepository<Subject, Long> {
     Optional<List<Subject>> findAllByOrderByName();
     Optional<List<Subject>> findByTeacher_Id(long teacherId);
     @Query("SELECT s FROM Subject s JOIN s.students sub WHERE sub.user.username = :studentName")
-    List<Student> findByStudentUsername(String studentName);
+    Optional<List<Subject>> findByStudentUsername(String studentName);
 }
