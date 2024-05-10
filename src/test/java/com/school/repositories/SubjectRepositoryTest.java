@@ -1,8 +1,6 @@
 package com.school.repositories;
 
 import com.school.models.Subject;
-import com.school.models.Teacher;
-import com.school.models.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,9 +46,7 @@ class SubjectRepositoryTest {
         Optional<Subject> result = subjectRepository.findByName("-----");
 
         //then
-        assertThrows(NoSuchElementException.class, () -> {
-            Subject value = result.get();
-        });
+        assertThrows(NoSuchElementException.class, result::get);
     }
 
     @Test
@@ -65,12 +61,7 @@ class SubjectRepositoryTest {
 
         //when
         List<Subject> result = subjectRepository.findAllByOrderByName().get();
-        subjects.sort(new Comparator<Subject>() {
-            @Override
-            public int compare(Subject o1, Subject o2) {
-                return o1.getName().compareTo(o2.getName());
-            }
-        });
+        subjects.sort(Comparator.comparing(Subject::getName));
 
         //then
         boolean expected = result.equals(subjects);
