@@ -32,6 +32,14 @@ public class Subject {
             inverseJoinColumns= @JoinColumn(name="student_id", referencedColumnName="id") )
     private List<Student> students;
 
+    public Subject(String name) {
+        this.name = name;
+    }
+
+    public Subject(String name, Teacher teacher) {
+        this.name = name;
+        this.teacher = teacher;
+    }
 
     @Override
     public String toString() {
