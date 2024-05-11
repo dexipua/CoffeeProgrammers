@@ -30,9 +30,9 @@ class SubjectRepositoryTest {
 
         //when
         Subject result = subjectRepository.findByName("Math").get();
+        boolean expected = result.equals(subject);
 
         //then
-        boolean expected = result.equals(subject);
         assertThat(expected).isTrue();
     }
 
@@ -62,9 +62,9 @@ class SubjectRepositoryTest {
         //when
         List<Subject> result = subjectRepository.findAllByOrderByName().get();
         subjects.sort(Comparator.comparing(Subject::getName));
+        boolean expected = result.equals(subjects);
 
         //then
-        boolean expected = result.equals(subjects);
         assertThat(expected).isTrue();
     }
 
@@ -80,9 +80,9 @@ class SubjectRepositoryTest {
 
         //when
         List<Subject> result = subjectRepository.findAllByOrderByName().get();
+        boolean expected = result.equals(subjects);
 
         //then
-        boolean expected = result.equals(subjects);
         assertThat(expected).isFalse();
     }
 
