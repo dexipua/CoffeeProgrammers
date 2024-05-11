@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface StudentRepository extends JpaRepository<Student, Long> {
-    @Query("SELECT s FROM Student s JOIN s.subjects sub WHERE sub.name = :subjectName")
+    @Query("SELECT s.students FROM Subject s WHERE s.name = :subjectName")
     Optional<List<Student>> findBySubjectName(String subjectName);
     @Query("select s from Student s where s.user.email =: email")
     Optional<Student> findByEmail(String email);

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter @Setter
@@ -34,11 +35,13 @@ public class Subject {
 
     public Subject(String name) {
         this.name = name;
+        this.students = new ArrayList<>();
     }
 
     public Subject(String name, Teacher teacher) {
         this.name = name;
         this.teacher = teacher;
+        this.students = new ArrayList<>();
     }
 
     @Override

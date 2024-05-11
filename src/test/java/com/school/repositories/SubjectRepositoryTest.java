@@ -1,5 +1,6 @@
 package com.school.repositories;
 
+import com.school.models.Student;
 import com.school.models.Subject;
 import com.school.models.Teacher;
 import org.junit.jupiter.api.AfterEach;
@@ -21,10 +22,14 @@ class SubjectRepositoryTest {
     @Autowired
     private TeacherRepository teacherRepository;
 
+    @Autowired
+    private StudentRepository studentRepository;
+
     @AfterEach
     void tearDown() {
         subjectRepository.deleteAll();
         teacherRepository.deleteAll();
+        subjectRepository.deleteAll();
     }
 
     @Test
@@ -105,7 +110,70 @@ class SubjectRepositoryTest {
     }
 
     @Test
-    void findByStudent_Id() { // TODO
+    void notFindByTeacher_Id() {
+        //given
+        Teacher teacher = new Teacher();
+        Teacher anotherTeacher = new Teacher();
+
+        Subject subject1 = new Subject("Algebra", anotherTeacher);
+        Subject subject2 = new Subject("Geometry", anotherTeacher);
+
+        List<Subject> subjects = new ArrayList<>(List.of(
+                subject1,
+                subject2
+        ));
+
+        teacherRepository.save(teacher);
+        teacherRepository.save(anotherTeacher);
+        subjectRepository.saveAll(subjects);
+
+        //when
+        List<Subject> result = subjectRepository.findByTeacher_Id(teacher.getId()).get();
+        boolean expected = result.equals(new ArrayList<>());
+
+        //then
+        assertThat(expected).isTrue();
+    }
+    @Test
+    void findByStudent_Id() {
+        //given
+        Student student = new Student();
+        Student anotherStudent = new Student();
+
+        Subject subject1 = new Subject("Algebra");
+        Subject subject2 = new Subject("Geometry");
+        Subject subject3 = new Subject("Philosophy");
+
+        subject1.getStudents().add(student);
+        subject2.getStudents().add(anotherStudent);
+        subject3.getStudents().addAll(List.of(
+                student, anotherStudent
+        ));
+
+        List<Subject> subjects = new ArrayList<>(List.of(
+                subject1,
+                subject2,
+                subject3
+        ));
+
+        studentRepository.save(student);
+        studentRepository.save(anotherStudent);
+        subjectRepository.saveAll(subjects);
+
+        //when
+        Optional<List<Subject>> test = subjectRepository.findByStudent_Id(student.getId());
+        List<Subject> result = test.get();
+        boolean expected = result.equals(new ArrayList<>(List.of(
+                subject1,
+                subject3
+        )));
+
+        //then
+        assertThat(expected).isTrue();
+    }
+
+    @Test
+    void notFindByStudent_Id() { //TODO
         //given
         //when
         //then
