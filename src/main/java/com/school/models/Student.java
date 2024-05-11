@@ -24,7 +24,7 @@ public class Student {
     private List<Subject> subjects;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id") //", referencedColumnName = "id"" //TODO
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
     public Student(User user){
