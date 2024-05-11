@@ -43,11 +43,7 @@ class StudentRepositoryTest {
         Student student2 = new Student();
         student2.setSubjects(new ArrayList<>(List.of(mathSubject)));
 
-        Student student3 = new Student();
-        student3.setSubjects(new ArrayList<>(List.of(artSubject)));
-
-        subjectRepository.save(artSubject);
-        subjectRepository.save(mathSubject);
+        subjectRepository.saveAll(List.of(mathSubject, artSubject));
         studentRepository.saveAll(List.of(student1, student2));
 
         // When
@@ -89,12 +85,12 @@ class StudentRepositoryTest {
     @Test
     void findByEmail() {
         // Given
-        Student student = new Student(new User("Vladobrod", "Vlad", "Bulakovskyi", "Vlad123", "vladobrod@gmail.com"));
+        Student student = new Student(new User("Userrrr", "Vadym", "Honcharuk", "User123", "useruser@gmail.com"));
 
         studentRepository.save(student);
 
         // When
-        Student res = studentRepository.findByEmail("vladobrod@gmail.com").get();
+        Student res = studentRepository.findByEmail("useruser@gmail.com").get();
         boolean result = res.equals(student);
 
         // Then
@@ -105,7 +101,7 @@ class StudentRepositoryTest {
     @Test
     void NotFindByEmail() {
         //given
-        Student student = new Student(new User("Vladobrod", "Vlad", "Bulakovskyi", "Vlad123", "vladobrod@gmail.com"));
+        Student student = new Student(new User("Userrrr", "Vadym", "Honcharuk", "User123", "useruser@gmail.com"));
 
         studentRepository.save(student);
 
@@ -120,11 +116,11 @@ class StudentRepositoryTest {
     @Test
     void findByUsername() {
         // Given
-        Student student = new Student(new User("Vladobrod", "Vlad", "Bulakovskyi", "Vlad123", "vladobrod@gmail.com"));
+        Student student = new Student(new User("Userrrr", "Vadym", "Honcharuk", "User123", "useruser@gmail.com"));
         studentRepository.save(student);
 
         // When
-        Student res = studentRepository.findByUsername("Vladobrod").get();
+        Student res = studentRepository.findByUsername("Userrrr").get();
 
         boolean result = res.equals(student);
 
@@ -135,7 +131,7 @@ class StudentRepositoryTest {
     @Test
     void NotFindByUserName() {
         //given
-        Student student = new Student(new User("Vladobrod", "Vlad", "Bulakovskyi", "Vlad123", "vladobrod@gmail.com"));
+        Student student = new Student(new User("Userrrr", "Vadym", "Honcharuk", "User123", "useruser@gmail.com"));
         studentRepository.save(student);
 
         //then
