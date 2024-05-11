@@ -1,6 +1,8 @@
 package com.school.repositories;
 
 import com.school.models.Subject;
+import com.school.models.Teacher;
+import com.school.models.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,61 +69,43 @@ class SubjectRepositoryTest {
         //then
         assertThat(expected).isTrue();
     }
-
+    
     @Test
-    void notFindAllByOrderByName() {
+    void findByTeacher_Id() { // TODO -fix-problem-
         //given
+        Teacher teacher = new Teacher(new User(
+                "teacher 1",
+                "t1",
+                "t1",
+                "12345",
+                "t1email@gmail.com"));
+        Teacher anotherTeacher = new Teacher(new User(
+                "teacher 2",
+                "t2",
+                "t2",
+                "12345",
+                "t2email@gmail.com"));
+        Subject subject1 = new Subject("Algebra", teacher);
+        Subject subject2 = new Subject("Geometry", teacher);
+        Subject subject3 = new Subject("Philosophy", anotherTeacher);
+
         List<Subject> subjects = new ArrayList<>(List.of(
-                new Subject("C"),
-                new Subject("A"),
-                new Subject("B")
+                subject1,
+                subject2,
+                subject3
         ));
         subjectRepository.saveAll(subjects);
 
         //when
-        List<Subject> result = subjectRepository.findAllByOrderByName().get();
-        boolean expected = result.equals(subjects);
+        List<Subject> result = subjectRepository.findByTeacher_Id(teacher.getId()).get();
+        boolean expected = result.equals(new ArrayList<>(List.of(
+                subject1,
+                subject2
+        )));
 
         //then
-        assertThat(expected).isFalse();
+        assertThat(expected).isTrue();
     }
-
-//    @Test
-//    void findByTeacher_Id() { // TODO -fix-problem-
-//        //given
-//        Teacher teacher = new Teacher(new User(
-//                "teacher 1",
-//                "firstName",
-//                "lastName",
-//                "12345",
-//                "email@gmail.com"));
-//        Teacher anotherTeacher = new Teacher(new User(
-//                "teacher 2",
-//                "firstName",
-//                "lastName",
-//                "12345",
-//                "email@gmail.com"));
-//        Subject subject1 = new Subject("Algebra", teacher);
-//        Subject subject2 = new Subject("Geometry", teacher);
-//        Subject subject3 = new Subject("Philosophy", anotherTeacher);
-//
-//        List<Subject> subjects = new ArrayList<>(List.of(
-//                subject1,
-//                subject2,
-//                subject3
-//        ));
-//        subjectRepository.saveAll(subjects);
-//
-//        //when
-//        List<Subject> result = subjectRepository.findByTeacher_Id(teacher.getId()).get();
-//
-//        //then
-//        boolean expected = result.equals(new ArrayList<>(List.of(
-//                subject1,
-//                subject2
-//        )));
-//        assertThat(expected).isTrue();
-//    }
 
     @Test
     void findByStudent_Id() { // TODO
