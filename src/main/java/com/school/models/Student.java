@@ -3,6 +3,7 @@ package com.school.models;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -14,7 +15,7 @@ import java.util.List;
 public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
     @ManyToMany
     @JoinTable(name = "subject_students",
@@ -23,9 +24,14 @@ public class Student {
     private List<Subject> subjects;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JoinColumn(name = "user_id") //", referencedColumnName = "id"" //TODO
     private User user;
 
+    public Student(User user){
+        this.user = user;
+        this.subjects = new ArrayList<>();
+
+    }
     @Override
     public String toString(){
         return "Student{" +
