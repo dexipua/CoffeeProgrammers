@@ -8,7 +8,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -161,8 +165,7 @@ class SubjectRepositoryTest {
         subjectRepository.saveAll(subjects);
 
         //when
-        Optional<List<Subject>> test = subjectRepository.findByStudent_Id(student.getId());
-        List<Subject> result = test.get();
+        List<Subject> result = subjectRepository.findByStudent_Id(student.getId()).get();
         boolean expected = result.equals(new ArrayList<>(List.of(
                 subject1,
                 subject3
@@ -173,9 +176,31 @@ class SubjectRepositoryTest {
     }
 
     @Test
-    void notFindByStudent_Id() { //TODO
+    void notFindByStudent_Id() {
         //given
+        Student student = new Student();
+        Student anotherStudent = new Student();
+
+        Subject subject1 = new Subject("Algebra");
+        Subject subject2 = new Subject("Geometry");
+
+        subject1.getStudents().add(anotherStudent);
+        subject2.getStudents().add(anotherStudent);
+
+        List<Subject> subjects = new ArrayList<>(List.of(
+                subject1,
+                subject2
+        ));
+
+        studentRepository.save(student);
+        studentRepository.save(anotherStudent);
+        subjectRepository.saveAll(subjects);
+
         //when
+        List<Subject> result = subjectRepository.findByStudent_Id(student.getId()).get();
+        boolean expected = result.equals(new ArrayList<>());
+
         //then
+        assertThat(expected).isTrue();
     }
 }
