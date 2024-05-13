@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+
 import com.school.repositories.UserRepository;
 import com.school.service.UserService;
 
@@ -50,19 +52,19 @@ public class UserServiceImpl implements UserService {
     }
 
     public User findByUsername(String username){
-        User user = userRepository.findByEmail(username).get();
-        if (user == null) {
+        Optional<User> user = userRepository.findByEmail(username);
+        if (!(user.isPresent())) {
             throw new EntityNotFoundException("User not found");
         }
-        return user;
+        return user.get();
     }
 
     public User findByEmail(String email){
-        User user = userRepository.findByEmail(email).get();
-        if (user == null) {
+        Optional<User> user = userRepository.findByEmail(email);
+        if (!(user.isPresent())) {
             throw new EntityNotFoundException("User not found");
         }
-        return user;
+        return user.get();
     }
 }
 
