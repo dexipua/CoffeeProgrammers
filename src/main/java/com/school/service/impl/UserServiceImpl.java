@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
     }
 
     public User findByUsername(String username){
-        Optional<User> user = userRepository.findByEmail(username);
+        Optional<User> user = userRepository.findByUsername(username);
         if (!(user.isPresent())) {
             throw new EntityNotFoundException("User not found");
         }

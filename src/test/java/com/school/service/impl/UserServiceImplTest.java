@@ -29,10 +29,7 @@ class UserServiceImplTest {
         userService = new UserServiceImpl(userRepository);
     }
 
-    @AfterEach
-    void tearDown() throws Exception {
-        userRepository.deleteAll();
-    }
+
 
     @Test
     void create() {
