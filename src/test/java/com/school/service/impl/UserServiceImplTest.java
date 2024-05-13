@@ -3,6 +3,7 @@ package com.school.service.impl;
 import com.school.models.User;
 import com.school.repositories.UserRepository;
 import com.school.service.UserService;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -47,6 +48,15 @@ class UserServiceImplTest {
     }
 
     @Test
+    void createNull() {
+        User user = null;
+
+        assertThrowsExactly(EntityNotFoundException.class, () -> {
+            userService.create(user);
+        });
+    }
+
+    @Test
     void readById() {
         User user = new User("Dexip", "Artem", "Moseichenko", "Abekpr257", "feee@nnvr.fejf");
         userService.create(user);
@@ -57,7 +67,16 @@ class UserServiceImplTest {
         assertEquals(user, res);
     }
 
-    @Disabled
+    @Test
+    void readByIdNotFound() {
+        User user = new User("Dexip", "Artem", "Moseichenko", "Abekpr257", "feee@nnvr.fejf");
+        userService.create(user);
+
+        assertThrowsExactly(EntityNotFoundException.class, () -> {
+            userService.readById(2);
+        });
+    }
+
     @Test
     void update() {
         User user = new User("Dexip", "Artem", "Moseichenko", "Abekpr257", "feee@nnvr.fejf");
@@ -69,6 +88,15 @@ class UserServiceImplTest {
         assertEquals(user, updatedUser);
         verify(userRepository, times(1)).findById(user.getId());
         verify(userRepository, times(1)).save(user);
+    }
+
+    @Test
+    void notUpdate() {
+        User user = null;
+
+        assertThrowsExactly(EntityNotFoundException.class, () -> {
+            userService.update(user);
+        });
     }
 
     @Test
@@ -104,6 +132,17 @@ class UserServiceImplTest {
     }
 
     @Test
+    void notFindByUsername() {
+        String username = "Dexip";
+        User user = new User(username, "Artem", "Moseichenko", "Abekpr257", "feee@nnvr.fejf");
+        userService.create(user);
+
+        assertThrowsExactly(EntityNotFoundException.class, () -> {
+            userService.findByUsername("rgfr");
+        });
+    }
+
+    @Test
     void findByEmail() {
         String email = "feee@nnvr.fejf";
         User user = new User("Dexip", "Artem", "Moseichenko", "Abekpr257", "feee@nnvr.fejf");
@@ -114,5 +153,16 @@ class UserServiceImplTest {
         User result = userService.findByEmail(email);
 
         assertEquals(user, result);
+    }
+
+    @Test
+    void notFindByEmail() {
+        String username = "Dexip";
+        User user = new User(username, "Artem", "Moseichenko", "Abekpr257", "feee@nnvr.fejf");
+        userService.create(user);
+
+        assertThrowsExactly(EntityNotFoundException.class, () -> {
+            userService.findByEmail("rgfr");
+        });
     }
 }

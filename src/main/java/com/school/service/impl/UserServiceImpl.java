@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
             readById(user.getId());
             return userRepository.save(user);
         }
-        throw new EntityNotFoundException("User with id " + user.getId() + " not found");
+        throw new EntityNotFoundException("User is null");
     }
 
     @Override
