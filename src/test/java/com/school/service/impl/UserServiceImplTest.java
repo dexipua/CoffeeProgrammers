@@ -60,11 +60,27 @@ class UserServiceImplTest {
     @Disabled
     @Test
     void update() {
+        User user = new User("Dexip", "Artem", "Moseichenko", "Abekpr257", "feee@nnvr.fejf");
+        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
+        when(userRepository.save(user)).thenReturn(user);
+
+        User updatedUser = userService.update(user);
+
+        assertEquals(user, updatedUser);
+        verify(userRepository, times(1)).findById(user.getId());
+        verify(userRepository, times(1)).save(user);
     }
 
-    @Disabled
     @Test
     void delete() {
+        User user = new User("Dexip", "Artem", "Moseichenko", "Abekpr257", "feee@nnvr.fejf");
+        userService.create(user);
+
+        when(userRepository.findById(1l)).thenReturn(Optional.of(user));
+        userService.delete(1l);
+
+        verify(userRepository, times(1)).findById(1l);
+        verify(userRepository, times(1)).delete(user);
     }
 
     @Test
