@@ -33,10 +33,14 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public Student update(Student student){
         if(student != null){
-            student = findById(student.getId());
-            studentRepository.save(student);
+            long studentId = student.getId();
+            if(studentRepository.findById(studentId).isPresent()) {
+                return studentRepository.save(student);
+            } else {
+                throw new EntityNotFoundException("Student with id " + studentId + " not found");
+            }
         }
-        throw new EntityNotFoundException("Student with id " + student.getId() + " not found");
+        throw new IllegalArgumentException("Student cannot be null");
     }
 
     @Override
