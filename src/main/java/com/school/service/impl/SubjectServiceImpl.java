@@ -7,7 +7,9 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -48,26 +50,25 @@ public class SubjectServiceImpl implements SubjectService {
 
     @Override
     public List<Subject> getAllByOrderByName() {
-        if (subjectRepository.findAllByOrderByName().isPresent()) {
-            return subjectRepository.findAllByOrderByName().get();
-        } else {
-            throw new EntityNotFoundException("Subjects not found");
-        }
+        Optional<List<Subject>> subjects = subjectRepository.findAllByOrderByName();
+        return subjects.orElseGet(ArrayList::new);
     }
 
     @Override
     public Subject findByName(String name) {
-        if (subjectRepository.findByName(name).isPresent()) {
-            return subjectRepository.findByName(name).get();
+        Optional<Subject> subject = subjectRepository.findByName(name);
+        if (subject.isPresent()) {
+            return subject.get();
         } else {
-            throw new EntityNotFoundException("Subject with name " + name + " not found");
+            throw new EntityNotFoundException("Subject not found");
         }
     }
 
     @Override
     public List<Subject> findByTeacher_Id(long teacherId) {
-        if (subjectRepository.findByTeacher_Id(teacherId).isPresent()) {
-            return subjectRepository.findByTeacher_Id(teacherId).get();
+        Optional<List<Subject>> subjects = subjectRepository.findByTeacher_Id(teacherId);
+        if (subjects.isPresent()) {
+            return subjects.get();
         } else {
             throw new EntityNotFoundException("Subjects with teacher id " + teacherId + " not found");
         }
@@ -75,10 +76,11 @@ public class SubjectServiceImpl implements SubjectService {
 
     @Override
     public List<Subject> findByStudent_Id(long studentId) {
-        if (subjectRepository.findByTeacher_Id(studentId).isPresent()) {
-            return subjectRepository.findByTeacher_Id(studentId).get();
+        Optional<List<Subject>> subjects = subjectRepository.findByStudent_Id(studentId);
+        if (subjects.isPresent()) {
+            return subjects.get();
         } else {
-            throw new EntityNotFoundException("Subjects with teacher id " + studentId + " not found");
+            throw new EntityNotFoundException("Subjects with student id " + studentId + " not found");
         }
     }
 }
