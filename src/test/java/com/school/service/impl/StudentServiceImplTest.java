@@ -183,7 +183,7 @@ class StudentServiceImplTest {
         when(studentRepository.findByUsername(eq(username))).thenReturn(Optional.empty());
 
         // When & Then
-        assertThrows(NoSuchElementException.class, () -> studentService.findByUsername(username));
+        assertThrows(EntityNotFoundException.class, () -> studentService.findByUsername(username));
     }
 
     @Test
@@ -207,7 +207,7 @@ class StudentServiceImplTest {
         when(studentRepository.findByEmail(eq(email))).thenReturn(Optional.empty());
 
         // When & Then
-        assertThrows(NoSuchElementException.class, () -> studentService.findByEmail(email));
+        assertThrows(EntityNotFoundException.class, () -> studentService.findByEmail(email));
     }
 
 }

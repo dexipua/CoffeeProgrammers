@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -32,15 +33,11 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Student update(Student student){
-        if(student != null){
-            long studentId = student.getId();
-            if(studentRepository.findById(studentId).isPresent()) {
-                return studentRepository.save(student);
-            } else {
-                throw new EntityNotFoundException("Student with id " + studentId + " not found");
-            }
+        if (student != null) {
+            findById(student.getId());
+            return studentRepository.save(student);
         }
-        throw new IllegalArgumentException("Student cannot be null");
+        throw new EntityNotFoundException("Student is null");
     }
 
     @Override
@@ -62,20 +59,20 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Student findByUsername(String username){
-        Student student = studentRepository.findByUsername(username).get();
-        if (student == null) {
+        Optional<Student> student = studentRepository.findByUsername(username);
+        if (!(student.isPresent())) {
             throw new EntityNotFoundException("Student not found");
         }
-        return student;
+        return student.get();
     }
 
     @Override
     public Student findByEmail(String email){
-        Student student = studentRepository.findByEmail(email).get();
-        if (student == null) {
+        Optional<Student> student = studentRepository.findByEmail(email);
+        if (!(student.isPresent())) {
             throw new EntityNotFoundException("Student not found");
         }
-        return student;
+        return student.get();
     }
 
 
