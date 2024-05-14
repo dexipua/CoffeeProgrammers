@@ -34,6 +34,10 @@ public class Teacher {
                 "}";
     }
 
+    public void addSubject(Subject subject) {
+        subjects.add(subject);
+    }
+
     public Teacher(User user) {
         this.user = user;
         this.subjects = new ArrayList<>();
