@@ -36,9 +36,18 @@ class StudentServiceImplTest {
     }
 
     @Test
-    void create() {
+    void createValidStudent() {
         //Given & When & Then
         studentService.create(new Student(new User("Userrrr", "Vadym", "Honcharuk", "User123", "useruser@gmail.com")));
+    }
+
+    @Test
+    void createNullStudent() {
+        // Given
+        Student student = null;
+
+        // When & Then
+        assertThrows(EntityNotFoundException.class, () -> studentService.create(student));
     }
 
     @Test
@@ -62,7 +71,7 @@ class StudentServiceImplTest {
 
         //When & Then
         assertThrows(EntityNotFoundException.class, () -> studentService.findById(-1L));
-    }
+        }
 
     @Test
     void update_Success() {
@@ -86,14 +95,11 @@ class StudentServiceImplTest {
     @Test
     void update_StudentNotFound(){
         // Given
-        long id = -1;
-        Student student = new Student();
-        student.setId(id);
-        when(studentRepository.findById(eq(id))).thenReturn(Optional.empty());
+        Student student = null;
 
-        // When & Then
-        assertThrows(EntityNotFoundException.class, () -> studentService.update(student));
-
+        assertThrowsExactly(EntityNotFoundException.class, () -> {
+            studentService.update(student);
+        });
 
     }
 
