@@ -38,7 +38,7 @@ class StudentServiceImplTest {
 
     @Test
     void create() {
-        //When & Then
+        //Given & When & Then
         studentService.create(new Student(new User("Userrrr", "Vadym", "Honcharuk", "User123", "useruser@gmail.com")));
     }
 
@@ -69,10 +69,10 @@ class StudentServiceImplTest {
     void update_Success() {
         // Given
         long studentId = 1;
-        Student existingStudent = new Student();
-        existingStudent.setId(studentId);
+        Student student = new Student();
+        student.setId(studentId);
 
-        when(studentRepository.findById(eq(studentId))).thenReturn(Optional.of(existingStudent));
+        when(studentRepository.findById(eq(studentId))).thenReturn(Optional.of(student));
 
         // When
         Student updatedStudent = new Student();
@@ -90,7 +90,7 @@ class StudentServiceImplTest {
         long id = -1;
         Student student = new Student();
         student.setId(id);
-        when(studentRepository.findById(id)).thenReturn(Optional.empty());
+        when(studentRepository.findById(eq(id))).thenReturn(Optional.empty());
 
         // When & Then
         assertThrows(EntityNotFoundException.class, () -> studentService.update(student));
@@ -179,7 +179,7 @@ class StudentServiceImplTest {
     @Test
     void findByUsername_NotExists() {
         // Given
-        String username = "NonExistingUser";
+        String username = "NotExistingUsername";
         when(studentRepository.findByUsername(eq(username))).thenReturn(Optional.empty());
 
         // When & Then
@@ -203,7 +203,7 @@ class StudentServiceImplTest {
     @Test
     void findByEmail_NotExists() {
         // Given
-        String email = "nonexisting@hhh.kkk";
+        String email = "notexisting@hhh.kkk";
         when(studentRepository.findByEmail(eq(email))).thenReturn(Optional.empty());
 
         // When & Then
