@@ -20,7 +20,7 @@ public class SubjectServiceImpl implements SubjectService {
         if (subject != null) {
             return subjectRepository.save(subject);
         } else {
-            throw new EntityNotFoundException("Subject is null");
+            throw new EntityNotFoundException("Subject not found");
         }
     }
 
@@ -36,7 +36,7 @@ public class SubjectServiceImpl implements SubjectService {
             readById(subject.getId());
             return subjectRepository.save(subject);
         } else {
-            throw new EntityNotFoundException("Subject is null");
+            throw new EntityNotFoundException("Subject not found");
         }
     }
 
