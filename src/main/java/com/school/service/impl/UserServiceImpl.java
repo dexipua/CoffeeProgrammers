@@ -3,6 +3,7 @@ package com.school.service.impl;
 import com.school.models.User;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,10 +17,12 @@ import com.school.service.UserService;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public User create(User user) {
         if (user != null) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
             return userRepository.save(user);
         }
         throw new EntityNotFoundException("User not found");
@@ -35,6 +38,7 @@ public class UserServiceImpl implements UserService {
     public User update(User user) {
         if (user != null) {
             readById(user.getId());
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
             return userRepository.save(user);
         }
         throw new EntityNotFoundException("User is null");
