@@ -1,10 +1,16 @@
 package com.school.service.impl;
 
+import com.school.models.Role;
 import com.school.models.Teacher;
+import com.school.repositories.RoleRepository;
 import com.school.repositories.TeacherRepository;
+import com.school.repositories.UserRepository;
+import com.school.service.RoleService;
 import com.school.service.TeacherService;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,8 +22,15 @@ public class TeacherServiceImpl implements TeacherService {
 
     private final TeacherRepository teacherRepository;
 
+    private final RoleRepository roleRepository;
+
     @Override
     public Teacher create(Teacher teacher) {
+        Optional<Role> role = roleRepository.findByName("TEACHER");
+        if(!role.isPresent()) {
+            throw new EntityNotFoundException("Role not found");
+        }
+        teacher.getUser().setRole(role.get());
         if (teacher != null) {
             return teacherRepository.save(teacher);
         }
