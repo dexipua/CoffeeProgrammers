@@ -2,6 +2,7 @@ package com.school.service.impl;
 
 import com.school.models.User;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,12 +27,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 
     @Override
-    public User create(User user) {
-        if (user != null) {
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-            return userRepository.save(user);
-        }
-        throw new EntityNotFoundException("User not found");
+    public User create(@NotNull User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        return userRepository.save(user);
     }
 
     @Override
@@ -41,13 +39,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public User update(User user) {
-        if (user != null) {
-            readById(user.getId());
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-            return userRepository.save(user);
-        }
-        throw new EntityNotFoundException("User is null");
+    public User update(@NotNull User user) {
+        readById(user.getId());
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        return userRepository.save(user);
     }
 
     @Override

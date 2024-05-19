@@ -4,6 +4,7 @@ import com.school.models.Role;
 import com.school.repositories.RoleRepository;
 import com.school.service.RoleService;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,11 +17,8 @@ public class RoleServiceImpl implements RoleService {
     private final RoleRepository roleRepository;
 
     @Override
-    public Role create(Role role) {
-        if (role != null) {
-            return roleRepository.save(role);
-        }
-        throw new EntityNotFoundException("Role is null");
+    public Role create(@NotNull Role role) {
+        return roleRepository.save(role);
     }
 
     @Override
@@ -30,12 +28,9 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Role update(Role role) {
-        if (role != null) {
-            readById(role.getId());
-            return roleRepository.save(role);
-        }
-        throw new EntityNotFoundException("Role is null");
+    public Role update(@NotNull Role role) {
+        readById(role.getId());
+        return roleRepository.save(role);
     }
 
     @Override

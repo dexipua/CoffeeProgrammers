@@ -44,16 +44,6 @@ class UserServiceImplTest {
     }
 
     @Test
-    void tryToCreateUserWithNull() {
-        //given
-        User user = null;
-        //when&then
-        assertThrowsExactly(EntityNotFoundException.class, () -> {
-            userService.create(user);
-        });
-    }
-
-    @Test
     void tryToReadByIdWithCorrectInformation() {
         //given
         User user = new User("Dexip", "Artem", "Moseichenko", "Abekpr257", "feee@nnvr.fejf");
@@ -88,16 +78,6 @@ class UserServiceImplTest {
         assertEquals(user, updatedUser);
         verify(userRepository, times(1)).findById(user.getId());
         verify(userRepository, times(1)).save(user);
-    }
-
-    @Test
-    void tryToUpdateWithWrongInformation() {
-        //given
-        User user = null;
-        //when&then
-        assertThrowsExactly(EntityNotFoundException.class, () -> {
-            userService.update(user);
-        });
     }
 
     @Test

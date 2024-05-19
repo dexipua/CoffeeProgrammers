@@ -43,15 +43,6 @@ class RoleServiceImplTest {
         Role actualRole = userArgumentCaptor.getValue();
         assertThat(actualRole).isEqualTo(role);
     }
-    @Test
-    void tryToCreateWithWrongInformation() {
-        //given
-        Role role = null;
-        //when&then
-        assertThrowsExactly(EntityNotFoundException.class, () -> {
-            roleService.create(role);
-        });
-    }
 
     @Test
     void tryToReadWithCorrectInformation() {
@@ -88,16 +79,6 @@ class RoleServiceImplTest {
         assertEquals(role, updatedRole);
         verify(roleRepository, times(1)).findById((long) role.getId());
         verify(roleRepository, times(1)).save(role);
-    }
-
-    @Test
-    void tryToUpdateWithWrongInformation() {
-        //given
-        Role role = null;
-        //when&then
-        assertThrowsExactly(EntityNotFoundException.class, () -> {
-            roleService.update(role);
-        });
     }
 
     @Test
