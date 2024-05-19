@@ -52,7 +52,7 @@ public class AuthController {
 
     @PostMapping("/auth/registration")
     public ResponseEntity<?> registration(@RequestBody @Valid LoginRequest loginRequest) {
-        Role role = roleService.findByName("USER");
+        Role role = roleService.findByName("STUDENT");
         User user = userService.create(LoginRequest.convertToEntity(loginRequest, role));
         String jwtToken = jwtUtils.generateTokenFromUsername(user.getUsername());
         AuthResponse authResponse = new AuthResponse(user.getUsername(), jwtToken);
