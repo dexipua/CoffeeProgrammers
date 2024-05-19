@@ -3,10 +3,7 @@ package com.school.dto;
 import com.school.models.Role;
 import com.school.models.User;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @Builder
