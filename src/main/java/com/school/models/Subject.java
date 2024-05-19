@@ -1,6 +1,7 @@
 package com.school.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
@@ -17,8 +18,9 @@ public class Subject {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @NotEmpty(message = "Name can't be empty")
     @Pattern(regexp = "^[A-Za-z0-9\\s]+$",
-            message = "Can contain only letters, numbers and spaces")
+            message = "Name can contain only letters, numbers and spaces")
     @Column(name = "name", nullable = false, unique = true)
     private String name;
 
