@@ -8,9 +8,7 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Optional;
 
@@ -33,134 +31,141 @@ class UserServiceImplTest {
 
 
     @Test
-    void create() {
+    void tryToCreateUser() {
+        //given
         User user = new User("Dexip", "Artem", "Moseichenko", "Abekpr257", "feee@nnvr.fejf");
-
         userService.create(user);
-
+        //when
         ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
-
         verify(userRepository).save(userArgumentCaptor.capture());
-
+        //then
         User actualUser = userArgumentCaptor.getValue();
-
         assertThat(actualUser).isEqualTo(user);
     }
 
     @Test
-    void createNull() {
+    void tryToCreateUserWithNull() {
+        //given
         User user = null;
-
+        //when&then
         assertThrowsExactly(EntityNotFoundException.class, () -> {
             userService.create(user);
         });
     }
 
     @Test
-    void readById() {
+    void tryToReadByIdWithCorrectInformation() {
+        //given
         User user = new User("Dexip", "Artem", "Moseichenko", "Abekpr257", "feee@nnvr.fejf");
         userService.create(user);
         // When
         when(userRepository.findById(1l)).thenReturn(Optional.of(user));
-
+        //then
         User res = userService.readById(1l);
         assertEquals(user, res);
     }
 
     @Test
-    void readByIdNotFound() {
+    void tryToReadByIdWithWrongInformation() {
+        //given
         User user = new User("Dexip", "Artem", "Moseichenko", "Abekpr257", "feee@nnvr.fejf");
         userService.create(user);
-
+        //when&then
         assertThrowsExactly(EntityNotFoundException.class, () -> {
             userService.readById(2);
         });
     }
 
     @Test
-    void update() {
+    void tryToUpdateWithCorrectInformation() {
+        //given
         User user = new User("Dexip", "Artem", "Moseichenko", "Abekpr257", "feee@nnvr.fejf");
         when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
         when(userRepository.save(user)).thenReturn(user);
-
+        // When
         User updatedUser = userService.update(user);
-
+        //then
         assertEquals(user, updatedUser);
         verify(userRepository, times(1)).findById(user.getId());
         verify(userRepository, times(1)).save(user);
     }
 
     @Test
-    void notUpdate() {
+    void tryToUpdateWithWrongInformation() {
+        //given
         User user = null;
-
+        //when&then
         assertThrowsExactly(EntityNotFoundException.class, () -> {
             userService.update(user);
         });
     }
 
     @Test
-    void delete() {
+    void tryToDeleteWithCorrectInformation() {
+        //given
         User user = new User("Dexip", "Artem", "Moseichenko", "Abekpr257", "feee@nnvr.fejf");
         userService.create(user);
-
+        // When
         when(userRepository.findById(1l)).thenReturn(Optional.of(user));
         userService.delete(1l);
-
+        //then
         verify(userRepository, times(1)).findById(1l);
         verify(userRepository, times(1)).delete(user);
     }
 
     @Test
-    void getAll() {
+    void tryToGetAll() {
+        //given
         userService.getAll();
-
+        //when&then
         verify(userRepository).findAll();
     }
 
     @Test
-    void findByUsername() {
+    void tryToFindByUsernameWithCorrectInformation() {
+        //given
         String username = "Dexip";
         User user = new User(username, "Artem", "Moseichenko", "Abekpr257", "feee@nnvr.fejf");
         userService.create(user);
-
+        // When
         when(userRepository.findByUsername(username)).thenReturn(Optional.of(user));
-
+        //then
         User result = userService.findByUsername(username);
-
         assertEquals(user, result);
     }
 
     @Test
-    void notFindByUsername() {
+    void tryToFindByUsernameWithWrongInformation() {
+        //given
         String username = "Dexip";
         User user = new User(username, "Artem", "Moseichenko", "Abekpr257", "feee@nnvr.fejf");
         userService.create(user);
-
+        //when&then
         assertThrowsExactly(EntityNotFoundException.class, () -> {
             userService.findByUsername("rgfr");
         });
     }
 
     @Test
-    void findByEmail() {
+    void tryToFindByEmailWithCorrectInformation() {
+        //given
         String email = "feee@nnvr.fejf";
         User user = new User("Dexip", "Artem", "Moseichenko", "Abekpr257", "feee@nnvr.fejf");
         userService.create(user);
-
+        // When
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
-
+        //then
         User result = userService.findByEmail(email);
-
         assertEquals(user, result);
     }
 
     @Test
-    void notFindByEmail() {
+    void tryToFindByEmailWithWrongInformation() {
+        //given
         String username = "Dexip";
         User user = new User(username, "Artem", "Moseichenko", "Abekpr257", "feee@nnvr.fejf");
         userService.create(user);
-
+        //when&then
         assertThrowsExactly(EntityNotFoundException.class, () -> {
             userService.findByEmail("rgfr");
         });
