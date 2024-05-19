@@ -14,15 +14,4 @@ public class LoginRequest {
     private String username;
     @NotBlank
     private String password;
-
-    public static User convertToEntity(LoginRequest loginRequest, Role role) {
-        User user = new User();
-        user.setUsername(loginRequest.getUsername());
-        user.setFirstName("New");
-        user.setLastName("New");
-        user.setEmail("New@email.com");
-        user.setPassword(loginRequest.getPassword());
-        user.setRole(role);
-        return user;
-    }
 }
