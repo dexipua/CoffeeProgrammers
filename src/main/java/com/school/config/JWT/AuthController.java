@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @Slf4j
@@ -47,15 +48,6 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
        }
-    }
-
-    @PostMapping("/auth/registration")
-    public ResponseEntity<?> registration(@RequestBody @Valid LoginRequest loginRequest) {
-        Role role = roleService.findByName("STUDENT");
-        User user = userService.create(LoginRequest.convertToEntity(loginRequest, role));
-        String jwtToken = jwtUtils.generateTokenFromUsername(user.getUsername());
-        AuthResponse authResponse = new AuthResponse(user.getUsername(), jwtToken);
-        return ResponseEntity.ok().body(authResponse);
     }
 }
 
