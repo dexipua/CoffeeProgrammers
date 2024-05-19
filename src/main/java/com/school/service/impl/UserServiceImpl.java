@@ -3,6 +3,9 @@ package com.school.service.impl;
 import com.school.models.User;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +17,7 @@ import com.school.service.UserService;
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -57,7 +60,7 @@ public class UserServiceImpl implements UserService {
 
     public User findByUsername(String username){
         Optional<User> user = userRepository.findByUsername(username);
-        if (!(user.isPresent())) {
+        if (user.isEmpty()) {
             throw new EntityNotFoundException("User not found");
         }
         return user.get();
@@ -65,7 +68,16 @@ public class UserServiceImpl implements UserService {
 
     public User findByEmail(String email){
         Optional<User> user = userRepository.findByEmail(email);
-        if (!(user.isPresent())) {
+        if (user.isEmpty()) {
+            throw new EntityNotFoundException("User not found");
+        }
+        return user.get();
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Optional<User> user = userRepository.findByUsername(username);
+        if (user.isEmpty()) {
             throw new EntityNotFoundException("User not found");
         }
         return user.get();
