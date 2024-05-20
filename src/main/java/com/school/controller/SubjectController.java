@@ -2,18 +2,18 @@ package com.school.controller;
 
 import com.school.dto.SubjectRequest;
 import com.school.dto.SubjectResponse;
+import com.school.dto.TransformSubject;
 import com.school.models.Subject;
 import com.school.service.SubjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
-@RequestMapping(value = "/subject")
+@RequestMapping("/subject")
 @RestController
 public class SubjectController {
 
@@ -24,35 +24,42 @@ public class SubjectController {
         this.subjectService = subjectService;
     }
 
-    @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     public void create(@RequestBody SubjectRequest subjectRequest) {
-        subjectService.create(new Subject(subjectRequest.getName()));
+        try { //TODO
+            subjectService.findByName(subjectRequest.getName());
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Subject with this name is present");
+        } catch (IllegalArgumentException e) {
+
+        }
+
+        Subject subject = TransformSubject.transformFromRequestToModel(subjectRequest);
+        subjectService.create(subject);
     }
 
-    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping("/byId/{id}")
     @ResponseStatus(HttpStatus.OK)
     public SubjectResponse getById(@PathVariable("id") long id) {
         return new SubjectResponse(subjectService.readById(id));
     }
 
-    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PutMapping("/update/{id}")
+    @ResponseStatus(HttpStatus.OK)
     public void update(@PathVariable("id") long id, @RequestBody SubjectRequest subjectRequest) {
-        if (Objects.equals(id, subjectRequest.getId())) {
-            subjectService.update(new Subject(subjectRequest.getName()));
-        } else {
-            throw new IllegalStateException("Invalid subject id");
-        }
+        Subject subjectToUpdate = TransformSubject.transformFromRequestToModel(subjectRequest);
+        subjectToUpdate.setId(id);
+        subjectService.update(subjectToUpdate);
+
     }
 
-    @DeleteMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/delete/{id}")
+    @ResponseStatus(HttpStatus.OK)
     public void delete(@PathVariable("id") long id) {
         subjectService.delete(id);
     }
 
-    @GetMapping(value = "/allByOrderByName", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
     public List<SubjectResponse> getAllByOrderByName() {
         List<SubjectResponse> result = new ArrayList<>();
@@ -62,13 +69,13 @@ public class SubjectController {
         return result;
     }
 
-    @GetMapping(value = "/{name}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping("/byName/{name}")
     @ResponseStatus(HttpStatus.OK)
     public SubjectResponse getByName(@PathVariable("name") String name) {
         return new SubjectResponse(subjectService.findByName(name));
     }
 
-    @GetMapping(value = "/{teacher_id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping("/byTeacherId/{teacher_id}")
     @ResponseStatus(HttpStatus.OK)
     public List<SubjectResponse> getByTeacherId(@PathVariable("teacher_id") long teacherId) {
         List<SubjectResponse> result = new ArrayList<>();
@@ -78,7 +85,7 @@ public class SubjectController {
         return result;
     }
 
-    @GetMapping(value = "/{student_id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping("/byStudentId/{student_id}")
     @ResponseStatus(HttpStatus.OK)
     public List<SubjectResponse> getByStudentId(@PathVariable("student_id") long studentId) {
         List<SubjectResponse> result = new ArrayList<>();

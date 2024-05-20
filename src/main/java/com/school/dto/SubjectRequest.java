@@ -1,19 +1,35 @@
 package com.school.dto;
 
-import com.school.models.Subject;
-import lombok.*;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.school.models.Student;
+import com.school.models.Teacher;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@AllArgsConstructor
-@NoArgsConstructor
+import java.util.List;
+
 @Getter
 @Setter
-@Data
+@JsonNaming(PropertyNamingStrategies.LowerCamelCaseStrategy.class)
 public class SubjectRequest {
-    private long id;
-    private String name;
+    String name;
+    Teacher teacher; //TODO
+    List<Student> students;
 
-    public SubjectRequest(Subject subject) {
-        this.id = subject.getId();
-        this.name = subject.getName();
+    @JsonCreator
+    public SubjectRequest(
+            @JsonProperty("name") @NotNull @NotEmpty String name,
+            @JsonProperty("teacher") Teacher teacher,
+            @JsonProperty("student_list") List<Student> students
+    ) {
+        this.name = name;
+        this.teacher = teacher;
+        this.students = students;
     }
 }
