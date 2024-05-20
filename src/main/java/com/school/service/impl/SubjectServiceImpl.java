@@ -4,6 +4,7 @@ import com.school.models.Subject;
 import com.school.repositories.SubjectRepository;
 import com.school.service.SubjectService;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,28 +19,20 @@ public class SubjectServiceImpl implements SubjectService {
     private final SubjectRepository subjectRepository;
 
     @Override
-    public Subject create(Subject subject) {
-        if (subject != null) {
+    public Subject create(@NotNull Subject subject) {
             return subjectRepository.save(subject);
-        } else {
-            throw new EntityNotFoundException("Subject not found");
-        }
     }
 
     @Override
     public Subject readById(long id) {
         return subjectRepository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException("Subject with id " + id + " not found"));
+                () -> new IllegalArgumentException("Subject with id " + id + " not found"));
     }
 
     @Override
-    public Subject update(Subject subject) {
-        if (subject != null) {
+    public Subject update(@NotNull Subject subject) {
             readById(subject.getId());
             return subjectRepository.save(subject);
-        } else {
-            throw new EntityNotFoundException("Subject not found");
-        }
     }
 
     @Override
@@ -60,7 +53,7 @@ public class SubjectServiceImpl implements SubjectService {
         if (subject.isPresent()) {
             return subject.get();
         } else {
-            throw new EntityNotFoundException("Subject not found");
+            throw new IllegalArgumentException("Subject not found");
         }
     }
 
@@ -70,7 +63,7 @@ public class SubjectServiceImpl implements SubjectService {
         if (subjects.isPresent()) {
             return subjects.get();
         } else {
-            throw new EntityNotFoundException("Subjects with teacher id " + teacherId + " not found");
+            throw new IllegalArgumentException("Subjects with teacher id " + teacherId + " not found");
         }
     }
 
@@ -80,7 +73,7 @@ public class SubjectServiceImpl implements SubjectService {
         if (subjects.isPresent()) {
             return subjects.get();
         } else {
-            throw new EntityNotFoundException("Subjects with student id " + studentId + " not found");
+            throw new IllegalArgumentException("Subjects with student id " + studentId + " not found");
         }
     }
 }
