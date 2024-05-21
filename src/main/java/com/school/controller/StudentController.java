@@ -4,9 +4,8 @@ import com.school.dto.StudentRequest;
 import com.school.dto.StudentResponse;
 import com.school.models.Student;
 import com.school.service.StudentService;
-import com.school.service.SubjectService;
-import lombok.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -16,66 +15,65 @@ import java.util.List;
 @RequestMapping("/students")
 @RequiredArgsConstructor
 public class StudentController {
-    @Autowired
+
     private final StudentService studentService;
 
-    @Autowired
-    private final SubjectService subjectService;
-
-    @GetMapping
-    public List<StudentResponse> getAll() {
-        List<StudentResponse> result = new ArrayList<>();
-        for (Student student : studentService.findAll()) {
-            result.add(new StudentResponse(student));
-        }
-        return result;
-    }
-
-    @PostMapping("/create")
-    public StudentResponse createStudent(@RequestBody StudentRequest studentRequest) {
-        Student student = new Student(studentRequest.getUser());
+    @PostMapping
+    public ResponseEntity<StudentResponse> createStudent(@RequestBody StudentRequest studentRequest) {
+        Student student = StudentRequest.toStudent(studentRequest);
         Student createdStudent = studentService.create(student);
-        return new StudentResponse(createdStudent);
+        return ResponseEntity.ok(new StudentResponse(createdStudent));
     }
 
     @GetMapping("/{id}")
-    public StudentResponse getStudentById(@PathVariable("id") long id) {
+    public ResponseEntity<StudentResponse> getStudentById(@PathVariable long id) {
         Student student = studentService.findById(id);
-        return new StudentResponse(student);
+        return ResponseEntity.ok(new StudentResponse(student));
     }
 
-    @PutMapping("/update")
-    public StudentResponse updateStudent(@RequestBody StudentRequest studentRequest) {
-        Student student = studentService.findById(studentRequest.getId());
-        student.setUser(studentRequest.getUser());
-        Student updatedStudent = studentService.update(student);
-        return new StudentResponse(updatedStudent);
+    @PutMapping("/{id}")
+    public ResponseEntity<StudentResponse> updateStudent(@PathVariable long id, @RequestBody StudentRequest studentRequest) {
+        Student studentToUpdate = StudentRequest.toStudent(studentRequest);
+        studentToUpdate.setId(id); // Ensure the ID is set for the update
+        Student updatedStudent = studentService.update(studentToUpdate);
+        return ResponseEntity.ok(new StudentResponse(updatedStudent));
     }
 
     @DeleteMapping("/{id}")
-    public void deleteStudent(@PathVariable("id") long id) {
+    public ResponseEntity<Void> deleteStudent(@PathVariable long id) {
         studentService.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/bySubject/{subjectName}")
-    public List<StudentResponse> getStudentsBySubjectName(@PathVariable("subjectName") String subjectName) {
-        List<Student> students = studentService.findBySubjectName(subjectName);
-        List<StudentResponse> responses = new ArrayList<>();
+    @GetMapping
+    public ResponseEntity<List<StudentResponse>> getAllStudents() {
+        List<Student> students = studentService.findAll();
+        List<StudentResponse> studentResponses = new ArrayList<>();
         for (Student student : students) {
-            responses.add(new StudentResponse(student));
+            studentResponses.add(new StudentResponse(student));
         }
-        return responses;
+        return ResponseEntity.ok(studentResponses);
     }
 
-    @GetMapping("/byUsername/{username}")
-    public StudentResponse getStudentByUsername(@PathVariable("username") String username) {
+    @GetMapping("/subject")
+    public ResponseEntity<List<StudentResponse>> getStudentsBySubjectName(@RequestParam String subjectName) {
+        List<Student> students = studentService.findBySubjectName(subjectName);
+        List<StudentResponse> studentResponses = new ArrayList<>();
+        for (Student student : students) {
+            studentResponses.add(new StudentResponse(student));
+        }
+        return ResponseEntity.ok(studentResponses);
+    }
+
+    @GetMapping("/username/{username}")
+    public ResponseEntity<StudentResponse> getStudentByUsername(@PathVariable String username) {
         Student student = studentService.findByUsername(username);
-        return new StudentResponse(student);
+        return ResponseEntity.ok(new StudentResponse(student));
     }
 
-    @GetMapping("/byEmail/{email}")
-    public StudentResponse getStudentByEmail(@PathVariable("email") String email) {
+    @GetMapping("/email/{email}")
+    public ResponseEntity<StudentResponse> getStudentByEmail(@PathVariable String email) {
         Student student = studentService.findByEmail(email);
-        return new StudentResponse(student);
+        return ResponseEntity.ok(new StudentResponse(student));
     }
 }
