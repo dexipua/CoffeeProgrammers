@@ -34,7 +34,7 @@ public class StudentController {
     @PutMapping("/{id}")
     public ResponseEntity<StudentResponse> updateStudent(@PathVariable long id, @RequestBody StudentRequest studentRequest) {
         Student studentToUpdate = StudentRequest.toStudent(studentRequest);
-        studentToUpdate.setId(id); // Ensure the ID is set for the update
+        studentToUpdate.setId(id);
         Student updatedStudent = studentService.update(studentToUpdate);
         return ResponseEntity.ok(new StudentResponse(updatedStudent));
     }
