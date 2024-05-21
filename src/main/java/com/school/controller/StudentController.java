@@ -3,9 +3,11 @@ package com.school.controller;
 import com.school.dto.StudentRequest;
 import com.school.dto.StudentResponse;
 import com.school.models.Student;
+import com.school.repositories.RoleRepository;
 import com.school.service.StudentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -25,13 +27,13 @@ public class StudentController {
         return ResponseEntity.ok(new StudentResponse(createdStudent));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/get/{id}")
     public ResponseEntity<StudentResponse> getStudentById(@PathVariable long id) {
         Student student = studentService.findById(id);
         return ResponseEntity.ok(new StudentResponse(student));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<StudentResponse> updateStudent(@PathVariable long id, @RequestBody StudentRequest studentRequest) {
         Student studentToUpdate = StudentRequest.toStudent(studentRequest);
         studentToUpdate.setId(id);
@@ -39,13 +41,13 @@ public class StudentController {
         return ResponseEntity.ok(new StudentResponse(updatedStudent));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteStudent(@PathVariable long id) {
         studentService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<StudentResponse>> getAllStudents() {
         List<Student> students = studentService.findAll();
         List<StudentResponse> studentResponses = new ArrayList<>();
@@ -55,8 +57,8 @@ public class StudentController {
         return ResponseEntity.ok(studentResponses);
     }
 
-    @GetMapping("/subject")
-    public ResponseEntity<List<StudentResponse>> getStudentsBySubjectName(@RequestParam String subjectName) {
+    @GetMapping("/by/{subject_name}")
+    public ResponseEntity<List<StudentResponse>> getStudentsBySubjectName(@PathVariable("subject_name") String subjectName) {
         List<Student> students = studentService.findBySubjectName(subjectName);
         List<StudentResponse> studentResponses = new ArrayList<>();
         for (Student student : students) {
@@ -65,13 +67,13 @@ public class StudentController {
         return ResponseEntity.ok(studentResponses);
     }
 
-    @GetMapping("/username/{username}")
+    @GetMapping("/by/username/{username}")
     public ResponseEntity<StudentResponse> getStudentByUsername(@PathVariable String username) {
         Student student = studentService.findByUsername(username);
         return ResponseEntity.ok(new StudentResponse(student));
     }
 
-    @GetMapping("/email/{email}")
+    @GetMapping("/by/email/{email}")
     public ResponseEntity<StudentResponse> getStudentByEmail(@PathVariable String email) {
         Student student = studentService.findByEmail(email);
         return ResponseEntity.ok(new StudentResponse(student));

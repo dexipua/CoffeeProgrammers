@@ -2,6 +2,7 @@ package com.school.service.impl;
 
 
 import com.school.models.Student;
+import com.school.repositories.RoleRepository;
 import com.school.repositories.StudentRepository;
 import com.school.service.StudentService;
 import jakarta.persistence.EntityNotFoundException;
@@ -16,9 +17,11 @@ import java.util.Optional;
 public class StudentServiceImpl implements StudentService {
 
     private final StudentRepository studentRepository;
+    private final RoleRepository roleRepository;
 
     @Override
     public Student create(Student student){
+        student.getUser().setRole(roleRepository.findByName("STUDENT").get());
         if(student != null){
             return studentRepository.save(student);
         }
@@ -35,6 +38,7 @@ public class StudentServiceImpl implements StudentService {
     public Student update(Student student){
         if (student != null) {
             findById(student.getId());
+            student.getUser().setRole(roleRepository.findByName("STUDENT").get());
             return studentRepository.save(student);
         }
         throw new EntityNotFoundException("Student is null");
