@@ -4,6 +4,7 @@ import com.school.dto.HttpResponse;
 import com.school.dto.TeacherRequest;
 import com.school.dto.TeacherResponse;
 import com.school.models.Teacher;
+import com.school.models.User;
 import com.school.service.TeacherService;
 import com.school.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
@@ -13,9 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpServerErrorException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 @RestController
@@ -120,7 +123,14 @@ public class TeacherController {
 
     @DeleteMapping("/{teacher_id}/delete")
     public ResponseEntity<?> deleteById(@PathVariable("teacher_id") long teacher_id){
-        teacherService.delete(teacher_id);
+        if(Objects.equals(teacherService.findById(teacher_id).getUser().getRole().getAuthority(), "ROLE_CHIEF_TEACHER")){
+            throw new HttpServerErrorException(HttpStatus.BAD_REQUEST, "Cannot delete teacher with id " + teacher_id);
+        }
+        User user = teacherService.findById(teacher_id).getUser();
+        user.setUsername("None");
+        user.setPassword("noneNone1234567890");
+        user.setEmail("none@go.co");
+        teacherService.update(teacherService.findById(teacher_id));
         return new ResponseEntity<>(new HttpResponse(HttpStatus.OK.value(),
                 "Deleted"),
                 HttpStatus.OK);

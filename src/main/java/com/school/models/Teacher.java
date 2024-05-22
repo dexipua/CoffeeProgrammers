@@ -22,7 +22,7 @@ public class Teacher {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "teacher")
+    @OneToMany(mappedBy = "teacher", cascade = CascadeType.DETACH)
     private List<Subject> subjects;
 
     @Override
