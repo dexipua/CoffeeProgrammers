@@ -38,7 +38,7 @@ public class TeacherController {
         return result;
     }
 
-    @GetMapping("/{teacher_id}")
+    @GetMapping("/get/{teacher_id}")
     public ResponseEntity<?> getById(@PathVariable("teacher_id") long teacher_id){
         try {
             return new ResponseEntity<>(new TeacherResponse(teacherService.findById(teacher_id)), HttpStatus.OK);

@@ -25,7 +25,7 @@ public class User implements UserDetails {
             strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
             parameters = {
                     @org.hibernate.annotations.Parameter(name = "sequence_name", value = "user_sequence"),
-                    @org.hibernate.annotations.Parameter(name = "initial_value", value = "10"),
+                    @org.hibernate.annotations.Parameter(name = "initial_value", value = "8"),
                     @org.hibernate.annotations.Parameter(name = "increment_size", value = "1")
             }
     )
