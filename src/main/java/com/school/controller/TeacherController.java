@@ -5,6 +5,8 @@ import com.school.dto.TeacherRequest;
 import com.school.dto.TeacherResponse;
 import com.school.models.Teacher;
 import com.school.models.User;
+import com.school.repositories.RoleRepository;
+import com.school.service.RoleService;
 import com.school.service.TeacherService;
 import com.school.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
@@ -28,6 +30,8 @@ public class TeacherController {
     TeacherService teacherService;
     @Autowired
     UserService userService;
+    @Autowired
+    RoleService roleService;
 
     @GetMapping
     public List<TeacherResponse> getAll(){
@@ -86,6 +90,7 @@ public class TeacherController {
         Teacher teacher;
         try {
             teacher = TeacherRequest.toTeacher(teacherRequest);
+            teacher.getUser().setRole(roleService.findByName("TEACHER"));
             teacherService.create(teacher);
         } catch(ConstraintViolationException e) {
             return new ResponseEntity<>(new HttpResponse(HttpStatus.BAD_REQUEST.value(),

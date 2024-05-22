@@ -34,11 +34,10 @@ public class TeacherServiceImplTest {
     @Mock
     private TeacherRepository teacherRepository;
     private TeacherService teacherService;
-    private RoleRepository roleRepository;
 
     @BeforeEach
     void setUp() {
-        teacherService = new TeacherServiceImpl(teacherRepository, roleRepository);
+        teacherService = new TeacherServiceImpl(teacherRepository);
     }
 
     @AfterEach
