@@ -93,10 +93,4 @@ public class StudentController {
         Student student = studentService.findByUsername(username);
         return ResponseEntity.ok(new StudentResponse(student));
     }
-
-    @GetMapping("/by/email/{email}")
-    public ResponseEntity<StudentResponse> getStudentByEmail(@PathVariable("email") String email) {
-        Student student = studentService.findByEmail(email);
-        return ResponseEntity.ok(new StudentResponse(student));
-    }
 }
