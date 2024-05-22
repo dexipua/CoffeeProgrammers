@@ -61,22 +61,22 @@ public class TeacherServiceImplTest {
     }
 
     @Test
-    void readById() {
+    void findById() {
         Teacher teacher = new Teacher(new User("Vladobrod", "Vlad", "Bulakovskyi", "Vlad123", "vladobrod@gmail.com"));
         teacherService.create(teacher);
 
         when(teacherRepository.findById(1L)).thenReturn(Optional.of(teacher));
 
-        Teacher res = teacherService.readById(1L);
+        Teacher res = teacherService.findById(1L);
         assertThat(res).isEqualTo(teacher);
     }
 
     @Test
-    void notReadById() {
+    void notFindById() {
         Teacher teacher = new Teacher(new User("Vladobrod", "Vlad", "Bulakovskyi", "Vlad123", "vladobrod@gmail.com"));
         teacherService.create(teacher);
 
-        assertThrows(EntityNotFoundException.class, () -> teacherService.readById(2));
+        assertThrows(EntityNotFoundException.class, () -> teacherService.findById(2));
     }
 
     @Test

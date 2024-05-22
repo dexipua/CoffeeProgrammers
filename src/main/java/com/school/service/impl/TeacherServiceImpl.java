@@ -38,7 +38,7 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public Teacher readById(long id) {
+    public Teacher findById(long id) {
         return teacherRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Teacher with id " + id + " not found"));
     }
@@ -46,7 +46,7 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public Teacher update(Teacher teacher) {
         if (teacher != null) {
-            readById(teacher.getId());
+            findById(teacher.getId());
             return teacherRepository.save(teacher);
         }
         throw new EntityNotFoundException("Teacher not found");
@@ -54,7 +54,7 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public void delete(long id) {
-        Teacher teacher = readById(id);
+        Teacher teacher = findById(id);
         teacherRepository.delete(teacher);
     }
 

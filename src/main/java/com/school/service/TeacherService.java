@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface TeacherService {
     Teacher create(Teacher teacher);
-    Teacher readById(long id);
+    Teacher findById(long id);
     Teacher update(Teacher teacher);
     void delete(long id);
     List<Teacher> findAll();

@@ -3,8 +3,6 @@ package com.school.dto;
 import com.school.models.Teacher;
 import lombok.Data;
 
-import java.util.Arrays;
-
 @Data
 public class TeacherResponse {
     private String username;
