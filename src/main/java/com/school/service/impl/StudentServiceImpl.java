@@ -6,7 +6,9 @@ import com.school.repositories.RoleRepository;
 import com.school.repositories.StudentRepository;
 import com.school.service.StudentService;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,29 +21,23 @@ public class StudentServiceImpl implements StudentService {
     private final StudentRepository studentRepository;
     private final RoleRepository roleRepository;
 
+
+
     @Override
-    public Student create(Student student){
-        student.getUser().setRole(roleRepository.findByName("STUDENT").get());
-        if(student != null){
-            return studentRepository.save(student);
-        }
-        throw new EntityNotFoundException("Student not found");
+    public Student create(@NotNull Student student){
+        return studentRepository.save(student);
     }
 
     @Override
     public Student findById(long id){
         return studentRepository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException("Student with id " + id + " not found"));
+                () -> new IllegalArgumentException("Student with id " + id + " not found"));
     }
 
     @Override
-    public Student update(Student student){
-        if (student != null) {
-            findById(student.getId());
-            student.getUser().setRole(roleRepository.findByName("STUDENT").get());
-            return studentRepository.save(student);
-        }
-        throw new EntityNotFoundException("Student is null");
+    public Student update(@NotNull Student student){
+        findById(student.getId());
+        return studentRepository.save(student);
     }
 
     @Override
@@ -58,14 +54,14 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public List<Student> findBySubjectName(String subjectName){
         return studentRepository.findBySubjectName(subjectName).orElseThrow(
-                () -> new EntityNotFoundException("Student with " + subjectName + " not found"));
+                () -> new IllegalArgumentException("Student with " + subjectName + " not found"));
     }
 
     @Override
     public Student findByUsername(String username){
         Optional<Student> student = studentRepository.findByUsername(username);
         if (!(student.isPresent())) {
-            throw new EntityNotFoundException("Student not found");
+            throw new IllegalArgumentException("Student not found");
         }
         return student.get();
     }
@@ -74,7 +70,7 @@ public class StudentServiceImpl implements StudentService {
     public Student findByEmail(String email){
         Optional<Student> student = studentRepository.findByEmail(email);
         if (!(student.isPresent())) {
-            throw new EntityNotFoundException("Student not found");
+            throw new IllegalArgumentException("Student not found");
         }
         return student.get();
     }

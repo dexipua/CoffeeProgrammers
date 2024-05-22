@@ -8,8 +8,6 @@ import java.util.List;
 
 @Setter
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
 @Data
 public class StudentResponse {
     private String username;

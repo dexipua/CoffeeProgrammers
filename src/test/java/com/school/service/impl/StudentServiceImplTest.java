@@ -1,7 +1,9 @@
 package com.school.service.impl;
 
+import com.school.models.Role;
 import com.school.models.Student;
 import com.school.models.User;
+import com.school.repositories.RoleRepository;
 import com.school.repositories.StudentRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.AfterEach;
@@ -10,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.util.Arrays;
 import java.util.List;
@@ -23,16 +26,13 @@ class StudentServiceImplTest {
 
     @Mock
     private StudentRepository studentRepository;
+    @Mock
+    private RoleRepository roleRepository;
     private StudentServiceImpl studentService;
 
     @BeforeEach
     void setUp() {
-        studentService = new StudentServiceImpl(studentRepository);
-    }
-
-    @AfterEach
-    void tearDown() {
-        studentRepository.deleteAll();
+        studentService = new StudentServiceImpl(studentRepository, roleRepository);
     }
 
     @Test
@@ -41,14 +41,6 @@ class StudentServiceImplTest {
         studentService.create(new Student(new User("Userrrr", "Vadym", "Honcharuk", "User123", "useruser@gmail.com")));
     }
 
-    @Test
-    void createNullStudent() {
-        // Given
-        Student student = null;
-
-        // When & Then
-        assertThrows(EntityNotFoundException.class, () -> studentService.create(student));
-    }
 
     @Test
     void findByExitingId() {
@@ -70,12 +62,13 @@ class StudentServiceImplTest {
         when(studentRepository.findById(-1L)).thenReturn(Optional.empty());
 
         //When & Then
-        assertThrows(EntityNotFoundException.class, () -> studentService.findById(-1L));
+        assertThrows(IllegalArgumentException.class, () -> studentService.findById(-1L));
         }
 
     @Test
     void update_Success() {
         // Given
+
         long studentId = 1;
         Student student = new Student();
         student.setId(studentId);
@@ -92,16 +85,6 @@ class StudentServiceImplTest {
         assertEquals(updatedStudent, result);
     }
 
-    @Test
-    void update_StudentNotFound(){
-        // Given
-        Student student = null;
-
-        assertThrowsExactly(EntityNotFoundException.class, () -> {
-            studentService.update(student);
-        });
-
-    }
 
     @Test
     void deleteById_Success() {
@@ -126,7 +109,7 @@ class StudentServiceImplTest {
         when(studentRepository.findById(id)).thenReturn(Optional.empty());
 
         // When & Then
-        assertThrows(EntityNotFoundException.class, () -> studentService.deleteById(id));
+        assertThrows(IllegalArgumentException.class, () -> studentService.deleteById(id));
     }
 
     @Test
@@ -164,7 +147,7 @@ class StudentServiceImplTest {
         when(studentRepository.findBySubjectName(eq(subjectName))).thenReturn(Optional.empty());
 
         // When & Then
-        assertThrows(EntityNotFoundException.class, () -> studentService.findBySubjectName(subjectName));
+        assertThrows(IllegalArgumentException.class, () -> studentService.findBySubjectName(subjectName));
     }
 
     @Test
@@ -188,7 +171,7 @@ class StudentServiceImplTest {
         when(studentRepository.findByUsername(eq(username))).thenReturn(Optional.empty());
 
         // When & Then
-        assertThrows(EntityNotFoundException.class, () -> studentService.findByUsername(username));
+        assertThrows(IllegalArgumentException.class, () -> studentService.findByUsername(username));
     }
 
     @Test
@@ -212,7 +195,7 @@ class StudentServiceImplTest {
         when(studentRepository.findByEmail(eq(email))).thenReturn(Optional.empty());
 
         // When & Then
-        assertThrows(EntityNotFoundException.class, () -> studentService.findByEmail(email));
+        assertThrows(IllegalArgumentException.class, () -> studentService.findByEmail(email));
     }
 
 }
