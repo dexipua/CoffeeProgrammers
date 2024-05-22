@@ -3,7 +3,9 @@ package com.school.service.impl;
 import com.school.models.Subject;
 import com.school.models.Teacher;
 import com.school.models.User;
+import com.school.repositories.RoleRepository;
 import com.school.repositories.TeacherRepository;
+import com.school.service.RoleService;
 import com.school.service.TeacherService;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -12,6 +14,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatNoException;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.mockito.Mock;
@@ -30,10 +34,11 @@ public class TeacherServiceImplTest {
     @Mock
     private TeacherRepository teacherRepository;
     private TeacherService teacherService;
+    private RoleRepository roleRepository;
 
     @BeforeEach
     void setUp() {
-        teacherService = new TeacherServiceImpl(teacherRepository);
+        teacherService = new TeacherServiceImpl(teacherRepository, roleRepository);
     }
 
     @AfterEach
@@ -44,7 +49,9 @@ public class TeacherServiceImplTest {
     @Test
     void create(){
         Teacher teacher = new Teacher(new User("Vladobrod", "Vlad", "Bulakovskyi", "Vlad123", "vladobrod@gmail.com"));
-        teacherService.create(teacher);
+        assertThatNoException()
+            //when
+            .isThrownBy(() -> teacherService.create(teacher));
     }
 
     @Test
@@ -54,22 +61,22 @@ public class TeacherServiceImplTest {
     }
 
     @Test
-    void readById() {
+    void findById() {
         Teacher teacher = new Teacher(new User("Vladobrod", "Vlad", "Bulakovskyi", "Vlad123", "vladobrod@gmail.com"));
         teacherService.create(teacher);
 
         when(teacherRepository.findById(1L)).thenReturn(Optional.of(teacher));
 
-        Teacher res = teacherService.readById(1L);
+        Teacher res = teacherService.findById(1L);
         assertThat(res).isEqualTo(teacher);
     }
 
     @Test
-    void notReadById() {
+    void notFindById() {
         Teacher teacher = new Teacher(new User("Vladobrod", "Vlad", "Bulakovskyi", "Vlad123", "vladobrod@gmail.com"));
         teacherService.create(teacher);
 
-        assertThrows(EntityNotFoundException.class, () -> teacherService.readById(2));
+        assertThrows(EntityNotFoundException.class, () -> teacherService.findById(2));
     }
 
     @Test
