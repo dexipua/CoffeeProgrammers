@@ -21,7 +21,6 @@ import java.util.Optional;
 public class TeacherServiceImpl implements TeacherService {
 
     private final TeacherRepository teacherRepository;
-
     private final RoleRepository roleRepository;
 
     @Override

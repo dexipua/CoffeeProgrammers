@@ -19,9 +19,6 @@ import java.util.Optional;
 public class StudentServiceImpl implements StudentService {
 
     private final StudentRepository studentRepository;
-    private final RoleRepository roleRepository;
-
-
 
     @Override
     public Student create(@NotNull Student student){

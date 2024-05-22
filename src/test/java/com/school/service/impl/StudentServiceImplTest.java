@@ -26,13 +26,11 @@ class StudentServiceImplTest {
 
     @Mock
     private StudentRepository studentRepository;
-    @Mock
-    private RoleRepository roleRepository;
     private StudentServiceImpl studentService;
 
     @BeforeEach
     void setUp() {
-        studentService = new StudentServiceImpl(studentRepository, roleRepository);
+        studentService = new StudentServiceImpl(studentRepository);
     }
 
     @Test
