@@ -10,6 +10,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
@@ -25,7 +26,7 @@ class UserServiceImplTest {
     private UserRepository userRepository;
     @Mock
     private PasswordEncoder passwordEncoder;
-    private UserService userService;
+    private UserServiceImpl userService;
 
     @BeforeEach
     void setUp() {
@@ -63,7 +64,7 @@ class UserServiceImplTest {
         User user = new User("Dexip", "Artem", "Moseichenko", "Abekpr257", "feee@nnvr.fejf");
         userService.create(user);
         //when&then
-        assertThrowsExactly(EntityNotFoundException.class, () -> {
+        assertThrowsExactly(IllegalArgumentException.class, () -> {
             userService.readById(2);
         });
     }
@@ -123,7 +124,7 @@ class UserServiceImplTest {
         User user = new User(username, "Artem", "Moseichenko", "Abekpr257", "feee@nnvr.fejf");
         userService.create(user);
         //when&then
-        assertThrowsExactly(EntityNotFoundException.class, () -> {
+        assertThrowsExactly(IllegalArgumentException.class, () -> {
             userService.findByUsername("rgfr");
         });
     }
@@ -144,12 +145,37 @@ class UserServiceImplTest {
     @Test
     void tryToFindByEmailWithWrongInformation() {
         //given
+        String email = "dexip@nrv.ece";
+        User user = new User("Dexip", "Artem", "Moseichenko", "Abekpr257", email);
+        userService.create(user);
+        //when&then
+        assertThrowsExactly(IllegalArgumentException.class, () -> {
+            userService.findByEmail("4ervvrwv");
+        });
+    }
+
+    @Test
+    void tryToLoadByEmailWithCorrectInformation() {
+        //given
+        String username = "Dexip";
+        User user = new User(username, "Artem", "Moseichenko", "Abekpr257", "feee@nnvr.fejf");
+        userService.create(user);
+        // When
+        when(userRepository.findByUsername(username)).thenReturn(Optional.of(user));
+        //then
+        UserDetails result = userService.loadUserByUsername(username);
+        assertEquals(user, result);
+    }
+
+    @Test
+    void tryToLoadByEmailWithWrongInformation() {
+        //given
         String username = "Dexip";
         User user = new User(username, "Artem", "Moseichenko", "Abekpr257", "feee@nnvr.fejf");
         userService.create(user);
         //when&then
-        assertThrowsExactly(EntityNotFoundException.class, () -> {
-            userService.findByEmail("rgfr");
+        assertThrowsExactly(IllegalArgumentException.class, () -> {
+            userService.loadUserByUsername("rgfr");
         });
     }
 }

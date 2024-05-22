@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public User readById(long id) {
         return userRepository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException("User with id " + id + " not found"));
+                () -> new IllegalArgumentException("User with id " + id + " not found"));
     }
 
     @Override
@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public User findByUsername(String username){
         Optional<User> user = userRepository.findByUsername(username);
         if (user.isEmpty()) {
-            throw new EntityNotFoundException("User not found");
+            throw new IllegalArgumentException("User not found");
         }
         return user.get();
     }
@@ -66,7 +66,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public User findByEmail(String email){
         Optional<User> user = userRepository.findByEmail(email);
         if (user.isEmpty()) {
-            throw new EntityNotFoundException("User not found");
+            throw new IllegalArgumentException("User not found");
         }
         return user.get();
     }
@@ -75,7 +75,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<User> user = userRepository.findByUsername(username);
         if (user.isEmpty()) {
-            throw new EntityNotFoundException("User not found");
+            throw new IllegalArgumentException("User not found");
         }
         return user.get();
     }
