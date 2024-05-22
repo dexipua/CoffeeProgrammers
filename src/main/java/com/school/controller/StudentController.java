@@ -25,7 +25,7 @@ public class StudentController {
     private final RoleRepository roleRepository;
 
     @PostMapping("/create")
- //   @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER')")
+    @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER')")
     public ResponseEntity<StudentResponse> createStudent(@RequestBody StudentRequest studentRequest) {
         try{
             studentService.findByUsername(studentRequest.getUsername());
@@ -44,7 +44,7 @@ public class StudentController {
     }
 
     @PutMapping("/update/{id}")
- //   @PreAuthorize("@userSecurity.checkUserId(#auth,#id)")
+    @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER') or @userSecurity.checkUserId(#auth,#id)")
     public ResponseEntity<StudentResponse> updateStudent(@PathVariable long id, @RequestBody StudentRequest studentRequest) {
         try{
             studentService.findByUsername(studentRequest.getUsername());
@@ -62,7 +62,7 @@ public class StudentController {
     }
 
     @DeleteMapping("/delete/{id}")
-//    @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER')")
+    @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER')")
     public ResponseEntity<Void> deleteStudent(@PathVariable long id) {
         studentService.deleteById(id);
         return ResponseEntity.noContent().build();
