@@ -15,7 +15,7 @@ public class StudentResponse {
     private String lastName;
     private String email;
     private long id;
-    private List<Subject> subjects;
+    private String[] subjects;
 
     public StudentResponse(Student student){
         this.username = student.getUser().getUsername();
@@ -23,6 +23,9 @@ public class StudentResponse {
         this.lastName = student.getUser().getLastName();
         this.email = student.getUser().getEmail();
         this.id = student.getId();
-        this.subjects = student.getSubjects();
+        this.subjects = new String[student.getSubjects().size()];
+        for(int i = 0; i < subjects.length; i++){
+            subjects[i] = student.getSubjects().get(i).getName();
+        }
     }
 }
