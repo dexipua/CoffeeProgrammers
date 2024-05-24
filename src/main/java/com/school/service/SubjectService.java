@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface SubjectService {
     Subject create(Subject subject);
-    Subject readById(long id);
+    Subject findById(long id);
     Subject update(Subject subject);
     void delete(long id);
     List<Subject> getAllByOrderByName();

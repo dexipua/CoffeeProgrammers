@@ -3,7 +3,6 @@ package com.school.service.impl;
 import com.school.models.Subject;
 import com.school.repositories.SubjectRepository;
 import com.school.service.SubjectService;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,20 +23,20 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     @Override
-    public Subject readById(long id) {
+    public Subject findById(long id) {
         return subjectRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("Subject with id " + id + " not found"));
     }
 
     @Override
     public Subject update(@NotNull Subject subject) {
-            readById(subject.getId());
+            findById(subject.getId());
             return subjectRepository.save(subject);
     }
 
     @Override
     public void delete(long id) {
-        Subject subject = readById(id);
+        Subject subject = findById(id);
         subjectRepository.delete(subject);
     }
 

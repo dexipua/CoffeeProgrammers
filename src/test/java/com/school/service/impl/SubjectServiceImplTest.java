@@ -4,7 +4,6 @@ import com.school.models.Student;
 import com.school.models.Subject;
 import com.school.models.Teacher;
 import com.school.repositories.SubjectRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -57,7 +56,7 @@ class SubjectServiceImplTest {
 
         // when
         when(subjectRepository.findById(subject.getId())).thenReturn(Optional.of(subject));
-        Subject actual = subjectService.readById(subject.getId());
+        Subject actual = subjectService.findById(subject.getId());
 
         //then
         assertThat(actual).isEqualTo(subject);
@@ -70,7 +69,7 @@ class SubjectServiceImplTest {
         subjectService.create(subject);
 
         //then
-        assertThrowsExactly(IllegalArgumentException.class, () -> subjectService.readById(-1));
+        assertThrowsExactly(IllegalArgumentException.class, () -> subjectService.findById(-1));
     }
 
     @Test
