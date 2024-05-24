@@ -1,27 +1,25 @@
 package com.school.dto;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import com.school.models.Student;
 import com.school.models.Subject;
-import com.school.models.Teacher;
-import lombok.Value;
-
-import java.util.List;
+import lombok.Data;
 
 
-@Value
-@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+@Data
 public class SubjectResponse {
     long id;
     String name;
-    Teacher teacher; //TODO
-    List<Student> students;
+    Long teacherId; //TODO -Long or long-
+    Long[] studentsId;
 
     public SubjectResponse(Subject subject) {
         this.id = subject.getId();
         this.name = subject.getName();
-        this.teacher = subject.getTeacher();
-        this.students = subject.getStudents();
+        this.teacherId = subject.getTeacher() == null ? null : subject.getTeacher().getId();
+        this.studentsId = new Long[subject.getStudents().size()];
+        int studentsSize = subject.getStudents().size();
+        for (int i = 0; i < studentsSize; i++) {
+            this.studentsId[i] = subject.getStudents().get(i).getId();
+        }
+
     }
 }
