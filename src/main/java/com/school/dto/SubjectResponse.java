@@ -8,7 +8,7 @@ import lombok.Data;
 public class SubjectResponse {
     long id;
     String name;
-    Long teacherId; //TODO -Long or long-
+    Long teacherId;
     Long[] studentsId;
 
     public SubjectResponse(Subject subject) {

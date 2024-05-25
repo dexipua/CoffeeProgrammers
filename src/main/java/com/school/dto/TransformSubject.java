@@ -23,9 +23,9 @@ public class TransformSubject {
         Long[] studentsId = subjectRequest.getStudentsId();
 
         model.setStudents(new ArrayList<>());
-        Arrays.stream(studentsId).
-                forEach(studentId -> model.getStudents().
-                        add(studentService.findById(studentId)));
+        Arrays.stream(studentsId)
+                .forEach(studentId -> model.getStudents()
+                        .add(studentService.findById(studentId)));
         return model;
     }
 }
