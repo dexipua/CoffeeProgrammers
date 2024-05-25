@@ -46,7 +46,7 @@ public class SubjectController {
 
     @GetMapping("/findById/{subject_id}")
     public ResponseEntity<SubjectResponse> getById(
-            @NotNull @PathVariable("subject_id") long subjectId) {
+            @PathVariable("subject_id") long subjectId) {
         try {
             return ResponseEntity.ok(new SubjectResponse(subjectService.findById(subjectId)));
         } catch (IllegalArgumentException e) {
@@ -57,15 +57,8 @@ public class SubjectController {
     @PutMapping("/updateSubject/{subject_id}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<SubjectResponse> update(
-            @NotNull @PathVariable("subject_id") long subjectId,
+            @PathVariable("subject_id") long subjectId,
             @RequestBody SubjectRequest subjectRequest) {
-        try {
-            subjectService.findByName(subjectRequest.getName());
-            if (!subjectRequest.getName().equals(subjectService.findById(subjectId).getName())){
-                throw new HttpClientErrorException(HttpStatus.BAD_REQUEST,
-                        "Subject with name " + subjectRequest.getName() + " already exists");
-            }
-        }catch (IllegalArgumentException ignored){}
 
         try {
             subjectService.findById(subjectId);
@@ -73,21 +66,27 @@ public class SubjectController {
             throw new HttpClientErrorException(HttpStatus.NOT_FOUND, e.getMessage());
         }
 
+        try {
+            subjectService.findByName(subjectRequest.getName());
+            if (!subjectRequest.getName().equals(subjectService.findById(subjectId).getName())) {
+                throw new HttpClientErrorException(HttpStatus.BAD_REQUEST,
+                        "Subject with name " + subjectRequest.getName() + " already exists");
+            }
+        } catch (IllegalArgumentException ignored) {
+        }
+
         Subject subjectToUpdate = TransformSubject.transformFromRequestToModel(teacherService, studentService, subjectRequest);
         subjectToUpdate.setId(subjectId);
 
-        try {
-            return ResponseEntity.ok(new SubjectResponse(subjectService.update(subjectToUpdate)));
-        } catch (IllegalArgumentException e) {
-            throw new HttpClientErrorException(HttpStatus.NOT_FOUND, e.getMessage());
-        }
+        return ResponseEntity.ok(new SubjectResponse(subjectService.update(subjectToUpdate)));
+
 
     }
 
     @PatchMapping("/updateSubject/{subject_id}/setTeacher/{teacher_id}")
     public ResponseEntity<Void> setTeacher(
-            @NotNull @PathVariable("subject_id") long subjectId,
-            @NotNull @PathVariable("teacher_id") long teacherId
+            @PathVariable("subject_id") long subjectId,
+            @PathVariable("teacher_id") long teacherId
     ) {
         Subject subject;
         try {
@@ -102,8 +101,10 @@ public class SubjectController {
             throw new HttpClientErrorException(HttpStatus.NOT_FOUND, e.getMessage());
         }
 
-        if (subject.getTeacher() == null || subject.getTeacher().getId() == teacherId){
-            return ResponseEntity.ok().build();
+        if (subject.getTeacher() != null){
+            if (subject.getTeacher().getId() == teacherId) {
+                return ResponseEntity.ok().build();
+            }
         }
 
         subject.setTeacher(teacher);
@@ -114,7 +115,7 @@ public class SubjectController {
 
     @PatchMapping("/updateSubject/{subject_id}/deleteTeacher")
     public ResponseEntity<Void> deleteTeacher(
-            @NotNull @PathVariable("subject_id") long subjectId) {
+            @PathVariable("subject_id") long subjectId) {
         Subject subject;
         try {
             subject = subjectService.findById(subjectId);
@@ -122,7 +123,7 @@ public class SubjectController {
             throw new HttpClientErrorException(HttpStatus.NOT_FOUND, e.getMessage());
         }
 
-        if (subject.getTeacher() == null){
+        if (subject.getTeacher() == null) {
             return ResponseEntity.ok().build();
         }
 
@@ -134,18 +135,14 @@ public class SubjectController {
 
     @PatchMapping("/updateSubject/{subject_id}/addStudent/{student_id}")
     public ResponseEntity<Void> addStudent(
-            @NotNull @PathVariable("subject_id") long subjectId,
-            @NotNull @PathVariable("student_id") long studentId) {
+            @PathVariable("subject_id") long subjectId,
+            @PathVariable("student_id") long studentId) {
         Subject subject;
-        try {
-            subject = subjectService.findById(subjectId);
-        } catch (IllegalArgumentException e) {
-            throw new HttpClientErrorException(HttpStatus.NOT_FOUND, e.getMessage());
-        }
         Student student;
         try {
+            subject = subjectService.findById(subjectId);
             student = studentService.findById(studentId);
-        } catch (EntityNotFoundException e) { // TODO -IllegalArgumentException-
+        } catch (IllegalArgumentException | EntityNotFoundException e) { // TODO -only IllegalArgumentException-
             throw new HttpClientErrorException(HttpStatus.NOT_FOUND, e.getMessage());
         }
 
@@ -162,18 +159,14 @@ public class SubjectController {
 
     @PatchMapping("/updateSubject/{subject_id}/deleteStudent/{student_id}")
     public ResponseEntity<Void> deleteStudent(
-            @NotNull @PathVariable("subject_id") long subjectId,
-            @NotNull @PathVariable("student_id") long studentId) {
+            @PathVariable("subject_id") long subjectId,
+            @PathVariable("student_id") long studentId) {
         Subject subject;
-        try {
-            subject = subjectService.findById(subjectId);
-        } catch (IllegalArgumentException e) {
-            throw new HttpClientErrorException(HttpStatus.NOT_FOUND, e.getMessage());
-        }
         Student student;
         try {
+            subject = subjectService.findById(subjectId);
             student = studentService.findById(studentId);
-        } catch (EntityNotFoundException e) { // TODO -IllegalArgumentException-
+        } catch (IllegalArgumentException | EntityNotFoundException e) { // TODO -only IllegalArgumentException-
             throw new HttpClientErrorException(HttpStatus.NOT_FOUND, e.getMessage());
         }
 
@@ -191,7 +184,7 @@ public class SubjectController {
 
     @DeleteMapping("/deleteSubject/{subject_id}")
     public ResponseEntity<Void> delete(
-            @NotNull @PathVariable("subject_id") long subjectId) {
+            @PathVariable("subject_id") long subjectId) {
         try {
             subjectService.delete(subjectId);
         } catch (IllegalArgumentException e) {
@@ -222,16 +215,12 @@ public class SubjectController {
 
     @GetMapping("/findByTeacherId/{teacher_id}")
     public ResponseEntity<List<SubjectResponse>> getByTeacherId(
-            @NotNull @PathVariable("teacher_id") long teacherId) {
-        try {
-            teacherService.readById(teacherId);
-        }catch (EntityNotFoundException e){
-            throw new HttpClientErrorException(HttpStatus.NOT_FOUND, e.getMessage());
-        }
+            @PathVariable("teacher_id") long teacherId) {
         List<Subject> subjects;
         try {
+            teacherService.readById(teacherId);
             subjects = subjectService.findByTeacher_Id(teacherId);
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException | EntityNotFoundException e) { // TODO -only IllegalArgumentException-
             throw new HttpClientErrorException(HttpStatus.NOT_FOUND, e.getMessage());
         }
         List<SubjectResponse> subjectResponses = subjects.stream().
@@ -242,17 +231,13 @@ public class SubjectController {
 
     @GetMapping("/findByStudentId/{student_id}")
     public ResponseEntity<List<SubjectResponse>> getByStudentId(
-            @NotNull @PathVariable("student_id") long studentId) {
-        try {
-            studentService.findById(studentId);
-        }catch (EntityNotFoundException e){
-            throw new HttpClientErrorException(HttpStatus.NOT_FOUND, e.getMessage());
-        }
+            @PathVariable("student_id") long studentId) {
 
         List<Subject> subjects;
         try {
+            studentService.findById(studentId);
             subjects = subjectService.findByStudent_Id(studentId);
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException | EntityNotFoundException e) { // TODO -only IllegalArgumentException-
             throw new HttpClientErrorException(HttpStatus.NOT_FOUND, e.getMessage());
         }
         List<SubjectResponse> subjectResponses = subjects.stream().
