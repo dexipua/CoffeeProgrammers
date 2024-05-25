@@ -36,7 +36,7 @@ public class TeacherRepositoryTest {
         Subject mathSubject = new Subject("Mathematics");
         Subject artSubject = new Subject("Art");
 
-        Teacher teacher = new Teacher(new User("Vladobrod", "Vlad", "Bulakovskyi", "Vlad123", "vladobrod@gmail.com"));
+        Teacher teacher = new Teacher(new User("Artem", "Moseichenko",  "am@gmil.com","Abekpr257"));
         teacher.addSubject(mathSubject);
 
         mathSubject.setTeacher(teacher);
@@ -45,7 +45,7 @@ public class TeacherRepositoryTest {
         teacherRepository.save(teacher);
 
         //when
-        Optional<Teacher> res = teacherRepository.findBySubjectName("Mathematics");
+        Optional<Teacher> res = teacherRepository.findBySubjectsContains("Mathematics");
         boolean result = res.get().equals(teacher);
 
         //then
@@ -58,7 +58,7 @@ public class TeacherRepositoryTest {
         Subject mathSubject = new Subject("Mathematics");
         Subject artSubject = new Subject("Art");
 
-        Teacher teacher = new Teacher(new User("Vladobrod", "Vlad", "Bulakovskyi", "Vlad123", "vladobrod@gmail.com"));
+        Teacher teacher = new Teacher(new User("Artem", "Moseichenko",  "am@gmil.com","Abekpr257"));
         teacher.addSubject(mathSubject);
 
         mathSubject.setTeacher(teacher);
@@ -67,14 +67,14 @@ public class TeacherRepositoryTest {
         teacherRepository.save(teacher);
 
         //then
-        Optional<Teacher> res = teacherRepository.findBySubjectName("Art");
+        Optional<Teacher> res = teacherRepository.findBySubjectsContains("Art");
         assertThrows(NoSuchElementException.class, res::get);
     }
 
     @Test
     void findByUserId() {
         //given
-        Teacher teacher = new Teacher(new User("Vladobrod", "Vlad", "Bulakovskyi", "Vlad123", "vladobrod@gmail.com"));
+        Teacher teacher = new Teacher(new User("Artem", "Moseichenko",  "am@gmil.com","Abekpr257"));
         teacherRepository.save(teacher);
 
         //when
@@ -88,7 +88,7 @@ public class TeacherRepositoryTest {
     @Test
     void notFindByUserId() {
         //given
-        Teacher teacher = new Teacher(new User("Vladobrod", "Vlad", "Bulakovskyi", "Vlad123", "vladobrod@gmail.com"));
+        Teacher teacher = new Teacher(new User("Artem", "Moseichenko",  "am@gmil.com","Abekpr257"));
         teacherRepository.save(teacher);
 
         //then
@@ -99,11 +99,11 @@ public class TeacherRepositoryTest {
     @Test
     void findByEmail() {
         //given
-        Teacher teacher = new Teacher(new User("Vladobrod", "Vlad", "Bulakovskyi", "Vlad123", "vladobrod@gmail.com"));
+        Teacher teacher = new Teacher(new User("Artem", "Moseichenko",  "am@gmil.com","Abekpr257"));
         teacherRepository.save(teacher);
 
         //when
-        Optional<Teacher> res = teacherRepository.findByEmail("vladobrod@gmail.com");
+        Optional<Teacher> res = teacherRepository.findByUserEmail("am@gmil.com");
         boolean result = res.get().equals(teacher);
 
         //then
@@ -113,37 +113,11 @@ public class TeacherRepositoryTest {
     @Test
     void notFindByEmail() {
         //given
-        Teacher teacher = new Teacher(new User("Vladobrod", "Vlad", "Bulakovskyi", "Vlad123", "vladobrod@gmail.com"));
+        Teacher teacher = new Teacher(new User("Artem", "Moseichenko",  "am@gmil.com","Abekpr257"));
         teacherRepository.save(teacher);
 
         //then
-        Optional<Teacher> res = teacherRepository.findByEmail("dssdssdssd");
-        assertThrows(NoSuchElementException.class, res::get);
-
-    }
-
-    @Test
-    void findByUsername() {
-        //given
-        Teacher teacher = new Teacher(new User("Vladobrod", "Vlad", "Bulakovskyi", "Vlad123", "vladobrod@gmail.com"));
-        teacherRepository.save(teacher);
-
-        //when
-        Optional<Teacher> res = teacherRepository.findByUsername("Vladobrod");
-        boolean result = res.get().equals(teacher);
-
-        //then
-        assertThat(result).isTrue();
-    }
-
-    @Test
-    void notFindByUserName() {
-        //given
-        Teacher teacher = new Teacher(new User("Vladobrod", "Vlad", "Bulakovskyi", "Vlad123", "vladobrod@gmail.com"));
-        teacherRepository.save(teacher);
-
-        //then
-        Optional<Teacher> res = teacherRepository.findByUsername("dssdssdssd");
+        Optional<Teacher> res = teacherRepository.findByUserEmail("dssdssdssd");
         assertThrows(NoSuchElementException.class, res::get);
 
     }

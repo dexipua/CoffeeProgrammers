@@ -68,7 +68,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
     private UserDetails getUserDetails(String token) {
         String jwtSubject = jwtUtils.getSubject(token);
-        return userDetailsService.findByUsername(jwtSubject);
+        return userDetailsService.findByEmail(jwtSubject);
     }
 
 

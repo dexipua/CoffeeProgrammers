@@ -15,16 +15,7 @@ import java.util.List;
 @EqualsAndHashCode
 public class Subject {
     @Id
-    @GeneratedValue(generator = "sequence-generator")
-    @GenericGenerator(
-            name = "sequence-generator",
-            strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
-            parameters = {
-                    @org.hibernate.annotations.Parameter(name = "sequence_name", value = "subject_sequence"),
-                    @org.hibernate.annotations.Parameter(name = "initial_value", value = "6"),
-                    @org.hibernate.annotations.Parameter(name = "increment_size", value = "1")
-            }
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @Pattern(regexp = "^[A-Za-z0-9\\s]+$",

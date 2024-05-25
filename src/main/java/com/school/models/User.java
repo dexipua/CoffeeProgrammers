@@ -16,24 +16,10 @@ import java.util.List;
 @Entity
 @EqualsAndHashCode
 @Table(name = "users")
-public class User implements UserDetails {
+public class User implements UserDetails, Comparable<User>{
     @Id
-    @GeneratedValue(generator = "sequence-generator")
-    @GenericGenerator(
-            name = "sequence-generator",
-            strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
-            parameters = {
-                    @org.hibernate.annotations.Parameter(name = "sequence_name", value = "user_sequence"),
-                    @org.hibernate.annotations.Parameter(name = "initial_value", value = "8"),
-                    @org.hibernate.annotations.Parameter(name = "increment_size", value = "1")
-            }
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
-    @Pattern(regexp = "[A-Z][a-z]+",
-            message = "Must start with a capital letter followed by one or more lowercase letters")
-    @Column(name = "username", nullable = false, unique = true)
-    private String username;
 
     @Pattern(regexp = "[A-Z][a-z]+",
             message = "Must start with a capital letter followed by one or more lowercase letters")
@@ -67,7 +53,6 @@ public class User implements UserDetails {
     @Override
     public String toString() {
         return "User{" +
-                "username='" + username + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", password='" + password + '\'' +
@@ -76,8 +61,7 @@ public class User implements UserDetails {
                 '}';
     }
 
-    public User(String username, String firstName, String lastName, String password, String email) {
-        this.username = username;
+    public User(String firstName, String lastName, String email, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
@@ -95,7 +79,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return username;
+        return email;
     }
 
     @Override
@@ -116,5 +100,12 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    public int compareTo(User o) {
+        int result = this.lastName.compareTo(o.lastName);
+        result = result == 0 ? this.firstName.compareTo(o.firstName) : result;
+        return result;
     }
 }

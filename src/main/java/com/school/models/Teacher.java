@@ -13,7 +13,7 @@ import java.util.List;
 @Setter
 @EqualsAndHashCode
 @Table(name = "teachers")
-public class Teacher {
+public class Teacher implements Comparable<Teacher>{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -41,5 +41,10 @@ public class Teacher {
     public Teacher(User user) {
         this.user = user;
         this.subjects = new ArrayList<>();
+    }
+
+    @Override
+    public int compareTo(Teacher o) {
+        return this.user.compareTo(o.user);
     }
 }

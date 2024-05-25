@@ -4,16 +4,14 @@ import com.school.models.Teacher;
 import lombok.Data;
 
 @Data
-public class TeacherResponse {
-    private String username;
+public class TeacherResponseAll {
+    private long id;
     private String firstName;
     private String lastName;
     private String email;
-    private long id;
     private String[] subjects;
 
-    public TeacherResponse(Teacher teacher){
-        this.username = teacher.getUser().getUsername();
+    public TeacherResponseAll(Teacher teacher){
         this.firstName = teacher.getUser().getFirstName();
         this.lastName = teacher.getUser().getLastName();
         this.email = teacher.getUser().getEmail();

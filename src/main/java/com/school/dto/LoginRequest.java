@@ -1,7 +1,5 @@
 package com.school.dto;
 
-import com.school.models.Role;
-import com.school.models.User;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 

@@ -1,15 +1,15 @@
 package com.school.service;
 
 import com.school.models.User;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
 
-public interface UserService {
+public interface UserService extends UserDetailsService {
     User create(User user);
     User readById(long id);
     User update(User user);
     void delete(long id);
-    List<User> getAll();
-    User findByUsername(String username);
+    List<User> getAllUsers();
     User findByEmail(String email);
 }

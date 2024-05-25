@@ -29,13 +29,11 @@ import org.springframework.web.server.ResponseStatusException;
 public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
-    private final UserService userService;
-    private final RoleService roleService;
 
 
     @PostMapping("/auth/login")
     public ResponseEntity<?> login(@RequestBody @Valid LoginRequest loginRequest) {
-            try {
+        try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
             UserDetails user = (UserDetails) authentication.getPrincipal();
@@ -46,7 +44,6 @@ public class AuthController {
             e.printStackTrace();
             log.error("BadCredentialsException: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-
        }
     }
 }

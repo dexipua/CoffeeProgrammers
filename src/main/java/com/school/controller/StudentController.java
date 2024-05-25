@@ -1,17 +1,16 @@
 package com.school.controller;
 
 import com.school.dto.StudentRequest;
-import com.school.dto.StudentResponse;
+import com.school.dto.StudentResponseAll;
+import com.school.dto.StudentResponseToGet;
 import com.school.models.Student;
-import com.school.repositories.RoleRepository;
 import com.school.service.StudentService;
+import com.school.service.impl.StudentServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.HttpServerErrorException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,55 +20,37 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StudentController {
 
-    private final StudentService studentService;
-    private final RoleRepository roleRepository;
+    private final StudentServiceImpl studentService;
 
     @PostMapping("/create")
+    @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER')")
-    public ResponseEntity<?> createStudent(@RequestBody StudentRequest studentRequest) {
-        try{
-            studentService.findByUsername(studentRequest.getUsername());
-            studentService.findByEmail(studentRequest.getEmail());
-            return new ResponseEntity<>("Such student with this username or email is exist", HttpStatus.BAD_REQUEST);
-        }catch (IllegalArgumentException e){}
+    public StudentResponseAll createStudent(@RequestBody StudentRequest studentRequest) {
         Student student = StudentRequest.toStudent(studentRequest);
-        student.getUser().setRole(roleRepository.findByName("STUDENT").get());
         Student createdStudent = studentService.create(student);
-        return ResponseEntity.ok(new StudentResponse(createdStudent));
+        return new StudentResponseAll(createdStudent);
     }
 
     @GetMapping("/get/{id}")
-    public ResponseEntity<?> getStudentById(@PathVariable long id) {
+    @ResponseStatus(HttpStatus.OK)
+    public StudentResponseAll getStudentById(@PathVariable long id) {
         Student student;
-        try {
-            student = studentService.findById(id);
-        }catch (IllegalArgumentException ex){
-            return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-        return ResponseEntity.ok(new StudentResponse(student));
+        student = studentService.findById(id);
+        return new StudentResponseAll(student);
     }
 
     @PutMapping("/update/{id}")
-    @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER') or @userSecurity.checkUserId(#auth,#id)")
-    public ResponseEntity<?> updateStudent(@PathVariable long id, @RequestBody StudentRequest studentRequest) {
-        try{
-            Student student = studentService.findByUsername(studentRequest.getUsername());
-            if(student.getId() != id){
-                return new ResponseEntity<>("Student with this username is exist", HttpStatus.BAD_REQUEST);
-            }
-            student = studentService.findByEmail(studentRequest.getEmail());
-            if (student.getId() != id){
-                return new ResponseEntity<>("Student with this email is exist", HttpStatus.BAD_REQUEST);
-            }
-        }catch (IllegalArgumentException e){}
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER')")//TODO or
+    public StudentResponseAll updateStudent(@PathVariable long id, @RequestBody StudentRequest studentRequest) {
         Student studentToUpdate = StudentRequest.toStudent(studentRequest);
         studentToUpdate.setId(id);
-        studentToUpdate.getUser().setRole(roleRepository.findByName("STUDENT").get());
         Student updatedStudent = studentService.update(studentToUpdate);
-        return ResponseEntity.ok(new StudentResponse(updatedStudent));
+        return new StudentResponseAll(updatedStudent);
     }
 
     @DeleteMapping("/delete/{id}")
+    @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER')")
     public ResponseEntity<Void> deleteStudent(@PathVariable long id) {
         studentService.deleteById(id);
@@ -77,38 +58,25 @@ public class StudentController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<StudentResponse>> getAllStudents() {
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<StudentResponseToGet>> getAllStudents() {
         List<Student> students = studentService.findAll();
-        List<StudentResponse> studentResponses = new ArrayList<>();
+        List<StudentResponseToGet> studentResponses = new ArrayList<>();
         for (Student student : students) {
-            studentResponses.add(new StudentResponse(student));
+            studentResponses.add(new StudentResponseToGet(student));
         }
         return ResponseEntity.ok(studentResponses);
     }
 
     @GetMapping("/by/{subject_name}")
-    public ResponseEntity<?> getStudentsBySubjectName(@PathVariable("subject_name") String subjectName) {
+    @ResponseStatus(HttpStatus.OK)
+    public List<StudentResponseToGet> getStudentsBySubjectName(@PathVariable("subject_name") String subjectName) {
         List<Student> students;
-        try{
-            students = studentService.findBySubjectName(subjectName);
-        }catch (IllegalArgumentException ex){
-            return new ResponseEntity<>("Student with this email is exist", HttpStatus.BAD_REQUEST);
-        }
-        List<StudentResponse> studentResponses = new ArrayList<>();
+        students = studentService.findBySubjectName(subjectName);
+        List<StudentResponseToGet> studentResponses = new ArrayList<>();
         for (Student student : students) {
-            studentResponses.add(new StudentResponse(student));
+            studentResponses.add(new StudentResponseToGet(student));
         }
-        return ResponseEntity.ok(studentResponses);
-    }
-
-    @GetMapping("/by/username/{username}")
-    public ResponseEntity<?> getStudentByUsername(@PathVariable String username) {
-        Student student;
-        try{
-            student = studentService.findByUsername(username);
-        }catch (IllegalArgumentException ex){
-            return new ResponseEntity<>("Student with this email is exist", HttpStatus.BAD_REQUEST);
-        }
-        return ResponseEntity.ok(new StudentResponse(student));
+        return studentResponses;
     }
 }

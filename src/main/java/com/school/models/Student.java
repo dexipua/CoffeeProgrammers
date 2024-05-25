@@ -13,18 +13,9 @@ import java.util.List;
 @Getter
 @Table(name = "students")
 @EqualsAndHashCode
-public class Student {
+public class Student implements Comparable<Student> {
     @Id
-    @GeneratedValue(generator = "sequence-generator")
-    @GenericGenerator(
-            name = "sequence-generator",
-            strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
-            parameters = {
-                    @org.hibernate.annotations.Parameter(name = "sequence_name", value = "student_sequence"),
-                    @org.hibernate.annotations.Parameter(name = "initial_value", value = "4"),
-                    @org.hibernate.annotations.Parameter(name = "increment_size", value = "1")
-            }
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @ManyToMany
@@ -49,5 +40,10 @@ public class Student {
                 ", subjects=" + subjects +
                 ", user=" + user +
                 '}';
+    }
+
+    @Override
+    public int compareTo(Student o) {
+        return this.user.compareTo(o.user);
     }
 }

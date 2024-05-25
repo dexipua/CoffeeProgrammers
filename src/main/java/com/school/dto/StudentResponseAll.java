@@ -1,24 +1,19 @@
 package com.school.dto;
 
 import com.school.models.Student;
-import com.school.models.Subject;
 import lombok.*;
-
-import java.util.List;
 
 @Setter
 @Getter
 @Data
-public class StudentResponse {
-    private String username;
+public class StudentResponseAll {
     private String firstName;
     private String lastName;
     private String email;
     private long id;
     private String[] subjects;
 
-    public StudentResponse(Student student){
-        this.username = student.getUser().getUsername();
+    public StudentResponseAll(Student student){
         this.firstName = student.getUser().getFirstName();
         this.lastName = student.getUser().getLastName();
         this.email = student.getUser().getEmail();
