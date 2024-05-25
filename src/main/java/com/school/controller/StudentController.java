@@ -5,12 +5,12 @@ import com.school.dto.StudentResponse;
 import com.school.models.Student;
 import com.school.repositories.RoleRepository;
 import com.school.service.StudentService;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 
 import java.util.ArrayList;
@@ -26,10 +26,11 @@ public class StudentController {
 
     @PostMapping("/create")
     @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER')")
-    public ResponseEntity<StudentResponse> createStudent(@RequestBody StudentRequest studentRequest) {
+    public ResponseEntity<?> createStudent(@RequestBody StudentRequest studentRequest) {
         try{
             studentService.findByUsername(studentRequest.getUsername());
-            throw new HttpServerErrorException(HttpStatus.BAD_REQUEST, "Such username already exists");
+            studentService.findByEmail(studentRequest.getEmail());
+            return new ResponseEntity<>("Such student with this username or email is exist", HttpStatus.BAD_REQUEST);
         }catch (IllegalArgumentException e){}
         Student student = StudentRequest.toStudent(studentRequest);
         student.getUser().setRole(roleRepository.findByName("STUDENT").get());
@@ -38,21 +39,28 @@ public class StudentController {
     }
 
     @GetMapping("/get/{id}")
-    public ResponseEntity<StudentResponse> getStudentById(@PathVariable long id) {
-        Student student = studentService.findById(id);
+    public ResponseEntity<?> getStudentById(@PathVariable long id) {
+        Student student;
+        try {
+            student = studentService.findById(id);
+        }catch (IllegalArgumentException ex){
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        }
         return ResponseEntity.ok(new StudentResponse(student));
     }
 
     @PutMapping("/update/{id}")
     @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER') or @userSecurity.checkUserId(#auth,#id)")
-    public ResponseEntity<StudentResponse> updateStudent(@PathVariable long id, @RequestBody StudentRequest studentRequest) {
+    public ResponseEntity<?> updateStudent(@PathVariable long id, @RequestBody StudentRequest studentRequest) {
         try{
-            studentService.findByUsername(studentRequest.getUsername());
-            throw new HttpServerErrorException(HttpStatus.BAD_REQUEST, "Such username already exists");
-        }catch (IllegalArgumentException e){}
-        try{
-            studentService.findByEmail(studentRequest.getEmail());
-            throw new HttpServerErrorException(HttpStatus.BAD_REQUEST, "Such email already exists");
+            Student student = studentService.findByUsername(studentRequest.getUsername());
+            if(student.getId() != id){
+                return new ResponseEntity<>("Student with this username is exist", HttpStatus.BAD_REQUEST);
+            }
+            student = studentService.findByEmail(studentRequest.getEmail());
+            if (student.getId() != id){
+                return new ResponseEntity<>("Student with this email is exist", HttpStatus.BAD_REQUEST);
+            }
         }catch (IllegalArgumentException e){}
         Student studentToUpdate = StudentRequest.toStudent(studentRequest);
         studentToUpdate.setId(id);
@@ -79,8 +87,13 @@ public class StudentController {
     }
 
     @GetMapping("/by/{subject_name}")
-    public ResponseEntity<List<StudentResponse>> getStudentsBySubjectName(@PathVariable("subject_name") String subjectName) {
-        List<Student> students = studentService.findBySubjectName(subjectName);
+    public ResponseEntity<?> getStudentsBySubjectName(@PathVariable("subject_name") String subjectName) {
+        List<Student> students;
+        try{
+            students = studentService.findBySubjectName(subjectName);
+        }catch (IllegalArgumentException ex){
+            return new ResponseEntity<>("Student with this email is exist", HttpStatus.BAD_REQUEST);
+        }
         List<StudentResponse> studentResponses = new ArrayList<>();
         for (Student student : students) {
             studentResponses.add(new StudentResponse(student));
@@ -89,8 +102,13 @@ public class StudentController {
     }
 
     @GetMapping("/by/username/{username}")
-    public ResponseEntity<StudentResponse> getStudentByUsername(@PathVariable String username) {
-        Student student = studentService.findByUsername(username);
+    public ResponseEntity<?> getStudentByUsername(@PathVariable String username) {
+        Student student;
+        try{
+            student = studentService.findByUsername(username);
+        }catch (IllegalArgumentException ex){
+            return new ResponseEntity<>("Student with this email is exist", HttpStatus.BAD_REQUEST);
+        }
         return ResponseEntity.ok(new StudentResponse(student));
     }
 }

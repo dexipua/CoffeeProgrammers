@@ -11,6 +11,7 @@ import com.school.service.TeacherService;
 import com.school.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolationException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.HttpStatus;
@@ -22,16 +23,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/teachers")
 public class TeacherController {
-    @Autowired
-    TeacherService teacherService;
-    @Autowired
-    UserService userService;
-    @Autowired
-    RoleService roleService;
+    private final TeacherService teacherService;
+    private final UserService userService;
+    private final RoleService roleService;
 
     @GetMapping
     public List<TeacherResponse> getAll(){
