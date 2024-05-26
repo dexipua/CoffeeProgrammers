@@ -4,6 +4,8 @@ import com.school.models.Student;
 import com.school.models.Subject;
 import com.school.models.Teacher;
 import com.school.repositories.SubjectRepository;
+import com.school.service.StudentService;
+import com.school.service.TeacherService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,11 +27,19 @@ class SubjectServiceImplTest {
 
     @Mock
     private SubjectRepository subjectRepository;
+    @Mock
+    private TeacherService teacherService;
+    @Mock
+    private StudentService studentService;
     private SubjectServiceImpl subjectService;
 
     @BeforeEach
     void setUp() {
-        subjectService = new SubjectServiceImpl(subjectRepository);
+        subjectService = new SubjectServiceImpl(
+                subjectRepository,
+                teacherService,
+                studentService
+        );
     }
 
     @Test
