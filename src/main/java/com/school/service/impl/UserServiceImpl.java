@@ -23,7 +23,6 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-
     @Override
     public User create(@NotNull User user) {
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {

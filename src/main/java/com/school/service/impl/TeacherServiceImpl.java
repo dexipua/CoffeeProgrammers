@@ -60,7 +60,7 @@ public class TeacherServiceImpl implements TeacherService {
         teacher.setSubjects(null);
         if(subjectRepository.findByTeacher_Id(id).isPresent()) {
             List<Subject> subjects = subjectRepository.findByTeacher_Id(id).get();
-            subjects.stream().forEach(a -> a.setTeacher(null));
+            subjects.forEach(a -> a.setTeacher(null));
         }
         if(teacher.getUser().getRole().getName().equals("CHIEF_TEACHER")){
             throw new TeacherExistException("Cannot delete teacher with role CHIEF_TEACHER");

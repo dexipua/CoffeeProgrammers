@@ -4,7 +4,6 @@ import com.school.dto.StudentRequest;
 import com.school.dto.StudentResponseAll;
 import com.school.dto.StudentResponseToGet;
 import com.school.models.Student;
-import com.school.service.StudentService;
 import com.school.service.impl.StudentServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
