@@ -8,6 +8,7 @@ import com.school.models.Subject;
 import com.school.models.Teacher;
 import com.school.models.User;
 import com.school.repositories.RoleRepository;
+import com.school.repositories.SubjectRepository;
 import com.school.repositories.TeacherRepository;
 import com.school.service.TeacherService;
 
@@ -28,6 +29,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -38,13 +42,15 @@ public class TeacherServiceImplTest {
 
     @Mock
     private TeacherRepository teacherRepository;
+    @Mock
+    private SubjectRepository subjectRepository;
     @Autowired
     private RoleRepository roleRepository;
     private TeacherService teacherService;
 
     @BeforeEach
     void setUp() {
-        teacherService = new TeacherServiceImpl(teacherRepository, roleRepository);
+        teacherService = new TeacherServiceImpl(teacherRepository, roleRepository, subjectRepository);
         roleRepository.save(new Role("TEACHER"));
     }
 
@@ -141,9 +147,22 @@ public class TeacherServiceImplTest {
             Teacher res = teacherService.findById(1L);
             assertEquals(updatedTeacher, res);
         }
+    @Test
+    void deleteWithSubjects () {
+        Teacher teacher = new Teacher(new User("Vladobrod", "Vlad", "Bulakovskyi", "Vlad123"));
+        teacherService.create(teacher);
+        //when
+        when(teacherRepository.findById(1L)).thenReturn(Optional.of(teacher));
+        when(subjectRepository.findByTeacher_Id(1L)).thenReturn(Optional.of(new ArrayList<>(Arrays.asList(new Subject("Some")))));
+        //then
+        teacherService.delete(1L);
+
+        verify(teacherRepository, times(1)).findById(1L);
+        verify(teacherRepository, times(1)).delete(teacher);
+    }
 
         @Test
-        void delete () {
+        void deleteWithOutSubjects () {
             Teacher teacher = new Teacher(new User("Vladobrod", "Vlad", "Bulakovskyi", "Vlad123"));
             teacherService.create(teacher);
 
@@ -153,6 +172,16 @@ public class TeacherServiceImplTest {
             verify(teacherRepository, times(1)).findById(1L);
             verify(teacherRepository, times(1)).delete(teacher);
         }
+    @Test
+    void deleteChief () {
+        Teacher teacher = new Teacher(new User("Vladobrod", "Vlad", "Bulakovskyi", "Vlad123"));
+        teacherService.create(teacher);
+        teacher.getUser().setRole(new Role("CHIEF_TEACHER"));
+        //when
+        when(teacherRepository.findById(1L)).thenReturn(Optional.of(teacher));
+        //then
+        assertThrowsExactly(TeacherExistException.class, () -> teacherService.delete(1L));
+    }
 
         @Test
         void findAll () {

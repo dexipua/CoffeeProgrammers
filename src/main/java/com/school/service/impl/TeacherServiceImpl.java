@@ -2,9 +2,11 @@ package com.school.service.impl;
 
 import com.school.exception.TeacherExistException;
 import com.school.exception.TeacherNotFoundException;
+import com.school.models.Subject;
 import com.school.models.Teacher;
 import com.school.repositories.RoleRepository;
 import com.school.repositories.StudentRepository;
+import com.school.repositories.SubjectRepository;
 import com.school.repositories.TeacherRepository;
 import com.school.service.TeacherService;
 import jakarta.persistence.EntityExistsException;
@@ -24,6 +26,7 @@ public class TeacherServiceImpl implements TeacherService {
 
     private final TeacherRepository teacherRepository;
     private final RoleRepository roleRepository;
+    private final SubjectRepository subjectRepository;
 
     @Override
     public Teacher create(@NotNull Teacher teacher) {
@@ -54,6 +57,14 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public void delete(long id) {
         Teacher teacher = findById(id);
+        teacher.setSubjects(null);
+        if(subjectRepository.findByTeacher_Id(id).isPresent()) {
+            List<Subject> subjects = subjectRepository.findByTeacher_Id(id).get();
+            subjects.stream().forEach(a -> a.setTeacher(null));
+        }
+        if(teacher.getUser().getRole().getName().equals("CHIEF_TEACHER")){
+            throw new TeacherExistException("Cannot delete teacher with role CHIEF_TEACHER");
+        }
         teacherRepository.delete(teacher);
     }
 

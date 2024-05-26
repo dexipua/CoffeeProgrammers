@@ -65,8 +65,6 @@ public class TeacherController {
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER')")
     public void deleteById(@PathVariable("teacher_id") long teacher_id){
-        Teacher teacher = teacherService.findById(teacher_id);
-        teacher.setSubjects(null);
         teacherService.delete(teacher_id);
     }
 }

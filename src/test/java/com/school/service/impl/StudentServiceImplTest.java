@@ -177,7 +177,9 @@ class StudentServiceImplTest {
     @Test
     void findAll(){
         // Given
-        List<Student> students = Arrays.asList(new Student(), new Student());
+        List<Student> students = Arrays.asList(
+                new Student(new User("Artem", "Moseichenko",  "am@gmil.com","Abubekir257")),
+                new Student(new User("Body", "Roseichenko",  "am@gmil.com","Abubekir257")));
         when(studentRepository.findAll()).thenReturn(students);
 
         // When
