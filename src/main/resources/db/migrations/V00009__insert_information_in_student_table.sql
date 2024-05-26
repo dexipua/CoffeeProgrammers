@@ -1,3 +1,3 @@
-insert into students(id, user_id) values (1, 5);
-insert into students(id, user_id) values (2, 6);
-insert into students(id, user_id) values (3, 7)
+insert into students(user_id) values (5);
+insert into students(user_id) values (6);
+insert into students(user_id) values (7)
