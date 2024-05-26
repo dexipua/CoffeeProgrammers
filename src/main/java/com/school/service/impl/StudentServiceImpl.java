@@ -11,6 +11,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,6 +44,7 @@ public class StudentServiceImpl implements StudentService {
                 throw new StudentExistException("Student with such email already exist");
             }
         }
+        student.getUser().setRole(roleRepository.findByName("STUDENT").get());
         findById(student.getId());
         return studentRepository.save(student);
     }
@@ -55,7 +57,9 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public List<Student> findAll(){
-        return studentRepository.findAll();
+        List<Student> students = studentRepository.findAll();
+        Collections.sort(students);
+        return students;
     }
 
     @Override

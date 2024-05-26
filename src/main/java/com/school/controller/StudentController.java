@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ public class StudentController {
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
- //   @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER')")
+    @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER')")
     public StudentResponseAll createStudent(@RequestBody StudentRequest studentRequest) {
         Student student = StudentRequest.toStudent(studentRequest);
         Student createdStudent = studentService.create(student);
@@ -41,8 +42,8 @@ public class StudentController {
 
     @PutMapping("/update/{id}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER')")//TODO or
-    public StudentResponseAll updateStudent(@PathVariable long id, @RequestBody StudentRequest studentRequest) {
+    @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER') or @userSecurity.checkUserByStudent(#auth, #id)")
+    public StudentResponseAll updateStudent(@PathVariable long id, @RequestBody StudentRequest studentRequest, Authentication auth) {
         Student studentToUpdate = StudentRequest.toStudent(studentRequest);
         studentToUpdate.setId(id);
         Student updatedStudent = studentService.update(studentToUpdate);

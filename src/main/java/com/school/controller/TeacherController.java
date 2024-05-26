@@ -8,6 +8,8 @@ import com.school.service.TeacherService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -21,13 +23,15 @@ public class TeacherController {
 
     @PostMapping("/addTeacher")
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER')")
     public TeacherResponseAll create(@RequestBody TeacherRequest teacherRequest){
         return new TeacherResponseAll(TeacherRequest.toTeacher(teacherRequest));
     }
 
-    @PutMapping("/update/{teacher_id}")
+    @PutMapping("/update/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public TeacherResponseAll update(@RequestBody TeacherRequest teacherRequest, @PathVariable("teacher_id") long id){
+    @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER') or @userSecurity.checkUserByTeacher(#auth, #id)")
+    public TeacherResponseAll update(@RequestBody TeacherRequest teacherRequest, @PathVariable("id") long id, Authentication auth){
         Teacher teacher = teacherService.findById(id);
         teacher.getUser().setFirstName(teacherRequest.getFirstName());
         teacher.getUser().setLastName(teacherRequest.getLastName());
@@ -59,6 +63,7 @@ public class TeacherController {
 
     @DeleteMapping("/delete/{teacher_id}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER')")
     public void deleteById(@PathVariable("teacher_id") long teacher_id){
         Teacher teacher = teacherService.findById(teacher_id);
         teacher.setSubjects(null);
