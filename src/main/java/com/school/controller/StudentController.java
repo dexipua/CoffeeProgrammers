@@ -24,7 +24,7 @@ public class StudentController {
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER')")
+ //   @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER')")
     public StudentResponseAll createStudent(@RequestBody StudentRequest studentRequest) {
         Student student = StudentRequest.toStudent(studentRequest);
         Student createdStudent = studentService.create(student);
