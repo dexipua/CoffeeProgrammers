@@ -1,12 +1,11 @@
 package com.school.service.impl;
 
+import com.school.exception.UserNotFoundException;
+import com.school.exception.UserExistsException;
 import com.school.models.User;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,15 +18,16 @@ import com.school.service.UserService;
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService, UserDetailsService {
+public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public User create(@NotNull User user) {
+        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+            throw new UserExistsException("User with email " + user.getEmail() + " already exists");
+        }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
@@ -35,12 +35,18 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public User readById(long id) {
         return userRepository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException("User with id " + id + " not found"));
+                () -> new UserNotFoundException("User with id " + id + " not found"));
     }
 
     @Override
     public User update(@NotNull User user) {
+        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+            if(!(user.getEmail().equals(userRepository.findById(user.getId()).get().getEmail()))) {
+                throw new UserExistsException("User with email " + user.getEmail() + " already exists");
+            }
+        }
         readById(user.getId());
+        delete(user.getId());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
@@ -52,31 +58,23 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public List<User> getAll() {
+    public List<User> getAllUsers() {
         return userRepository.findAll();
-    }
-
-    public User findByUsername(String username){
-        Optional<User> user = userRepository.findByUsername(username);
-        if (user.isEmpty()) {
-            throw new EntityNotFoundException("User not found");
-        }
-        return user.get();
     }
 
     public User findByEmail(String email){
         Optional<User> user = userRepository.findByEmail(email);
         if (user.isEmpty()) {
-            throw new EntityNotFoundException("User not found");
+            throw new UserNotFoundException("User not found");
         }
         return user.get();
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> user = userRepository.findByUsername(username);
+        Optional<User> user = userRepository.findByEmail(username);
         if (user.isEmpty()) {
-            throw new EntityNotFoundException("User not found");
+            throw new UserNotFoundException("User not found");
         }
         return user.get();
     }

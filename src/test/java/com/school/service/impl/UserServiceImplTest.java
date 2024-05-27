@@ -1,14 +1,16 @@
 package com.school.service.impl;
 
+import com.school.exception.UserExistsException;
+import com.school.exception.UserNotFoundException;
 import com.school.models.User;
 import com.school.repositories.UserRepository;
-import com.school.service.UserService;
-import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
@@ -21,19 +23,19 @@ class UserServiceImplTest {
 
     @Mock
     private UserRepository userRepository;
-    private UserService userService;
+    @Mock
+    private PasswordEncoder passwordEncoder;
+    private UserServiceImpl userService;
 
     @BeforeEach
     void setUp() {
-        userService = new UserServiceImpl(userRepository);
+        userService = new UserServiceImpl(userRepository, passwordEncoder);
     }
-
-
 
     @Test
     void tryToCreateUser() {
         //given
-        User user = new User("Dexip", "Artem", "Moseichenko", "Abekpr257", "feee@nnvr.fejf");
+        User user = new User("Artem", "Moseichenko",  "am@gmil.com","Abekpr257");
         userService.create(user);
         //when
         ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
@@ -44,93 +46,120 @@ class UserServiceImplTest {
     }
 
     @Test
+    void tryToCreateUserWithAlreadyExistName() {
+        //given
+        User userExist = new User("Artem", "Moseichenko",  "am@gmil.com","Abekpr257");
+        when(userRepository.findByEmail(userExist.getEmail()))
+                .thenReturn(Optional.of(userExist));
+
+        //when&then
+        assertThrows(UserExistsException.class, () -> {
+            userService.create(userExist);
+        });
+    }
+
+    @Test
     void tryToReadByIdWithCorrectInformation() {
         //given
-        User user = new User("Dexip", "Artem", "Moseichenko", "Abekpr257", "feee@nnvr.fejf");
+        User user = new User("Artem", "Moseichenko",  "am@gmil.com","Abekpr257");
         userService.create(user);
         // When
-        when(userRepository.findById(1l)).thenReturn(Optional.of(user));
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
         //then
-        User res = userService.readById(1l);
+        User res = userService.readById(1L);
         assertEquals(user, res);
     }
 
     @Test
     void tryToReadByIdWithWrongInformation() {
         //given
-        User user = new User("Dexip", "Artem", "Moseichenko", "Abekpr257", "feee@nnvr.fejf");
+        User user = new User("Artem", "Moseichenko",  "am@gmil.com","Abekpr257");
         userService.create(user);
         //when&then
-        assertThrowsExactly(EntityNotFoundException.class, () -> {
+        assertThrowsExactly(UserNotFoundException.class, () -> {
             userService.readById(2);
         });
     }
 
     @Test
+    void tryToUpdateWithWrongInformation() {
+        //given
+        User user = new User("Artem", "Moseichenko",  "am@gmil.com","Abubekir257");
+        user.setId(1);
+        userService.create(user);
+        User userExist = new User("Artem", "Moseichenko",  "Newpassword@gmil.com","Abubekir257");
+        user.setId(2);
+        userService.create(userExist);
+        //when
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(userRepository.findByEmail(userExist.getEmail())).thenReturn(Optional.of(userExist));
+        //then
+        User updatedUser = new User("rename", "surname",  "Newpassword@gmil.com", "Password441324");
+        updatedUser.setId(1);
+        assertThrowsExactly(UserExistsException.class, () -> {
+            userService.update(updatedUser);
+        });
+    }
+    @Test
+    void tryToUpdateWithOurOwnEmail() {
+        //given
+        User user = new User("Artem", "Moseichenko",  "am@gmil.com","Abubekir257");
+        user.setId(1);
+        userService.create(user);
+        //when
+        User updatedUser = new User("rename", "surname",  "am@gmil.com", "Password441324");
+        updatedUser.setId(1);
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+        userService.update(updatedUser);
+        when(userRepository.findById(1L)).thenReturn(Optional.of(updatedUser));
+        //then
+        User res = userService.readById(1L);
+        assertEquals(updatedUser, res);
+    }
+    @Test
     void tryToUpdateWithCorrectInformation() {
         //given
-        User user = new User("Dexip", "Artem", "Moseichenko", "Abekpr257", "feee@nnvr.fejf");
-        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
-        when(userRepository.save(user)).thenReturn(user);
-        // When
-        User updatedUser = userService.update(user);
+        User user = new User("Artem", "Moseichenko",  "am@gmil.com","Abubekir257");
+        user.setId(1);
+        userService.create(user);
+        //when
+        User updatedUser = new User("rename", "surname",  "Newpassword@gmil.com", "Password441324");
+        updatedUser.setId(1);
+        when(userRepository.findById(1L)).thenReturn(Optional.of(updatedUser));
         //then
-        assertEquals(user, updatedUser);
-        verify(userRepository, times(1)).findById(user.getId());
-        verify(userRepository, times(1)).save(user);
+        userService.update(updatedUser);
+        User res = userService.readById(1L);
+        assertEquals(updatedUser, res);
     }
 
     @Test
     void tryToDeleteWithCorrectInformation() {
         //given
-        User user = new User("Dexip", "Artem", "Moseichenko", "Abekpr257", "feee@nnvr.fejf");
+        User user = new User("Artem", "Moseichenko",  "am@gmil.com","Abekpr257");
         userService.create(user);
         // When
-        when(userRepository.findById(1l)).thenReturn(Optional.of(user));
-        userService.delete(1l);
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        userService.delete(1L);
         //then
-        verify(userRepository, times(1)).findById(1l);
+        verify(userRepository, times(1)).findById(1L);
         verify(userRepository, times(1)).delete(user);
     }
 
     @Test
     void tryToGetAll() {
         //given
-        userService.getAll();
+        userService.getAllUsers();
         //when&then
         verify(userRepository).findAll();
     }
 
-    @Test
-    void tryToFindByUsernameWithCorrectInformation() {
-        //given
-        String username = "Dexip";
-        User user = new User(username, "Artem", "Moseichenko", "Abekpr257", "feee@nnvr.fejf");
-        userService.create(user);
-        // When
-        when(userRepository.findByUsername(username)).thenReturn(Optional.of(user));
-        //then
-        User result = userService.findByUsername(username);
-        assertEquals(user, result);
-    }
-
-    @Test
-    void tryToFindByUsernameWithWrongInformation() {
-        //given
-        String username = "Dexip";
-        User user = new User(username, "Artem", "Moseichenko", "Abekpr257", "feee@nnvr.fejf");
-        userService.create(user);
-        //when&then
-        assertThrowsExactly(EntityNotFoundException.class, () -> {
-            userService.findByUsername("rgfr");
-        });
-    }
 
     @Test
     void tryToFindByEmailWithCorrectInformation() {
         //given
         String email = "feee@nnvr.fejf";
-        User user = new User("Dexip", "Artem", "Moseichenko", "Abekpr257", "feee@nnvr.fejf");
+        User user = new User("Artem", "Moseichenko",  email, "Abekpr257");
         userService.create(user);
         // When
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
@@ -142,12 +171,37 @@ class UserServiceImplTest {
     @Test
     void tryToFindByEmailWithWrongInformation() {
         //given
-        String username = "Dexip";
-        User user = new User(username, "Artem", "Moseichenko", "Abekpr257", "feee@nnvr.fejf");
+        String email = "dexip@nrv.ece";
+        User user = new User("Dexip", "Artem", email, "Abekpr257");
         userService.create(user);
         //when&then
-        assertThrowsExactly(EntityNotFoundException.class, () -> {
-            userService.findByEmail("rgfr");
+        assertThrowsExactly(UserNotFoundException.class, () -> {
+            userService.findByEmail("4ervvrwv");
+        });
+    }
+
+    @Test
+    void tryToLoadByEmailWithCorrectInformation() {
+        //given
+        String email = "feee@nnvr.fejf";
+        User user = new User("Artem", "Moseichenko",  email,"Abekpr257");
+        userService.create(user);
+        // When
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
+        //then
+        UserDetails result = userService.loadUserByUsername(email);
+        assertEquals(user, result);
+    }
+
+    @Test
+    void tryToLoadByEmailWithWrongInformation() {
+        //given
+        String email = "feee@nnvr.fejf";
+        User user = new User("Artem", "Moseichenko",  email,"Abekpr257");
+        userService.create(user);
+        //when&then
+        assertThrowsExactly(UserNotFoundException.class, () -> {
+            userService.loadUserByUsername("rgfr");
         });
     }
 }

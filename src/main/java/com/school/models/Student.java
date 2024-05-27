@@ -2,6 +2,7 @@ package com.school.models;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.List;
 @Getter
 @Table(name = "students")
 @EqualsAndHashCode
-public class Student {
+public class Student implements Comparable<Student> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -39,5 +40,10 @@ public class Student {
                 ", subjects=" + subjects +
                 ", user=" + user +
                 '}';
+    }
+
+    @Override
+    public int compareTo(Student o) {
+        return this.user.compareTo(o.user);
     }
 }

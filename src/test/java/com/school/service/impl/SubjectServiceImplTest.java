@@ -4,7 +4,8 @@ import com.school.models.Student;
 import com.school.models.Subject;
 import com.school.models.Teacher;
 import com.school.repositories.SubjectRepository;
-import jakarta.persistence.EntityNotFoundException;
+import com.school.service.StudentService;
+import com.school.service.TeacherService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,11 +27,19 @@ class SubjectServiceImplTest {
 
     @Mock
     private SubjectRepository subjectRepository;
+    @Mock
+    private TeacherService teacherService;
+    @Mock
+    private StudentService studentService;
     private SubjectServiceImpl subjectService;
 
     @BeforeEach
     void setUp() {
-        subjectService = new SubjectServiceImpl(subjectRepository);
+        subjectService = new SubjectServiceImpl(
+                subjectRepository,
+                teacherService,
+                studentService
+        );
     }
 
     @Test
@@ -50,12 +59,6 @@ class SubjectServiceImplTest {
     }
 
     @Test
-    void createNull() {
-        //then
-        assertThrowsExactly(EntityNotFoundException.class, () -> subjectService.create(null));
-    }
-
-    @Test
     void readById() {
         //given
         Subject subject = new Subject();
@@ -63,7 +66,7 @@ class SubjectServiceImplTest {
 
         // when
         when(subjectRepository.findById(subject.getId())).thenReturn(Optional.of(subject));
-        Subject actual = subjectService.readById(subject.getId());
+        Subject actual = subjectService.findById(subject.getId());
 
         //then
         assertThat(actual).isEqualTo(subject);
@@ -76,7 +79,7 @@ class SubjectServiceImplTest {
         subjectService.create(subject);
 
         //then
-        assertThrowsExactly(EntityNotFoundException.class, () -> subjectService.readById(-1));
+        assertThrowsExactly(IllegalArgumentException.class, () -> subjectService.findById(-1));
     }
 
     @Test
@@ -96,13 +99,6 @@ class SubjectServiceImplTest {
         verify(subjectRepository, times(1)).save(subject);
 
     }
-
-    @Test
-    void updateNull() {
-        //then
-        assertThrowsExactly(EntityNotFoundException.class, () -> subjectService.update(null));
-    }
-
 
     @Test
     void delete() {
@@ -183,7 +179,7 @@ class SubjectServiceImplTest {
         subjectService.create(subject2);
 
         //then
-        assertThrowsExactly(EntityNotFoundException.class, () -> subjectService.findByName("---"));
+        assertThrowsExactly(IllegalArgumentException.class, () -> subjectService.findByName("---"));
     }
 
     @Test
@@ -220,7 +216,7 @@ class SubjectServiceImplTest {
         subjectService.create(subject2);
 
         //then
-        assertThrowsExactly(EntityNotFoundException.class, () -> subjectService.findByTeacher_Id(-1));
+        assertThrowsExactly(IllegalArgumentException.class, () -> subjectService.findByTeacher_Id(-1));
     }
 
     @Test
@@ -261,6 +257,6 @@ class SubjectServiceImplTest {
         subjectService.create(subject2);
 
         //then
-        assertThrowsExactly(EntityNotFoundException.class, () -> subjectService.findByStudent_Id(-1));
+        assertThrowsExactly(IllegalArgumentException.class, () -> subjectService.findByStudent_Id(-1));
     }
 }

@@ -10,7 +10,6 @@ public interface StudentService {
     void deleteById(long id);
     List<Student> findAll();
     List<Student> findBySubjectName(String subName);
-    Student findByUsername(String username);
     Student findByEmail(String email);
 
 }

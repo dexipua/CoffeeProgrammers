@@ -32,7 +32,7 @@ class StudentRepositoryTest {
     }
 
     @Test
-    void findBySubjectName() {
+    void findStudentBySubjectsContains() {
         // Given
         Subject mathSubject = new Subject("Mathematics");
         Subject artSubject = new Subject("Art");
@@ -47,7 +47,7 @@ class StudentRepositoryTest {
         studentRepository.saveAll(List.of(student1, student2));
 
         // When
-        List<Student> res = studentRepository.findBySubjectName("Mathematics").get();
+        List<Student> res = studentRepository.findStudentBySubjectsContains("Mathematics").get();
         boolean result = res.equals(List.of(student1, student2));
 
         // Then
@@ -55,7 +55,7 @@ class StudentRepositoryTest {
     }
 
     @Test
-    void NotFindBySubjectName(){
+    void NotFindStudentBySubjectsContains(){
         // Given
         Subject mathSubject = new Subject("Mathematics");
         Subject algebraSubject = new Subject("algebra");
@@ -74,7 +74,7 @@ class StudentRepositoryTest {
         studentRepository.saveAll(List.of(student1, student2));
 
         // When
-        List<Student> res = studentRepository.findBySubjectName("dgdsgs").get();
+        List<Student> res = studentRepository.findStudentBySubjectsContains("dgdsgs").get();
         boolean result = res.equals(List.of());
 
         // Then
@@ -85,12 +85,12 @@ class StudentRepositoryTest {
     @Test
     void findByEmail() {
         // Given
-        Student student = new Student(new User("Userrrr", "Vadym", "Honcharuk", "User123", "useruser@gmail.com"));
+        Student student = new Student(new User("Artem", "Moseichenko",  "am@gmil.com","Abekpr257"));
 
         studentRepository.save(student);
 
         // When
-        Student res = studentRepository.findByEmail("useruser@gmail.com").get();
+        Student res = studentRepository.findByUserEmail("am@gmil.com").get();
         boolean result = res.equals(student);
 
         // Then
@@ -101,41 +101,12 @@ class StudentRepositoryTest {
     @Test
     void NotFindByEmail() {
         //given
-        Student student = new Student(new User("Userrrr", "Vadym", "Honcharuk", "User123", "useruser@gmail.com"));
+        Student student = new Student(new User("Artem", "Moseichenko",  "am@gmil.com","Abekpr257"));
 
         studentRepository.save(student);
 
         //then
-        Optional<Student> res = studentRepository.findByEmail("sgfdfsd@gkf.com");
-        assertThrows(NoSuchElementException.class, () -> {
-            Student value = res.get();
-        });
-
-    }
-
-    @Test
-    void findByUsername() {
-        // Given
-        Student student = new Student(new User("Userrrr", "Vadym", "Honcharuk", "User123", "useruser@gmail.com"));
-        studentRepository.save(student);
-
-        // When
-        Student res = studentRepository.findByUsername("Userrrr").get();
-
-        boolean result = res.equals(student);
-
-        // Then
-        assertThat(result).isTrue();
-    }
-
-    @Test
-    void NotFindByUserName() {
-        //given
-        Student student = new Student(new User("Userrrr", "Vadym", "Honcharuk", "User123", "useruser@gmail.com"));
-        studentRepository.save(student);
-
-        //then
-        Optional<Student> res = studentRepository.findByUsername("fsgdfhs");
+        Optional<Student> res = studentRepository.findByUserEmail("sgfdfsd@gkf.com");
         assertThrows(NoSuchElementException.class, () -> {
             Student value = res.get();
         });

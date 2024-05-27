@@ -4,15 +4,12 @@ import com.school.models.Teacher;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface TeacherRepository extends JpaRepository<Teacher, Long> {
-    @Query("SELECT t FROM Teacher t WHERE t.user.id =:id")
     Optional<Teacher> findByUserId(long id);
-    @Query("SELECT t FROM Teacher t WHERE t.user.email =:email")
-    Optional<Teacher> findByEmail(String email);
-    @Query("SELECT t FROM Teacher t WHERE t.user.username =:username")
-    Optional<Teacher> findByUsername(String username);
-    @Query("SELECT s.teacher FROM Subject s WHERE s.name =:subjectName")
-    Optional<Teacher> findBySubjectName(String subjectName);
+    Optional<Teacher> findByUserEmail(String email);
+    @Query("SELECT s.teacher FROM Subject s WHERE s.name =:subject")
+    Optional<Teacher> findBySubjectsContains(String subject);
 }
