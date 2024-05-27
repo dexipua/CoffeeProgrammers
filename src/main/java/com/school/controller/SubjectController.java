@@ -28,9 +28,8 @@ public class SubjectController {
     @ResponseStatus(HttpStatus.CREATED)
     public SubjectResponse create(@RequestBody SubjectRequest subjectRequest) {
         Subject subject = TransformSubject.
-                transformFromRequestToModel(teacherService, studentService, subjectRequest);
+                transformFromRequestToModel(subjectRequest);
         return new SubjectResponse(subjectService.create(subject));
-
     }
 
 
@@ -46,7 +45,7 @@ public class SubjectController {
             @PathVariable("subject_id") long subjectId,
             @RequestBody SubjectRequest subjectRequest) {
 
-        Subject subjectToUpdate = TransformSubject.transformFromRequestToModel(teacherService, studentService, subjectRequest);
+        Subject subjectToUpdate = TransformSubject.transformFromRequestToModel(subjectRequest);
         subjectToUpdate.setId(subjectId);
 
         return new SubjectResponse(subjectService.update(subjectToUpdate));

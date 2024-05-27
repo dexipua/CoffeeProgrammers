@@ -33,8 +33,7 @@ public class SubjectServiceImpl implements SubjectService {
             throw new SubjectExistException(
                     "Subject with name " + subject.getName() + " already exists"
             );
-        } catch (IllegalArgumentException ignored) {
-        }
+        } catch (SubjectNotFoundException ignored) {}
         return subjectRepository.save(subject);
     }
 
@@ -53,7 +52,7 @@ public class SubjectServiceImpl implements SubjectService {
                         "Subject with name " + subject.getName() + " already exists"
                 );
             }
-        } catch (IllegalArgumentException ignored) {
+        } catch (StudentNotFoundException ignored) {
         }
 
         findById(subject.getId());
@@ -98,7 +97,6 @@ public class SubjectServiceImpl implements SubjectService {
     public void setTeacher(long subjectId, long teacherId) {
         Subject subject = findById(subjectId);
         Teacher teacher = teacherService.findById(teacherId);
-
         subject.setTeacher(teacher);
 
         subjectRepository.save(subject);
