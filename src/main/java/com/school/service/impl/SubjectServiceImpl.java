@@ -1,5 +1,9 @@
 package com.school.service.impl;
 
+import com.school.exception.StudentNotFoundException;
+import com.school.exception.SubjectExistException;
+import com.school.exception.SubjectNotFoundException;
+import com.school.exception.TeacherNotFoundException;
 import com.school.models.Student;
 import com.school.models.Subject;
 import com.school.models.Teacher;
@@ -29,8 +33,7 @@ public class SubjectServiceImpl implements SubjectService {
     public Subject create(@NotNull Subject subject) {
         try {
             findByName(subject.getName());
-            throw new HttpClientErrorException(
-                    HttpStatus.BAD_REQUEST,
+            throw new SubjectExistException(
                     "Subject with name " + subject.getName() + " already exists"
             );
         } catch (IllegalArgumentException ignored) {
@@ -41,7 +44,7 @@ public class SubjectServiceImpl implements SubjectService {
     @Override
     public Subject findById(long id) {
         return subjectRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("Subject with id " + id + " not found"));
+                () -> new SubjectNotFoundException("Subject with id " + id + " not found"));
     }
 
     @Override
@@ -49,8 +52,7 @@ public class SubjectServiceImpl implements SubjectService {
         try {
             Subject check = findByName(subject.getName());
             if (check.getId() != subject.getId()) {
-                throw new HttpClientErrorException(
-                        HttpStatus.BAD_REQUEST,
+                throw new SubjectExistException(
                         "Subject with name " + subject.getName() + " already exists"
                 );
             }
@@ -80,25 +82,25 @@ public class SubjectServiceImpl implements SubjectService {
         if (subject.isPresent()) {
             return subject.get();
         } else {
-            throw new IllegalArgumentException("Subject not found");
+            throw new SubjectNotFoundException("Subject " + name + " not found");
         }
     }
 
     @Override
     public List<Subject> findByTeacher_Id(long teacherId) {
-        teacherService.readById(teacherId);
+        teacherService.findById(teacherId);
         Optional<List<Subject>> subjects = subjectRepository.findByTeacher_Id(teacherId);
         if (subjects.isPresent()) {
             return subjects.get();
         } else {
-            throw new IllegalArgumentException("Subjects with teacher id " + teacherId + " not found");
+            throw new TeacherNotFoundException("Subjects with teacher id " + teacherId + " not found");
         }
     }
 
     @Override
     public void setTeacher(long subjectId, long teacherId) {
         Subject subject = findById(subjectId);
-        Teacher teacher = teacherService.readById(teacherId);
+        Teacher teacher = teacherService.findById(teacherId);
 
         subject.setTeacher(teacher);
 
@@ -121,7 +123,7 @@ public class SubjectServiceImpl implements SubjectService {
         if (subjects.isPresent()) {
             return subjects.get();
         } else {
-            throw new IllegalArgumentException("Subjects with student id " + studentId + " not found");
+            throw new StudentNotFoundException("Subjects with student id " + studentId + " not found");
         }
     }
 
