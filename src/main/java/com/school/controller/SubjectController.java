@@ -118,8 +118,7 @@ public class SubjectController {
                 .collect(Collectors.toList());
     }
 
-    @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER') or " +
-            "#userSecurity.checkUserByTeacher(#auth, #teacherServiceImpl.findBySubjectName(subjectServiceImpl.findById(subjectId)))")
+    @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER') or @userSecurity.checkUserBySubject(#auth, #subjectId)")
     @PatchMapping("/updateSubject/{subject_id}/addStudent/{student_id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void addStudent(
@@ -130,8 +129,7 @@ public class SubjectController {
         subjectService.addStudent(subjectId, studentId);
     }
 
-    @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER') or " +
-            "#userSecurity.checkUserByTeacher(#auth, #teacherServiceImpl.findBySubjectName(subjectServiceImpl.findById(subjectId)))")
+    @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER') or @userSecurity.checkUserBySubject(#auth, #subjectId)")
     @PatchMapping("/updateSubject/{subject_id}/deleteStudent/{student_id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteStudent(
