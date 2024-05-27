@@ -1,9 +1,6 @@
 package com.school.service.impl;
 
-import com.school.exception.StudentNotFoundException;
-import com.school.exception.SubjectExistException;
-import com.school.exception.SubjectNotFoundException;
-import com.school.exception.TeacherNotFoundException;
+import com.school.exception.*;
 import com.school.models.Student;
 import com.school.models.Subject;
 import com.school.models.Teacher;
@@ -133,8 +130,7 @@ public class SubjectServiceImpl implements SubjectService {
         Student student = studentService.findById(studentId);
 
         if (subject.getStudents().contains(student)) {
-            throw new HttpClientErrorException(
-                    HttpStatus.BAD_REQUEST,
+            throw new StudentExistException(
                     "Subject already have this student"
             );
         }
@@ -150,8 +146,7 @@ public class SubjectServiceImpl implements SubjectService {
         Student student = studentService.findById(studentId);
 
         if (!subject.getStudents().contains(student)) {
-            throw new HttpClientErrorException(
-                    HttpStatus.BAD_REQUEST,
+            throw new StudentNotFoundException(
                     "Subject doesn't have this student"
             );
         }
