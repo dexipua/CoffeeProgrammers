@@ -10,6 +10,8 @@ import com.school.service.TeacherService;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,6 +26,7 @@ public class SubjectController {
     private final TeacherService teacherService;
     private final StudentService studentService;
 
+    @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER')")
     @PostMapping("/createSubject")
     @ResponseStatus(HttpStatus.CREATED)
     public SubjectResponse create(@RequestBody SubjectRequest subjectRequest) {
@@ -39,6 +42,7 @@ public class SubjectController {
         return new SubjectResponse(subjectService.findById(subjectId));
     }
 
+    @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER')")
     @PutMapping("/updateSubject/{subject_id}")
     @ResponseStatus(HttpStatus.OK)
     public SubjectResponse update(
@@ -53,6 +57,7 @@ public class SubjectController {
 
     }
 
+    @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER')")
     @DeleteMapping("/deleteSubject/{subject_id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("subject_id") long subjectId) {
@@ -84,6 +89,7 @@ public class SubjectController {
                 .collect(Collectors.toList());
     }
 
+    @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER')")
     @PatchMapping("/updateSubject/{subject_id}/setTeacher/{teacher_id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void setTeacher(
@@ -93,11 +99,13 @@ public class SubjectController {
         subjectService.setTeacher(subjectId, teacherId);
     }
 
+    @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER')")
     @PatchMapping("/updateSubject/{subject_id}/deleteTeacher")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteTeacher(@PathVariable("subject_id") long subjectId) {
         subjectService.deleteTeacher(subjectId);
     }
+
 
 
     @GetMapping("/findByStudentId/{student_id}")
@@ -110,20 +118,26 @@ public class SubjectController {
                 .collect(Collectors.toList());
     }
 
+    @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER') or " +
+            "#userSecurity.checkUserByTeacher(#auth, #teacherServiceImpl.findBySubjectName(subjectServiceImpl.findById(subjectId)))")
     @PatchMapping("/updateSubject/{subject_id}/addStudent/{student_id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void addStudent(
             @PathVariable("subject_id") long subjectId,
-            @PathVariable("student_id") long studentId) {
+            @PathVariable("student_id") long studentId,
+            Authentication auth) {
 
         subjectService.addStudent(subjectId, studentId);
     }
 
+    @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER') or " +
+            "#userSecurity.checkUserByTeacher(#auth, #teacherServiceImpl.findBySubjectName(subjectServiceImpl.findById(subjectId)))")
     @PatchMapping("/updateSubject/{subject_id}/deleteStudent/{student_id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteStudent(
             @PathVariable("subject_id") long subjectId,
-            @PathVariable("student_id") long studentId) {
+            @PathVariable("student_id") long studentId,
+            Authentication auth) {
         subjectService.deleteStudent(subjectId, studentId);
     }
 }

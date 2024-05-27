@@ -11,6 +11,7 @@ import com.school.service.TeacherService;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
@@ -52,7 +53,7 @@ public class SubjectServiceImpl implements SubjectService {
                         "Subject with name " + subject.getName() + " already exists"
                 );
             }
-        } catch (StudentNotFoundException ignored) {
+        } catch (SubjectNotFoundException ignored) {
         }
 
         findById(subject.getId());
