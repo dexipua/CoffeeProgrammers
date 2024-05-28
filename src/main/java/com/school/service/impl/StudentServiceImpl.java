@@ -7,7 +7,9 @@ import com.school.models.Student;
 import com.school.repositories.RoleRepository;
 import com.school.repositories.StudentRepository;
 import com.school.repositories.TeacherRepository;
+import com.school.service.RoleService;
 import com.school.service.StudentService;
+import com.school.service.TeacherService;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,16 +21,16 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class StudentServiceImpl implements StudentService {
 
-    private final TeacherRepository teacherRepository;
+    private final TeacherService teacherService;
     private final StudentRepository studentRepository;
-    private final RoleRepository roleRepository;
+    private final RoleService roleService;
 
     @Override
     public Student create(@NotNull Student student){
         if(studentRepository.findByUserEmail(student.getUser().getEmail()).isPresent()) {
             throw new StudentExistException("Student with such email already exist");
         }
-        student.getUser().setRole(roleRepository.findByName("STUDENT").get());
+        student.getUser().setRole(roleService.findByName("STUDENT"));
         return studentRepository.save(student);
     }
 
@@ -45,7 +47,7 @@ public class StudentServiceImpl implements StudentService {
                 throw new StudentExistException("Student with such email already exist");
             }
         }
-        student.getUser().setRole(roleRepository.findByName("STUDENT").get());
+        student.getUser().setRole(roleService.findByName("STUDENT"));
         findById(student.getId());
         return studentRepository.save(student);
     }
@@ -80,9 +82,7 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public List<Student> findStudentsByTeacherId(long teacherId){
         HashSet<Student> students = new HashSet<>();
-        if(teacherRepository.findById(teacherId).isPresent()) {
-            teacherRepository.findById(teacherId).get().getSubjects().forEach(sub -> students.addAll(sub.getStudents()));
-        }
+        teacherService.findById(teacherId).getSubjects().forEach(subject -> students.addAll(subject.getStudents()));
         return new ArrayList<>(students);
     }
 }

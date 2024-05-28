@@ -37,7 +37,7 @@ class StudentServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        studentService = new StudentServiceImpl((TeacherServiceImpl) teacherService, studentRepository, roleRepository);
+        studentService = new StudentServiceImpl(teacherService, studentRepository, roleRepository);
         roleRepository.save(new Role("STUDENT"));
     }
 
