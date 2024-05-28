@@ -26,7 +26,7 @@ public class HomeController {
     private final SubjectService subjectService;
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List homePage(){
+    public List homePage(){   //// TODO make homeResponse
         List list = new ArrayList<>();
         List<TeacherResponseToGet> teachers = new ArrayList<>();
         for(Teacher teacher : teacherService.findAll()){
