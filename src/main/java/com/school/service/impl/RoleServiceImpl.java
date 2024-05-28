@@ -1,5 +1,6 @@
 package com.school.service.impl;
 
+import com.school.exception.RoleNotFoundException;
 import com.school.models.Role;
 import com.school.repositories.RoleRepository;
 import com.school.service.RoleService;
@@ -23,7 +24,7 @@ public class RoleServiceImpl implements RoleService {
 
     public Role findById(long id) {
         return roleRepository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException("Role with id " + id + " not found"));
+                () -> new RoleNotFoundException("Role with id " + id + " not found"));
     }
 
     @Override
@@ -48,6 +49,6 @@ public class RoleServiceImpl implements RoleService {
         if(roleRepository.findByName(name).isPresent()) {
             return roleRepository.findByName(name).get();
         }
-        throw new EntityNotFoundException("Role with name " + name + " not found");
+        throw new RoleNotFoundException("Role with name " + name + " not found");
     }
 }
