@@ -8,18 +8,18 @@ import lombok.Data;
 public class SubjectResponse {
     long id;
     String name;
-    Long teacherId;
-    Long[] studentsId;
+    TeacherResponseToGet teacherId;
+    StudentResponseToGet[] studentsId;
 
     public SubjectResponse(Subject subject) {
         this.id = subject.getId();
         this.name = subject.getName();
-        this.teacherId = subject.getTeacher() == null ? null : subject.getTeacher().getId();
+        this.teacherId = subject.getTeacher() == null ? null : new TeacherResponseToGet(subject.getTeacher());
         try {
-            this.studentsId = new Long[subject.getStudents().size()];
+            this.studentsId = new StudentResponseToGet[subject.getStudents().size()];
             int studentsSize = subject.getStudents().size();
             for (int i = 0; i < studentsSize; i++) {
-                this.studentsId[i] = subject.getStudents().get(i).getId();
+                this.studentsId[i] = new StudentResponseToGet(subject.getStudents().get(i));
             }
         }catch (NullPointerException e) {
             studentsId = null;
