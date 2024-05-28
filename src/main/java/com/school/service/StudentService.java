@@ -1,6 +1,8 @@
 package com.school.service;
 
 import com.school.models.Student;
+
+import java.util.HashSet;
 import java.util.List;
 
 public interface StudentService {
@@ -11,5 +13,5 @@ public interface StudentService {
     List<Student> findAll();
     List<Student> findBySubjectName(String subName);
     Student findByEmail(String email);
-
+    List<Student> findStudentsByTeacherId(long teacherId);
 }

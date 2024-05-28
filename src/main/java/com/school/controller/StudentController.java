@@ -79,4 +79,16 @@ public class StudentController {
         }
         return studentResponses;
     }
+
+    @GetMapping("/by/{teacher_id}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<StudentResponseToGet> getStudentsByTeacherId( @PathVariable("teacher_id") long teacherId) {
+        List<Student> students;
+        students = studentService.findStudentsByTeacherId(teacherId);
+        List<StudentResponseToGet> studentResponses = new ArrayList<>();
+        for (Student student : students) {
+            studentResponses.add(new StudentResponseToGet(student));
+        }
+        return studentResponses;
+    }
 }

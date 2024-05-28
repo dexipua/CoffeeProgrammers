@@ -6,19 +6,20 @@ import com.school.exception.StudentNotFoundException;
 import com.school.models.Student;
 import com.school.repositories.RoleRepository;
 import com.school.repositories.StudentRepository;
+import com.school.repositories.TeacherRepository;
 import com.school.service.StudentService;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class StudentServiceImpl implements StudentService {
 
+    private final TeacherRepository teacherRepository;
     private final StudentRepository studentRepository;
     private final RoleRepository roleRepository;
 
@@ -77,5 +78,12 @@ public class StudentServiceImpl implements StudentService {
         return student.get();
     }
 
-
+    @Override
+    public List<Student> findStudentsByTeacherId(long teacherId){
+        HashSet<Student> students = new HashSet<>();
+        if(teacherRepository.findById(teacherId).isPresent()) {
+            teacherRepository.findById(teacherId).get().getSubjects().forEach(sub -> students.addAll(sub.getStudents()));
+        }
+        return new ArrayList<>(students);
+    }
 }
