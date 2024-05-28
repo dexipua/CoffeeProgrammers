@@ -4,9 +4,7 @@ import com.school.dto.SubjectRequest;
 import com.school.dto.SubjectResponse;
 import com.school.dto.TransformSubject;
 import com.school.models.Subject;
-import com.school.service.StudentService;
 import com.school.service.SubjectService;
-import com.school.service.TeacherService;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,8 +21,6 @@ import java.util.stream.Collectors;
 public class SubjectController {
 
     private final SubjectService subjectService;
-    private final TeacherService teacherService;
-    private final StudentService studentService;
 
     @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER')")
     @PostMapping("/createSubject")
