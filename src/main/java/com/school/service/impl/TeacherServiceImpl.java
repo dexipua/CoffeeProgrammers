@@ -26,7 +26,6 @@ public class TeacherServiceImpl implements TeacherService {
 
     private final TeacherRepository teacherRepository;
     private final RoleService roleService;
-    private final SubjectService subjectService;
 
     @Override
     public Teacher create(@NotNull Teacher teacher) {
@@ -60,10 +59,10 @@ public class TeacherServiceImpl implements TeacherService {
         if(teacher.getUser().getRole().getName().equals("CHIEF_TEACHER")) {
             throw new TeacherExistException("Cannot delete teacher with role CHIEF_TEACHER");
         }else{
-            List<Subject> subjects = subjectService.findByTeacher_Id(id);
-            subjects.forEach(a -> a.setTeacher(null));
+            List<Subject> subjects = teacher.getSubjects();
+            subjects.forEach(subject -> subject.setTeacher(null));
         }
-        teacher.setSubjects(null);
+        teacher.setSubjects(new ArrayList<>());
         teacherRepository.delete(teacher);
     }
 
