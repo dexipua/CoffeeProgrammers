@@ -1,5 +1,6 @@
 package com.school.service.impl;
 
+import com.school.exception.RoleNotFoundException;
 import com.school.models.Role;
 import com.school.repositories.RoleRepository;
 import com.school.service.RoleService;
@@ -21,21 +22,20 @@ public class RoleServiceImpl implements RoleService {
         return roleRepository.save(role);
     }
 
-    @Override
-    public Role readById(long id) {
+    public Role findById(long id) {
         return roleRepository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException("Role with id " + id + " not found"));
+                () -> new RoleNotFoundException("Role with id " + id + " not found"));
     }
 
     @Override
     public Role update(@NotNull Role role) {
-        readById(role.getId());
+        findById(role.getId());
         return roleRepository.save(role);
     }
 
     @Override
     public void delete(long id) {
-        Role role = readById(id);
+        Role role = findById(id);
         roleRepository.delete(role);
     }
 
@@ -49,6 +49,6 @@ public class RoleServiceImpl implements RoleService {
         if(roleRepository.findByName(name).isPresent()) {
             return roleRepository.findByName(name).get();
         }
-        throw new EntityNotFoundException("Role with name " + name + " not found");
+        throw new RoleNotFoundException("Role with name " + name + " not found");
     }
 }

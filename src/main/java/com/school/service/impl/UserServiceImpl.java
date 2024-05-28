@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User readById(long id) {
+    public User findById(long id) {
         return userRepository.findById(id).orElseThrow(
                 () -> new UserNotFoundException("User with id " + id + " not found"));
     }
@@ -45,7 +45,7 @@ public class UserServiceImpl implements UserService {
                 throw new UserExistsException("User with email " + user.getEmail() + " already exists");
             }
         }
-        readById(user.getId());
+        findById(user.getId());
         delete(user.getId());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
@@ -53,7 +53,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void delete(long id) {
-        User user = readById(id);
+        User user = findById(id);
         userRepository.delete(user);
     }
 

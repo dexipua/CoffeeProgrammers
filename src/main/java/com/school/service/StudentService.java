@@ -2,7 +2,6 @@ package com.school.service;
 
 import com.school.models.Student;
 
-import java.util.HashSet;
 import java.util.List;
 
 public interface StudentService {
@@ -10,7 +9,7 @@ public interface StudentService {
     Student findById(long id);
     Student update(Student student);
     void deleteById(long id);
-    List<Student> findAll();
+    List<Student> findAllOrderedByName();
     List<Student> findBySubjectName(String subName);
     Student findByEmail(String email);
     List<Student> findStudentsByTeacherId(long teacherId);

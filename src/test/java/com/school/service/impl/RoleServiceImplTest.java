@@ -1,5 +1,6 @@
 package com.school.service.impl;
 
+import com.school.exception.RoleNotFoundException;
 import com.school.models.Role;
 import com.school.models.User;
 import com.school.repositories.RoleRepository;
@@ -52,7 +53,7 @@ class RoleServiceImplTest {
         //when
         when(roleRepository.findById(1l)).thenReturn(Optional.of(role));
         //then
-        Role res = roleService.readById(1l);
+        Role res = roleService.findById(1l);
         assertThat(res).isEqualTo(role);
     }
 
@@ -62,8 +63,8 @@ class RoleServiceImplTest {
         Role role = new Role("Dexip");
         roleService.create(role);
         //when&then
-        assertThrowsExactly(EntityNotFoundException.class, () -> {
-            roleService.readById(2l);
+        assertThrowsExactly(RoleNotFoundException.class, () -> {
+            roleService.findById(2l);
         });
     }
 
@@ -120,7 +121,7 @@ class RoleServiceImplTest {
         Role role = new Role("Dexip");
         roleService.create(role);
         //when&then
-        assertThrowsExactly(EntityNotFoundException.class, () -> {
+        assertThrowsExactly(RoleNotFoundException.class, () -> {
             Role res = roleService.findByName("Dexipbr");
         });
 

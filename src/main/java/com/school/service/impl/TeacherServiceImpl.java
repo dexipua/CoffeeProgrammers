@@ -2,12 +2,15 @@ package com.school.service.impl;
 
 import com.school.exception.TeacherExistException;
 import com.school.exception.TeacherNotFoundException;
+import com.school.models.Student;
 import com.school.models.Subject;
 import com.school.models.Teacher;
 import com.school.repositories.RoleRepository;
 import com.school.repositories.StudentRepository;
 import com.school.repositories.SubjectRepository;
 import com.school.repositories.TeacherRepository;
+import com.school.service.RoleService;
+import com.school.service.SubjectService;
 import com.school.service.TeacherService;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
@@ -15,25 +18,22 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 public class TeacherServiceImpl implements TeacherService {
 
     private final TeacherRepository teacherRepository;
-    private final RoleRepository roleRepository;
-    private final SubjectRepository subjectRepository;
+    private final RoleService roleService;
+    private final SubjectService subjectService;
 
     @Override
     public Teacher create(@NotNull Teacher teacher) {
         if(teacherRepository.findByUserEmail(teacher.getUser().getEmail()).isPresent()){
             throw new TeacherExistException("Teacher already exists");
         }
-        teacher.getUser().setRole(roleRepository.findByName("TEACHER").get());
+        teacher.getUser().setRole(roleService.findByName("TEACHER"));
         return teacherRepository.save(teacher);
     }
 
@@ -57,11 +57,10 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public void delete(long id) {
         Teacher teacher = findById(id);
-        if(teacher.getUser().getRole().getName().equals("CHIEF_TEACHER")){
+        if(teacher.getUser().getRole().getName().equals("CHIEF_TEACHER")) {
             throw new TeacherExistException("Cannot delete teacher with role CHIEF_TEACHER");
-        }
-        if(subjectRepository.findByTeacher_Id(id).isPresent()) {
-            List<Subject> subjects = subjectRepository.findByTeacher_Id(id).get();
+        }else{
+            List<Subject> subjects = subjectService.findByTeacher_Id(id);
             subjects.forEach(a -> a.setTeacher(null));
         }
         teacher.setSubjects(null);
@@ -70,9 +69,8 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public List<Teacher> findAll() {
-        List<Teacher> teachers = teacherRepository.findAll();
-        Collections.sort(teachers);
-        return teachers;
+        Optional<List<Teacher>> teachers = teacherRepository.findAllByOrderByUser();
+        return teachers.orElseGet(ArrayList::new);
     }
 
     @Override

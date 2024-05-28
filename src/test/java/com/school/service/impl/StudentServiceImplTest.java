@@ -7,6 +7,7 @@ import com.school.models.Student;
 import com.school.models.User;
 import com.school.repositories.RoleRepository;
 import com.school.repositories.StudentRepository;
+import com.school.service.TeacherService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,6 +28,8 @@ import static org.mockito.Mockito.*;
 class StudentServiceImplTest {
 
     @Mock
+    private TeacherService teacherService;
+    @Mock
     private StudentRepository studentRepository;
     @Autowired
     private RoleRepository roleRepository;
@@ -34,7 +37,7 @@ class StudentServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        studentService = new StudentServiceImpl(studentRepository, roleRepository);
+        studentService = new StudentServiceImpl(teacherService, studentRepository, roleRepository);
         roleRepository.save(new Role("STUDENT"));
     }
 
@@ -175,7 +178,7 @@ class StudentServiceImplTest {
     }
 
     @Test
-    void findAll(){
+    void findAllOrderedByName(){
         // Given
         List<Student> students = Arrays.asList(
                 new Student(new User("Artem", "Moseichenko",  "am@gmil.com","Abubekir257")),
@@ -183,7 +186,7 @@ class StudentServiceImplTest {
         when(studentRepository.findAll()).thenReturn(students);
 
         // When
-        List<Student> result = studentService.findAll();
+        List<Student> result = studentService.findAllOrderedByName();
 
         // Then
         assertEquals(students, result);

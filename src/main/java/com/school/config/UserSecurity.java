@@ -21,7 +21,7 @@ public class UserSecurity {
     private boolean checkUser(Authentication authentication, long userId) {
         UserDetails user = (UserDetails) authentication.getPrincipal();
         String authenticatedUserEmail = user.getUsername();
-        String ownEmail = userService.readById(userId).getEmail();
+        String ownEmail = userService.findById(userId).getEmail();
         return authenticatedUserEmail.equals(ownEmail);
     }
     public boolean checkUserByStudent(Authentication authentication, long userId) {
