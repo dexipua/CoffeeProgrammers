@@ -14,6 +14,15 @@ import java.time.ZonedDateTime;
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
+    @ExceptionHandler(value = {RoleNotFoundException.class})
+    public ResponseEntity<?> handleRoleNotFoundException(RoleNotFoundException ex) {
+        log.error("handleRoleNotFoundException: {}", ex.getMessage());
+        ExceptionResponse exceptionResponse = new ExceptionResponse(
+                ex.getMessage(),
+                HttpStatus.NOT_FOUND,
+                ZonedDateTime.now(ZoneId.of("Z")));
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
+    }
     @ExceptionHandler(value = {SubjectExistException.class})
     public ResponseEntity<?> handleSubjectExistException(SubjectExistException ex) {
         log.error("handleSubjectExistException: {}", ex.getMessage());
