@@ -21,21 +21,20 @@ public class RoleServiceImpl implements RoleService {
         return roleRepository.save(role);
     }
 
-    @Override
-    public Role readById(long id) {
+    public Role findById(long id) {
         return roleRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Role with id " + id + " not found"));
     }
 
     @Override
     public Role update(@NotNull Role role) {
-        readById(role.getId());
+        findById(role.getId());
         return roleRepository.save(role);
     }
 
     @Override
     public void delete(long id) {
-        Role role = readById(id);
+        Role role = findById(id);
         roleRepository.delete(role);
     }
 

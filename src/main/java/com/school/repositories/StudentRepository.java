@@ -11,4 +11,5 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     @Query("SELECT s.students FROM Subject s WHERE s.name = :subjectName")
     Optional<List<Student>> findStudentBySubjectsContains(String subjectName);
     Optional<Student> findByUserEmail(String email);
+    Optional<List<Student>> findAllByOrderByUser();
 }

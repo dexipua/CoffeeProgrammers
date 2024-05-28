@@ -2,6 +2,7 @@ package com.school.service.impl;
 
 import com.school.exception.TeacherExistException;
 import com.school.exception.TeacherNotFoundException;
+import com.school.models.Student;
 import com.school.models.Subject;
 import com.school.models.Teacher;
 import com.school.repositories.RoleRepository;
@@ -15,10 +16,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -70,9 +68,8 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public List<Teacher> findAll() {
-        List<Teacher> teachers = teacherRepository.findAll();
-        Collections.sort(teachers);
-        return teachers;
+        Optional<List<Teacher>> teachers = teacherRepository.findAllByOrderByUser();
+        return teachers.orElseGet(ArrayList::new);
     }
 
     @Override

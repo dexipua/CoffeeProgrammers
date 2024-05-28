@@ -57,10 +57,9 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public List<Student> findAll(){
-        List<Student> students = studentRepository.findAll();
-        Collections.sort(students);
-        return students;
+    public List<Student> findAllOrderedByName(){
+        Optional<List<Student>> students = studentRepository.findAllByOrderByUser();
+        return students.orElseGet(ArrayList::new);
     }
 
     @Override

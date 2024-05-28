@@ -60,7 +60,7 @@ public class StudentController {
     @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<StudentResponseToGet>> getAllStudents() {
-        List<Student> students = studentService.findAll();
+        List<Student> students = studentService.findAllOrderedByName();
         List<StudentResponseToGet> studentResponses = new ArrayList<>();
         for (Student student : students) {
             studentResponses.add(new StudentResponseToGet(student));

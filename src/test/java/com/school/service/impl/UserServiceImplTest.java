@@ -59,25 +59,25 @@ class UserServiceImplTest {
     }
 
     @Test
-    void tryToReadByIdWithCorrectInformation() {
+    void tryToFindByIdWithCorrectInformation() {
         //given
         User user = new User("Artem", "Moseichenko",  "am@gmil.com","Abekpr257");
         userService.create(user);
         // When
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
         //then
-        User res = userService.readById(1L);
+        User res = userService.findById(1L);
         assertEquals(user, res);
     }
 
     @Test
-    void tryToReadByIdWithWrongInformation() {
+    void tryToFindByIdWithWrongInformation() {
         //given
         User user = new User("Artem", "Moseichenko",  "am@gmil.com","Abekpr257");
         userService.create(user);
         //when&then
         assertThrowsExactly(UserNotFoundException.class, () -> {
-            userService.readById(2);
+            userService.findById(2);
         });
     }
 
@@ -114,7 +114,7 @@ class UserServiceImplTest {
         userService.update(updatedUser);
         when(userRepository.findById(1L)).thenReturn(Optional.of(updatedUser));
         //then
-        User res = userService.readById(1L);
+        User res = userService.findById(1L);
         assertEquals(updatedUser, res);
     }
     @Test
@@ -129,7 +129,7 @@ class UserServiceImplTest {
         when(userRepository.findById(1L)).thenReturn(Optional.of(updatedUser));
         //then
         userService.update(updatedUser);
-        User res = userService.readById(1L);
+        User res = userService.findById(1L);
         assertEquals(updatedUser, res);
     }
 
