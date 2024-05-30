@@ -69,7 +69,7 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public Teacher findBySubjectName(String subjectName){
-        Optional<Teacher> teacher = teacherRepository.findBySubjectsContains(subjectName);
+        Optional<Teacher> teacher = teacherRepository.findBySubjectName(subjectName);
         if (teacher.isEmpty()) {
             throw new EntityNotFoundException("Teacher with subject name " + subjectName + " not found");
         }
