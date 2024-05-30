@@ -1,4 +1,4 @@
-package com.school.exception;
+package com.school.dto;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
