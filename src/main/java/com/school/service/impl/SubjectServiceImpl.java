@@ -10,14 +10,10 @@ import com.school.service.SubjectService;
 import com.school.service.TeacherService;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -69,35 +65,29 @@ public class SubjectServiceImpl implements SubjectService {
 
     @Override
     public List<Subject> getAllByOrderByName() {
-        Optional<List<Subject>> subjects = subjectRepository.findAllByOrderByName();
-        return subjects.orElseGet(ArrayList::new);
+        return subjectRepository.findAllByOrderByName().orElseGet(ArrayList::new);
     }
 
     @Override
     public Subject findByName(String name) {
-        Optional<Subject> subject = subjectRepository.findByName(name);
-        if (subject.isPresent()) {
-            return subject.get();
-        } else {
-            throw new SubjectNotFoundException("Subject " + name + " not found");
-        }
+        return subjectRepository.findByName(name).orElseThrow(
+                () -> new SubjectNotFoundException("Subject " + name + " not found")
+        );
     }
 
     @Override
     public List<Subject> findByTeacher_Id(long teacherId) {
         teacherService.findById(teacherId);
-        Optional<List<Subject>> subjects = subjectRepository.findByTeacher_Id(teacherId);
-        if (subjects.isPresent()) {
-            return subjects.get();
-        } else {
-            throw new TeacherNotFoundException("Subjects with teacher id " + teacherId + " not found");
-        }
+        return subjectRepository.findByTeacher_Id(teacherId).orElseThrow(
+                () -> new TeacherNotFoundException("Subjects with teacher id " + teacherId + " not found")
+        );
     }
 
     @Override
     public void setTeacher(long subjectId, long teacherId) {
         Subject subject = findById(subjectId);
         Teacher teacher = teacherService.findById(teacherId);
+
         subject.setTeacher(teacher);
 
         subjectRepository.save(subject);
@@ -115,12 +105,9 @@ public class SubjectServiceImpl implements SubjectService {
     @Override
     public List<Subject> findByStudent_Id(long studentId) {
         studentService.findById(studentId);
-        Optional<List<Subject>> subjects = subjectRepository.findByStudent_Id(studentId);
-        if (subjects.isPresent()) {
-            return subjects.get();
-        } else {
-            throw new StudentNotFoundException("Subjects with student id " + studentId + " not found");
-        }
+        return subjectRepository.findByStudent_Id(studentId).orElseThrow(
+                () -> new StudentNotFoundException("Subjects with student id " + studentId + " not found")
+        );
     }
 
     @Override
