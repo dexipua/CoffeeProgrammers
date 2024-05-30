@@ -46,12 +46,11 @@ public class StudentServiceImpl implements StudentService {
         String updatedEmail = student.getUser().getEmail();
         String actualEmail = findById(student.getId()).getUser().getEmail();
 
-        if(!updatedEmail.equals(actualEmail) && studentRepository.findByUserEmail(student.getUser().getEmail()).isPresent()) {
+        if(!updatedEmail.equals(actualEmail) && studentRepository.findByUserEmail(updatedEmail).isPresent()) {
             throw new EntityExistsException("Student with such email already exist");
         }
 
         student.getUser().setRole(roleService.findByName("STUDENT"));
-        findById(student.getId());
         return studentRepository.save(student);
     }
 

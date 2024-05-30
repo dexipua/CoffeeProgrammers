@@ -24,7 +24,7 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public Teacher create(@NotNull Teacher teacher) {
-        if(teacherRepository.findByUserEmail(teacher.getUser().getEmail()).isPresent()){
+        if (teacherRepository.findByUserEmail(teacher.getUser().getEmail()).isPresent()) {
             throw new EntityExistsException("Teacher already exists");
         }
         teacher.getUser().setRole(roleService.findByName("TEACHER"));
@@ -39,21 +39,22 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public Teacher update(@NotNull Teacher teacher) {
-        if(teacherRepository.findByUserEmail(teacher.getUser().getEmail()).isPresent()){
-            if(!(teacher.getUser().getEmail().equals(teacherRepository.findById(teacher.getId()).get().getUser().getEmail()))){
-                throw new EntityExistsException("Teacher already exists");
-            }
+        String updatedEmail = teacher.getUser().getEmail();
+        String actualEmail = findById(teacher.getId()).getUser().getEmail();
+
+        if (!updatedEmail.equals(actualEmail) && teacherRepository.findByUserEmail(updatedEmail).isPresent()) {
+            throw new EntityExistsException("Teacher with such email already exists");
         }
-        findById(teacher.getId());
+
         return teacherRepository.save(teacher);
     }
 
     @Override
     public void delete(long id) {
         Teacher teacher = findById(id);
-        if(teacher.getUser().getRole().getName().equals("CHIEF_TEACHER")) {
+        if (teacher.getUser().getRole().getName().equals("CHIEF_TEACHER")) {
             throw new EntityExistsException("Cannot delete teacher with role CHIEF_TEACHER");
-        }else{
+        } else {
             List<Subject> subjects = teacher.getSubjects();
             subjects.forEach(subject -> subject.setTeacher(null));
         }
@@ -68,20 +69,16 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public Teacher findBySubjectName(String subjectName){
-        Optional<Teacher> teacher = teacherRepository.findBySubjectName(subjectName);
-        if (teacher.isEmpty()) {
-            throw new EntityNotFoundException("Teacher with subject name " + subjectName + " not found");
-        }
-        return teacher.get();
+    public Teacher findBySubjectName(String subjectName) {
+        return teacherRepository.findBySubjectName(subjectName).orElseThrow(
+                () -> new EntityNotFoundException("Teacher with subject name " + subjectName + " not found")
+        );
     }
 
     @Override
-    public Teacher findByEmail(String email){
-        Optional<Teacher> teacher = teacherRepository.findByUserEmail(email);
-        if (teacher.isEmpty()) {
-            throw new EntityNotFoundException("Teacher not found with such email" + email);
-        }
-        return teacher.get();
+    public Teacher findByEmail(String email) {
+        return teacherRepository.findByUserEmail(email).orElseThrow(
+                () -> new EntityNotFoundException("Teacher not found with such email" + email)
+        );
     }
 }

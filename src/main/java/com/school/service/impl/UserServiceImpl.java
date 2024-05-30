@@ -1,6 +1,8 @@
 package com.school.service.impl;
 
 import com.school.models.User;
+import com.school.repositories.UserRepository;
+import com.school.service.UserService;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.constraints.NotNull;
@@ -12,9 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-
-import com.school.repositories.UserRepository;
-import com.school.service.UserService;
 
 @Service
 @RequiredArgsConstructor
@@ -40,12 +39,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User update(@NotNull User user) {
-        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
-            if(!(user.getEmail().equals(userRepository.findById(user.getId()).get().getEmail()))) {
-                throw new EntityExistsException("User with email " + user.getEmail() + " already exists");
-            }
+
+        String updatedEmail = user.getEmail();
+        String actualEmail = findById(user.getId()).getEmail();
+
+        if (!updatedEmail.equals(actualEmail) && userRepository.findByEmail(updatedEmail).isPresent()) {
+            throw new EntityExistsException("User with email " + updatedEmail + " already exists");
         }
-        findById(user.getId());
+
         delete(user.getId());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
@@ -62,12 +63,10 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAll();
     }
 
-    public User findByEmail(String email){
-        Optional<User> user = userRepository.findByEmail(email);
-        if (user.isEmpty()) {
-            throw new EntityNotFoundException("User not found");
-        }
-        return user.get();
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(
+                () -> new EntityNotFoundException("User not found")
+        );
     }
 
     @Override
