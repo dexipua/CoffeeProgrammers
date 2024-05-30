@@ -1,4 +1,4 @@
-package com.school.dto;
+package com.school.dto.subject;
 
 import lombok.Data;
 

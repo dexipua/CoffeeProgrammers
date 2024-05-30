@@ -1,8 +1,8 @@
 package com.school.controller;
 
-import com.school.dto.SubjectRequest;
-import com.school.dto.SubjectResponse;
-import com.school.dto.TransformSubject;
+import com.school.dto.subject.SubjectRequest;
+import com.school.dto.subject.SubjectResponse;
+import com.school.dto.subject.TransformSubject;
 import com.school.models.Subject;
 import com.school.service.SubjectService;
 import jakarta.validation.constraints.NotNull;
@@ -41,7 +41,7 @@ public class SubjectController {
     @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER')")
     @PutMapping("/updateSubject/{subject_id}")
     @ResponseStatus(HttpStatus.OK)
-    public SubjectResponse update(
+    public SubjectResponse update( //TODO
             @PathVariable("subject_id") long subjectId,
             @RequestBody SubjectRequest subjectRequest) {
 

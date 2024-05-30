@@ -1,4 +1,4 @@
-package com.school.dto;
+package com.school.dto.auth;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;

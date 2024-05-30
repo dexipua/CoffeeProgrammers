@@ -1,8 +1,8 @@
 package com.school.controller;
 
-import com.school.dto.TeacherRequest;
-import com.school.dto.TeacherResponseAll;
-import com.school.dto.TeacherResponseToGet;
+import com.school.dto.teacher.TeacherRequest;
+import com.school.dto.teacher.TeacherResponseAll;
+import com.school.dto.teacher.TeacherResponseToGet;
 import com.school.models.Teacher;
 import com.school.service.TeacherService;
 import lombok.RequiredArgsConstructor;

@@ -1,5 +1,7 @@
-package com.school.dto;
+package com.school.dto.subject;
 
+import com.school.dto.student.StudentResponseToGet;
+import com.school.dto.teacher.TeacherResponseToGet;
 import com.school.models.Subject;
 import lombok.Data;
 
