@@ -1,6 +1,5 @@
 package com.school.service.impl;
 
-import com.school.exception.*;
 import com.school.models.Student;
 import com.school.models.Subject;
 import com.school.models.Teacher;
@@ -8,6 +7,8 @@ import com.school.repositories.SubjectRepository;
 import com.school.service.StudentService;
 import com.school.service.SubjectService;
 import com.school.service.TeacherService;
+import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,31 +26,30 @@ public class SubjectServiceImpl implements SubjectService {
 
     @Override
     public Subject create(@NotNull Subject subject) {
-        try {
-            findByName(subject.getName());
-            throw new SubjectExistException(
+        if (subjectRepository.findByName(subject.getName()).isPresent()){
+            throw new EntityExistsException(
                     "Subject with name " + subject.getName() + " already exists"
             );
-        } catch (SubjectNotFoundException ignored) {}
+        }
         return subjectRepository.save(subject);
     }
 
     @Override
     public Subject findById(long id) {
         return subjectRepository.findById(id).orElseThrow(
-                () -> new SubjectNotFoundException("Subject with id " + id + " not found"));
+                () -> new EntityNotFoundException("Subject with id " + id + " not found"));
     }
 
     @Override
     public Subject update(@NotNull Subject subject) {
-        try {
-            Subject check = findByName(subject.getName());
-            if (check.getId() != subject.getId()) {
-                throw new SubjectExistException(
-                        "Subject with name " + subject.getName() + " already exists"
-                );
-            }
-        } catch (SubjectNotFoundException ignored) {
+
+        String updatedName = subject.getName();
+        String actualName = findById(subject.getId()).getName();
+
+        if (!updatedName.equals(actualName) && subjectRepository.findByName(subject.getName()).isPresent()){
+            throw new EntityExistsException(
+                    "Subject with name " + subject.getName() + " already exists"
+            );
         }
 
         findById(subject.getId());
@@ -71,15 +71,15 @@ public class SubjectServiceImpl implements SubjectService {
     @Override
     public Subject findByName(String name) {
         return subjectRepository.findByName(name).orElseThrow(
-                () -> new SubjectNotFoundException("Subject " + name + " not found")
+                () -> new EntityNotFoundException("Subject " + name + " not found")
         );
     }
 
     @Override
     public List<Subject> findByTeacher_Id(long teacherId) {
         teacherService.findById(teacherId);
-        return subjectRepository.findByTeacher_Id(teacherId).orElseThrow(
-                () -> new TeacherNotFoundException("Subjects with teacher id " + teacherId + " not found")
+        return subjectRepository.findByTeacher_Id(teacherId).orElseThrow( // TODO
+                () -> new EntityNotFoundException("Subjects with teacher id " + teacherId + " not found")
         );
     }
 
@@ -106,7 +106,7 @@ public class SubjectServiceImpl implements SubjectService {
     public List<Subject> findByStudent_Id(long studentId) {
         studentService.findById(studentId);
         return subjectRepository.findByStudent_Id(studentId).orElseThrow(
-                () -> new StudentNotFoundException("Subjects with student id " + studentId + " not found")
+                () -> new EntityNotFoundException("Subjects with student id " + studentId + " not found")
         );
     }
 
@@ -116,7 +116,7 @@ public class SubjectServiceImpl implements SubjectService {
         Student student = studentService.findById(studentId);
 
         if (subject.getStudents().contains(student)) {
-            throw new StudentExistException(
+            throw new EntityExistsException(
                     "Subject already have this student"
             );
         }
@@ -132,7 +132,7 @@ public class SubjectServiceImpl implements SubjectService {
         Student student = studentService.findById(studentId);
 
         if (!subject.getStudents().contains(student)) {
-            throw new StudentNotFoundException(
+            throw new EntityNotFoundException(
                     "Subject doesn't have this student"
             );
         }

@@ -1,8 +1,8 @@
 package com.school.service.impl;
 
-import com.school.exception.UserNotFoundException;
-import com.school.exception.UserExistsException;
 import com.school.models.User;
+import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User create(@NotNull User user) {
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
-            throw new UserExistsException("User with email " + user.getEmail() + " already exists");
+            throw new EntityExistsException("User with email " + user.getEmail() + " already exists");
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
@@ -35,14 +35,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findById(long id) {
         return userRepository.findById(id).orElseThrow(
-                () -> new UserNotFoundException("User with id " + id + " not found"));
+                () -> new EntityNotFoundException("User with id " + id + " not found"));
     }
 
     @Override
     public User update(@NotNull User user) {
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             if(!(user.getEmail().equals(userRepository.findById(user.getId()).get().getEmail()))) {
-                throw new UserExistsException("User with email " + user.getEmail() + " already exists");
+                throw new EntityExistsException("User with email " + user.getEmail() + " already exists");
             }
         }
         findById(user.getId());
@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService {
     public User findByEmail(String email){
         Optional<User> user = userRepository.findByEmail(email);
         if (user.isEmpty()) {
-            throw new UserNotFoundException("User not found");
+            throw new EntityNotFoundException("User not found");
         }
         return user.get();
     }
@@ -74,7 +74,7 @@ public class UserServiceImpl implements UserService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<User> user = userRepository.findByEmail(username);
         if (user.isEmpty()) {
-            throw new UserNotFoundException("User not found");
+            throw new UsernameNotFoundException("User not found");
         }
         return user.get();
     }
