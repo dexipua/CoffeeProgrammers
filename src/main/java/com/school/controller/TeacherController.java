@@ -42,7 +42,7 @@ public class TeacherController {
     @ResponseStatus(HttpStatus.OK)
     public List<TeacherResponseToGet> getAll(){
         List<TeacherResponseToGet> result = new ArrayList<>();
-        for(Teacher teacher : teacherService.findAll()){
+        for(Teacher teacher : teacherService.findAllByOrderByUser()){
             result.add(new TeacherResponseToGet(teacher));
         }
         return result;

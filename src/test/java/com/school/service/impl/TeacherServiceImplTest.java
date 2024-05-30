@@ -3,13 +3,12 @@ package com.school.service.impl;
 import com.school.exception.TeacherExistException;
 import com.school.exception.TeacherNotFoundException;
 import com.school.exception.UserExistsException;
-import com.school.models.Role;
-import com.school.models.Subject;
-import com.school.models.Teacher;
-import com.school.models.User;
+import com.school.models.*;
 import com.school.repositories.RoleRepository;
 import com.school.repositories.SubjectRepository;
 import com.school.repositories.TeacherRepository;
+import com.school.service.RoleService;
+import com.school.service.SubjectService;
 import com.school.service.TeacherService;
 
 
@@ -20,6 +19,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,22 +36,21 @@ import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-@DataJpaTest
 @ExtendWith(MockitoExtension.class)
 public class TeacherServiceImplTest {
 
     @Mock
     private TeacherRepository teacherRepository;
     @Mock
-    private SubjectRepository subjectRepository;
-    @Autowired
-    private RoleRepository roleRepository;
-    private TeacherService teacherService;
+    private SubjectService subjectService;
+    @Mock
+    private RoleService roleService;
+    @InjectMocks
+    private TeacherServiceImpl teacherService;
 
     @BeforeEach
     void setUp() {
-        teacherService = new TeacherServiceImpl(teacherRepository, roleRepository, subjectRepository);
-        roleRepository.save(new Role("TEACHER"));
+        roleService.create(new Role("TEACHER"));
     }
 
     @Test
@@ -132,28 +131,30 @@ public class TeacherServiceImplTest {
         Teacher res = teacherService.findById(1L);
         assertEquals(updatedTeacher, res);
     }
-        @Test
-        void tryUpdate () {
-            //given
-            Teacher teacher = new Teacher(new User("Artem", "Moseichenko", "am@gmil.com", "Abubekir257"));
-            teacher.setId(1);
-            teacherService.create(teacher);
-            //then
-            Teacher updatedTeacher = new Teacher(new User("rename", "surname", "Newpassword@gmil.com", "Password441324"));
-            updatedTeacher.setId(1);
-            when(teacherRepository.findById(1L)).thenReturn(Optional.of(updatedTeacher));
-            teacherService.update(updatedTeacher);
-            //when
-            Teacher res = teacherService.findById(1L);
-            assertEquals(updatedTeacher, res);
-        }
+
     @Test
-    void deleteWithSubjects () {
+    void tryUpdate() {
+        //given
+        Teacher teacher = new Teacher(new User("Artem", "Moseichenko", "am@gmil.com", "Abubekir257"));
+        teacher.setId(1);
+        teacherService.create(teacher);
+        //then
+        Teacher updatedTeacher = new Teacher(new User("rename", "surname", "Newpassword@gmil.com", "Password441324"));
+        updatedTeacher.setId(1);
+        when(teacherRepository.findById(1L)).thenReturn(Optional.of(updatedTeacher));
+        teacherService.update(updatedTeacher);
+        //when
+        Teacher res = teacherService.findById(1L);
+        assertEquals(updatedTeacher, res);
+    }
+
+    @Test
+    void deleteWithSubjects() {
         Teacher teacher = new Teacher(new User("Vladobrod", "Vlad", "Bulakovskyi", "Vlad123"));
         teacherService.create(teacher);
         //when
         when(teacherRepository.findById(1L)).thenReturn(Optional.of(teacher));
-        when(subjectRepository.findByTeacher_Id(1L)).thenReturn(Optional.of(new ArrayList<>(Arrays.asList(new Subject("Some")))));
+        when(subjectService.findByTeacher_Id(1L));
         //then
         teacherService.delete(1L);
 
@@ -161,19 +162,21 @@ public class TeacherServiceImplTest {
         verify(teacherRepository, times(1)).delete(teacher);
     }
 
-        @Test
-        void deleteWithOutSubjects () {
-            Teacher teacher = new Teacher(new User("Vladobrod", "Vlad", "Bulakovskyi", "Vlad123"));
-            teacherService.create(teacher);
-
-            when(teacherRepository.findById(1L)).thenReturn(Optional.of(teacher));
-            teacherService.delete(1L);
-
-            verify(teacherRepository, times(1)).findById(1L);
-            verify(teacherRepository, times(1)).delete(teacher);
-        }
     @Test
-    void deleteChief () {
+    void deleteWithOutSubjects() {
+        Teacher teacher = new Teacher(new User("Vladobrod", "Vlad", "Bulakovskyi", "Vlad123"));
+        teacherService.create(teacher);
+
+        when(teacherRepository.findById(1L)).thenReturn(Optional.of(teacher));
+
+        teacherService.delete(1L);
+
+        verify(teacherRepository).findById(1L);
+        verify(teacherRepository).delete(teacher);
+    }
+
+    @Test
+    void deleteChief() {
         Teacher teacher = new Teacher(new User("Vladobrod", "Vlad", "Bulakovskyi", "Vlad123"));
         teacherService.create(teacher);
         teacher.getUser().setRole(new Role("CHIEF_TEACHER"));
@@ -183,55 +186,55 @@ public class TeacherServiceImplTest {
         assertThrowsExactly(TeacherExistException.class, () -> teacherService.delete(1L));
     }
 
-        @Test
-        void findAll () {
-            teacherService.findAll();
+    @Test
+    void findAll() {
+        teacherService.findAllByOrderByUser();
 
-            verify(teacherRepository).findAll();
-        }
-
-        @Test
-        void findBySubjectName () {
-            Subject subject = new Subject("Mathematics");
-            Teacher teacher = new Teacher(new User("Vladobrod", "Vlad", "Bulakovskyi", "Vlad123"));
-            teacher.addSubject(subject);
-            subject.setTeacher(teacher);
-            teacherService.create(teacher);
-
-            when(teacherRepository.findBySubjectsContains(subject.getName())).thenReturn(Optional.of(teacher));
-
-            Teacher result = teacherService.findBySubjectName(subject.getName());
-
-            assertEquals(teacher, result);
-        }
-
-        @Test
-        void notFindBySubjectName () {
-            Subject subject = new Subject("Mathematics");
-            Teacher teacher = new Teacher(new User("Vladobrod", "Vlad", "Bulakovskyi", "Vlad123"));
-            teacher.addSubject(subject);
-            subject.setTeacher(teacher);
-            teacherService.create(teacher);
-
-            assertThrows(TeacherNotFoundException.class, () -> teacherService.findBySubjectName("Art"));
-        }
-
-        @Test
-        void findByEmail () {
-            Teacher teacher = new Teacher(new User("Vladobrod", "Vlad", "some@gmail.com", "Vlad123"));
-            teacherService.create(teacher);
-            when(teacherRepository.findByUserEmail(teacher.getUser().getEmail())).thenReturn(Optional.of(teacher));
-
-            Teacher result = teacherService.findByEmail(teacher.getUser().getEmail());
-
-            assertEquals(teacher, result);
-        }
-
-        @Test
-        void notFindByEmail () {
-            Teacher teacher = new Teacher(new User("Vladobrod", "Vlad", "Bulakovskyi", "Vlad123"));
-            teacherService.create(teacher);
-
-            assertThrows(TeacherNotFoundException.class, () -> teacherService.findByEmail("dssdssdssd"));
-        }
+        verify(teacherRepository).findAllByOrderByUser();
     }
+
+    @Test
+    void findBySubjectName() {
+        Subject subject = new Subject("Mathematics");
+        Teacher teacher = new Teacher(new User("Vladobrod", "Vlad", "Bulakovskyi", "Vlad123"));
+        teacher.addSubject(subject);
+        subject.setTeacher(teacher);
+        teacherService.create(teacher);
+
+        when(teacherRepository.findBySubjectsContains(subject.getName())).thenReturn(Optional.of(teacher));
+
+        Teacher result = teacherService.findBySubjectName(subject.getName());
+
+        assertEquals(teacher, result);
+    }
+
+    @Test
+    void notFindBySubjectName() {
+        Subject subject = new Subject("Mathematics");
+        Teacher teacher = new Teacher(new User("Vladobrod", "Vlad", "Bulakovskyi", "Vlad123"));
+        teacher.addSubject(subject);
+        subject.setTeacher(teacher);
+        teacherService.create(teacher);
+
+        assertThrows(TeacherNotFoundException.class, () -> teacherService.findBySubjectName("Art"));
+    }
+
+    @Test
+    void findByEmail() {
+        Teacher teacher = new Teacher(new User("Vladobrod", "Vlad", "some@gmail.com", "Vlad123"));
+        teacherService.create(teacher);
+        when(teacherRepository.findByUserEmail(teacher.getUser().getEmail())).thenReturn(Optional.of(teacher));
+
+        Teacher result = teacherService.findByEmail(teacher.getUser().getEmail());
+
+        assertEquals(teacher, result);
+    }
+
+    @Test
+    void notFindByEmail() {
+        Teacher teacher = new Teacher(new User("Vladobrod", "Vlad", "Bulakovskyi", "Vlad123"));
+        teacherService.create(teacher);
+
+        assertThrows(TeacherNotFoundException.class, () -> teacherService.findByEmail("dssdssdssd"));
+    }
+}

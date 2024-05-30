@@ -2,18 +2,11 @@ package com.school.service.impl;
 
 import com.school.exception.TeacherExistException;
 import com.school.exception.TeacherNotFoundException;
-import com.school.models.Student;
 import com.school.models.Subject;
 import com.school.models.Teacher;
-import com.school.repositories.RoleRepository;
-import com.school.repositories.StudentRepository;
-import com.school.repositories.SubjectRepository;
 import com.school.repositories.TeacherRepository;
 import com.school.service.RoleService;
-import com.school.service.SubjectService;
 import com.school.service.TeacherService;
-import jakarta.persistence.EntityExistsException;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,7 +19,6 @@ public class TeacherServiceImpl implements TeacherService {
 
     private final TeacherRepository teacherRepository;
     private final RoleService roleService;
-    private final SubjectService subjectService;
 
     @Override
     public Teacher create(@NotNull Teacher teacher) {
@@ -60,15 +52,15 @@ public class TeacherServiceImpl implements TeacherService {
         if(teacher.getUser().getRole().getName().equals("CHIEF_TEACHER")) {
             throw new TeacherExistException("Cannot delete teacher with role CHIEF_TEACHER");
         }else{
-            List<Subject> subjects = subjectService.findByTeacher_Id(id);
+            List<Subject> subjects = teacher.getSubjects();
             subjects.forEach(a -> a.setTeacher(null));
         }
-        teacher.setSubjects(null);
+        teacher.setSubjects(new ArrayList<>());
         teacherRepository.delete(teacher);
     }
 
     @Override
-    public List<Teacher> findAll() {
+    public List<Teacher> findAllByOrderByUser() {
         Optional<List<Teacher>> teachers = teacherRepository.findAllByOrderByUser();
         return teachers.orElseGet(ArrayList::new);
     }
