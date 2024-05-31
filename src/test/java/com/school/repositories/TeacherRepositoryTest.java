@@ -45,7 +45,7 @@ public class TeacherRepositoryTest {
         teacherRepository.save(teacher);
 
         //when
-        Optional<Teacher> res = teacherRepository.findBySubjectsContains("Mathematics");
+        Optional<Teacher> res = teacherRepository.findBySubjectName("Mathematics");
         boolean result = res.get().equals(teacher);
 
         //then
@@ -67,7 +67,7 @@ public class TeacherRepositoryTest {
         teacherRepository.save(teacher);
 
         //then
-        Optional<Teacher> res = teacherRepository.findBySubjectsContains("Art");
+        Optional<Teacher> res = teacherRepository.findBySubjectName("Art");
         assertThrows(NoSuchElementException.class, res::get);
     }
 

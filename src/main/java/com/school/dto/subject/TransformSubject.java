@@ -1,12 +1,7 @@
-package com.school.dto;
+package com.school.dto.subject;
 
 import com.school.models.Subject;
-import com.school.service.StudentService;
-import com.school.service.TeacherService;
 import lombok.RequiredArgsConstructor;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 
 @RequiredArgsConstructor
 public class TransformSubject {

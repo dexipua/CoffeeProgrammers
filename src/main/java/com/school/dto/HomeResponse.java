@@ -1,5 +1,7 @@
 package com.school.dto;
 
+import com.school.dto.subject.SubjectResponse;
+import com.school.dto.teacher.TeacherResponseToGet;
 import com.school.models.Subject;
 import com.school.models.Teacher;
 import com.school.service.StudentService;

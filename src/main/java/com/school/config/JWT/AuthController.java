@@ -1,11 +1,7 @@
 package com.school.config.JWT;
 
-import com.school.dto.AuthResponse;
-import com.school.dto.LoginRequest;
-import com.school.models.Role;
-import com.school.models.User;
-import com.school.service.RoleService;
-import com.school.service.UserService;
+import com.school.dto.auth.AuthResponse;
+import com.school.dto.auth.LoginRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +16,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @Slf4j

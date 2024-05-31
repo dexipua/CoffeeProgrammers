@@ -1,4 +1,4 @@
-package com.school.dto;
+package com.school.dto.teacher;
 
 import com.school.models.Teacher;
 import com.school.models.User;

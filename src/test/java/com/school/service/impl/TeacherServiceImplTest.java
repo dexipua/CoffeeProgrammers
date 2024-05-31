@@ -31,7 +31,6 @@ import static org.mockito.Mockito.verify;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -198,7 +197,7 @@ public class TeacherServiceImplTest {
             subject.setTeacher(teacher);
             teacherService.create(teacher);
 
-            when(teacherRepository.findBySubjectsContains(subject.getName())).thenReturn(Optional.of(teacher));
+            when(teacherRepository.findBySubjectName(subject.getName())).thenReturn(Optional.of(teacher));
 
             Teacher result = teacherService.findBySubjectName(subject.getName());
 
