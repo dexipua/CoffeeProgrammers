@@ -11,7 +11,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,9 +33,7 @@ public class StudentController {
     @GetMapping("/get/{id}")
     @ResponseStatus(HttpStatus.OK)
     public StudentResponseAll getStudentById(@PathVariable long id) {
-        Student student;
-        student = studentService.findById(id);
-        return new StudentResponseAll(student);
+        return new StudentResponseAll(studentService.findById(id));
     }
 
     @PutMapping("/update/{id}")
@@ -69,27 +66,27 @@ public class StudentController {
                 .collect(Collectors.toList());
     }
 
+    @GetMapping("/byEmail/{email}")
+    @ResponseStatus(HttpStatus.OK)
+    public StudentResponseToGet getByEmail(@PathVariable("email") String email){
+        return new StudentResponseToGet(studentService.findByEmail(email));
+    }
+
     @GetMapping("/bySubjectName/{subject_name}")
     @ResponseStatus(HttpStatus.OK)
     public List<StudentResponseToGet> getStudentsBySubjectName(@PathVariable("subject_name") String subjectName) {
-        List<Student> students;
-        students = studentService.findBySubjectName(subjectName);
-        List<StudentResponseToGet> studentResponses = new ArrayList<>();
-        for (Student student : students) {
-            studentResponses.add(new StudentResponseToGet(student));
-        }
-        return studentResponses;
+        List<Student> students = studentService.findBySubjectName(subjectName);
+        return students.stream()
+                .map(StudentResponseToGet::new)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/byTeacherId/{teacher_id}")
     @ResponseStatus(HttpStatus.OK)
     public List<StudentResponseToGet> getStudentsByTeacherId( @PathVariable("teacher_id") long teacherId) {
-        List<Student> students;
-        students = studentService.findStudentsByTeacherId(teacherId);
-        List<StudentResponseToGet> studentResponses = new ArrayList<>();
-        for (Student student : students) {
-            studentResponses.add(new StudentResponseToGet(student));
-        }
-        return studentResponses;
+        List<Student> students = studentService.findStudentsByTeacherId(teacherId);
+        return students.stream()
+                .map(StudentResponseToGet::new)
+                .collect(Collectors.toList());
     }
 }

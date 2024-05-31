@@ -67,6 +67,11 @@ public class StudentServiceImpl implements StudentService {
         return students.orElseGet(ArrayList::new);
     }
 
+    @Override
+    public Student findByEmail(String email) {
+        return studentRepository.findByUserEmail(email).orElseThrow(
+                () -> new EntityNotFoundException("Student with " + email + " not found"));
+    }
 
     @Override
     public List<Student> findBySubjectName(String subjectName) {
@@ -74,15 +79,8 @@ public class StudentServiceImpl implements StudentService {
                 () -> new EntityNotFoundException("Student with " + subjectName + " not found"));
     }
 
-    @Override
-    public Student findByEmail(String email) {
-        return studentRepository.findByUserEmail(email).orElseThrow(
-                () -> new EntityNotFoundException("Student with " + email + " not found"));
-    }
-
     // TODO -------------------------------------------------------------------
     // TODO -to-repository-
-    // TODO -to-controller-
     @Override
     public List<Student> findStudentsByTeacherId(long teacherId) {
         HashSet<Student> students = new HashSet<>();
