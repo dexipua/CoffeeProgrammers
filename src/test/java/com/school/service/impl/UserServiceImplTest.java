@@ -1,9 +1,9 @@
 package com.school.service.impl;
 
-import com.school.exception.UserExistsException;
-import com.school.exception.UserNotFoundException;
 import com.school.models.User;
 import com.school.repositories.UserRepository;
+import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -53,9 +53,8 @@ class UserServiceImplTest {
                 .thenReturn(Optional.of(userExist));
 
         //when&then
-        assertThrows(UserExistsException.class, () -> {
-            userService.create(userExist);
-        });
+        assertThrows(EntityExistsException.class, () ->
+                userService.create(userExist));
     }
 
     @Test
@@ -76,9 +75,8 @@ class UserServiceImplTest {
         User user = new User("Artem", "Moseichenko",  "am@gmil.com","Abekpr257");
         userService.create(user);
         //when&then
-        assertThrowsExactly(UserNotFoundException.class, () -> {
-            userService.findById(2);
-        });
+        assertThrowsExactly(EntityNotFoundException.class, () ->
+                userService.findById(2));
     }
 
     @Test
@@ -96,9 +94,8 @@ class UserServiceImplTest {
         //then
         User updatedUser = new User("rename", "surname",  "Newpassword@gmil.com", "Password441324");
         updatedUser.setId(1);
-        assertThrowsExactly(UserExistsException.class, () -> {
-            userService.update(updatedUser);
-        });
+        assertThrowsExactly(EntityExistsException.class, () ->
+                userService.update(updatedUser));
     }
     @Test
     void tryToUpdateWithOurOwnEmail() {
@@ -175,9 +172,7 @@ class UserServiceImplTest {
         User user = new User("Dexip", "Artem", email, "Abekpr257");
         userService.create(user);
         //when&then
-        assertThrowsExactly(UserNotFoundException.class, () -> {
-            userService.findByEmail("4ervvrwv");
-        });
+        assertThrowsExactly(EntityNotFoundException.class, () -> userService.findByEmail("4ervvrwv"));
     }
 
     @Test
@@ -200,8 +195,7 @@ class UserServiceImplTest {
         User user = new User("Artem", "Moseichenko",  email,"Abekpr257");
         userService.create(user);
         //when&then
-        assertThrowsExactly(UserNotFoundException.class, () -> {
-            userService.loadUserByUsername("rgfr");
-        });
+        assertThrowsExactly(EntityNotFoundException.class, () ->
+                userService.loadUserByUsername("rgfr"));
     }
 }
