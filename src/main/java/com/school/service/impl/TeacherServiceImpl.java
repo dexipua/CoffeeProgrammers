@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -64,8 +63,7 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public List<Teacher> findAll() {
-        Optional<List<Teacher>> teachers = teacherRepository.findAllByOrderByUser();
-        return teachers.orElseGet(ArrayList::new);
+        return teacherRepository.findAllByOrderByUser();
     }
 
     @Override
