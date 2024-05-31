@@ -129,7 +129,7 @@ class SubjectServiceImplTest {
         subjectService.create(subjects.get(2));
 
         //when
-        when(subjectRepository.findAllByOrderByName()).thenReturn(Optional.of(subjects));
+        when(subjectRepository.findAllByOrderByName()).thenReturn(subjects);
         List<Subject> actual = subjectService.getAllByOrderByName();
 
         //then
@@ -199,7 +199,7 @@ class SubjectServiceImplTest {
         subjectService.create(anotherTeacherSubject);
 
         //when
-        when(subjectRepository.findByTeacher_Id(teacher.getId())).thenReturn(Optional.of(teacherSubjects));
+        when(subjectRepository.findByTeacher_Id(teacher.getId())).thenReturn(teacherSubjects);
         List<Subject> actual = subjectService.findByTeacher_Id(teacher.getId());
 
         //then
@@ -240,7 +240,7 @@ class SubjectServiceImplTest {
         subjectService.create(anotherStudentSubject);
 
         //when
-        when(subjectRepository.findByStudent_Id(student.getId())).thenReturn(Optional.of(studentSubjects));
+        when(subjectRepository.findByStudent_Id(student.getId())).thenReturn(studentSubjects);
         List<Subject> actual = subjectService.findByStudent_Id(student.getId());
 
         //then
