@@ -2,8 +2,10 @@ package com.school.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
-import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -22,12 +24,12 @@ public class User implements UserDetails, Comparable<User>{
     private long id;
 
     @Pattern(regexp = "[A-Z][a-z]+",
-            message = "Must start with a capital letter followed by one or more lowercase letters")
+            message = "First name must start with a capital letter followed by one or more lowercase letters")
     @Column(name = "first_name", nullable = false)
     private String firstName;
 
     @Pattern(regexp = "[A-Z][a-z]+",
-            message = "Must start with a capital letter followed by one or more lowercase letters")
+            message = "Last name must start with a capital letter followed by one or more lowercase letters")
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
