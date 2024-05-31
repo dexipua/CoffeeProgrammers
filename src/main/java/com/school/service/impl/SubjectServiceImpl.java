@@ -13,7 +13,6 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -64,7 +63,7 @@ public class SubjectServiceImpl implements SubjectService {
 
     @Override
     public List<Subject> getAllByOrderByName() {
-        return subjectRepository.findAllByOrderByName().orElseGet(ArrayList::new);
+        return subjectRepository.findAllByOrderByName();
     }
 
     @Override
@@ -77,10 +76,7 @@ public class SubjectServiceImpl implements SubjectService {
     @Override
     public List<Subject> findByTeacher_Id(long teacherId) {
         teacherService.findById(teacherId);
-        return subjectRepository.findByTeacher_Id(teacherId).orElseThrow( // TODO
-                () -> new EntityNotFoundException(
-                        "Subjects with teacher id " + teacherId + " not found")
-        );
+        return subjectRepository.findByTeacher_Id(teacherId);
     }
 
     @Override
@@ -105,10 +101,7 @@ public class SubjectServiceImpl implements SubjectService {
     @Override
     public List<Subject> findByStudent_Id(long studentId) {
         studentService.findById(studentId);
-        return subjectRepository.findByStudent_Id(studentId).orElseThrow(
-                () -> new EntityNotFoundException(
-                        "Subjects with student id " + studentId + " not found")
-        );
+        return subjectRepository.findByStudent_Id(studentId);
     }
 
     @Override
