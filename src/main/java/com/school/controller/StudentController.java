@@ -7,13 +7,13 @@ import com.school.models.Student;
 import com.school.service.impl.StudentServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/students")
@@ -44,33 +44,32 @@ public class StudentController {
     @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER') or @userSecurity.checkUserByStudent(#auth, #id)")
     public StudentResponseAll updateStudent(@PathVariable long id, @RequestBody StudentRequest studentRequest, Authentication auth) {
         Student student = studentService.findById(id);
-        Student studentToUpdate = StudentRequest.toStudent(studentRequest);
-        studentToUpdate.setId(id);
-        studentToUpdate.setSubjects(student.getSubjects());
-        Student updatedStudent = studentService.update(studentToUpdate);
-        return new StudentResponseAll(updatedStudent);
+
+        student.getUser().setEmail(studentRequest.getEmail());
+        student.getUser().setPassword(studentRequest.getPassword());
+        student.getUser().setFirstName(studentRequest.getFirstName());
+        student.getUser().setLastName(studentRequest.getLastName());
+
+        return new StudentResponseAll(studentService.update(student));
     }
 
     @DeleteMapping("/delete/{id}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER')")
-    public ResponseEntity<Void> deleteStudent(@PathVariable long id) {
+    public void deleteStudent(@PathVariable long id) {
         studentService.deleteById(id);
-        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<StudentResponseToGet>> getAllStudents() {
+    public List<StudentResponseToGet> getAllStudents() {
         List<Student> students = studentService.findAllOrderedByName();
-        List<StudentResponseToGet> studentResponses = new ArrayList<>();
-        for (Student student : students) {
-            studentResponses.add(new StudentResponseToGet(student));
-        }
-        return ResponseEntity.ok(studentResponses);
+        return students.stream()
+                .map(StudentResponseToGet::new)
+                .collect(Collectors.toList());
     }
 
-    @GetMapping("/by/{subject_name}")
+    @GetMapping("/bySubjectName/{subject_name}")
     @ResponseStatus(HttpStatus.OK)
     public List<StudentResponseToGet> getStudentsBySubjectName(@PathVariable("subject_name") String subjectName) {
         List<Student> students;
@@ -82,7 +81,7 @@ public class StudentController {
         return studentResponses;
     }
 
-    @GetMapping("/by/{teacher_id}")
+    @GetMapping("/byTeacherId/{teacher_id}")
     @ResponseStatus(HttpStatus.OK)
     public List<StudentResponseToGet> getStudentsByTeacherId( @PathVariable("teacher_id") long teacherId) {
         List<Student> students;
