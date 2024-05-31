@@ -78,7 +78,8 @@ public class SubjectServiceImpl implements SubjectService {
     public List<Subject> findByTeacher_Id(long teacherId) {
         teacherService.findById(teacherId);
         return subjectRepository.findByTeacher_Id(teacherId).orElseThrow( // TODO
-                () -> new EntityNotFoundException("Subjects with teacher id " + teacherId + " not found")
+                () -> new EntityNotFoundException(
+                        "Subjects with teacher id " + teacherId + " not found")
         );
     }
 
@@ -105,7 +106,8 @@ public class SubjectServiceImpl implements SubjectService {
     public List<Subject> findByStudent_Id(long studentId) {
         studentService.findById(studentId);
         return subjectRepository.findByStudent_Id(studentId).orElseThrow(
-                () -> new EntityNotFoundException("Subjects with student id " + studentId + " not found")
+                () -> new EntityNotFoundException(
+                        "Subjects with student id " + studentId + " not found")
         );
     }
 

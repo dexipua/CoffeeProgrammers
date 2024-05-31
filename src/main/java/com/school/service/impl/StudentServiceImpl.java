@@ -46,7 +46,8 @@ public class StudentServiceImpl implements StudentService {
         String updatedEmail = student.getUser().getEmail();
         String actualEmail = findById(student.getId()).getUser().getEmail();
 
-        if(!updatedEmail.equals(actualEmail) && studentRepository.findByUserEmail(updatedEmail).isPresent()) {
+        if(!updatedEmail.equals(actualEmail) &&
+                studentRepository.findByUserEmail(updatedEmail).isPresent()) {
             throw new EntityExistsException("Student with such email already exist");
         }
 
@@ -80,10 +81,12 @@ public class StudentServiceImpl implements StudentService {
     }
 
     // TODO -------------------------------------------------------------------
+    // TODO -to-repository-
+    // TODO -to-controller-
     @Override
     public List<Student> findStudentsByTeacherId(long teacherId) {
         HashSet<Student> students = new HashSet<>();
-        teacherService.findById(teacherId).getSubjects() // TODO -to-repository-
+        teacherService.findById(teacherId).getSubjects()
                 .forEach(subject -> students.addAll(subject.getStudents()));
         return new ArrayList<>(students);
     }
