@@ -43,8 +43,10 @@ public class StudentController {
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER') or @userSecurity.checkUserByStudent(#auth, #id)")
     public StudentResponseAll updateStudent(@PathVariable long id, @RequestBody StudentRequest studentRequest, Authentication auth) {
+        Student student = studentService.findById(id);
         Student studentToUpdate = StudentRequest.toStudent(studentRequest);
         studentToUpdate.setId(id);
+        studentToUpdate.setSubjects(student.getSubjects());
         Student updatedStudent = studentService.update(studentToUpdate);
         return new StudentResponseAll(updatedStudent);
     }

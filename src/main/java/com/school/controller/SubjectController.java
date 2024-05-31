@@ -45,8 +45,11 @@ public class SubjectController {
             @PathVariable("subject_id") long subjectId,
             @RequestBody SubjectRequest subjectRequest) {
 
+        Subject subject = subjectService.findById(subjectId);
         Subject subjectToUpdate = TransformSubject.transformFromRequestToModel(subjectRequest);
         subjectToUpdate.setId(subjectId);
+        subjectToUpdate.setTeacher(subject.getTeacher());
+        subjectToUpdate.setStudents(subject.getStudents());
 
         return new SubjectResponse(subjectService.update(subjectToUpdate));
 
