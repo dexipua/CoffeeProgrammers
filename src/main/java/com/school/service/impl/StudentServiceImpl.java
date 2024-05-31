@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -63,8 +62,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public List<Student> findAllOrderedByName() {
-        Optional<List<Student>> students = studentRepository.findAllByOrderByUser();
-        return students.orElseGet(ArrayList::new);
+        return studentRepository.findAllByOrderByUser();
     }
 
     @Override
@@ -75,8 +73,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public List<Student> findBySubjectName(String subjectName) {
-        return studentRepository.findStudentBySubjectName(subjectName).orElseThrow(
-                () -> new EntityNotFoundException("Student with " + subjectName + " not found"));
+        return studentRepository.findStudentBySubjectName(subjectName);
     }
 
     // TODO -------------------------------------------------------------------

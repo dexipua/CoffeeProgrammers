@@ -18,6 +18,6 @@ public class StudentResponseToGet {
         this.firstName = student.getUser().getFirstName();
         this.lastName = student.getUser().getLastName();
         this.email = student.getUser().getEmail();
-        this.id = student.getUser().getId();
+        this.id = student.getId();
     }
 }
