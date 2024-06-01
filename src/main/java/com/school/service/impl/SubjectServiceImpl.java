@@ -72,10 +72,8 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     @Override
-    public Subject findByName(String name) {
-        return subjectRepository.findByName(name).orElseThrow(
-                () -> new EntityNotFoundException("Subject " + name + " not found")
-        );
+    public List<Subject> findByNameContaining(String name) {
+        return subjectRepository.findByNameContaining(name);
     }
 
     @Override

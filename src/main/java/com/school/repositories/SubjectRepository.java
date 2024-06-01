@@ -9,6 +9,7 @@ import java.util.Optional;
 
 public interface SubjectRepository extends JpaRepository<Subject, Long> {
     Optional<Subject> findByName(String name);
+    List<Subject> findByNameContaining(String name);
     List<Subject> findAllByOrderByName();
     List<Subject> findByTeacher_Id(long teacherId);
     @Query("SELECT s.subjects FROM Student s WHERE s.id = :studentId")

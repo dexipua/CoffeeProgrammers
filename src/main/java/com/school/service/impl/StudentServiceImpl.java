@@ -5,15 +5,12 @@ import com.school.models.Student;
 import com.school.repositories.StudentRepository;
 import com.school.service.RoleService;
 import com.school.service.StudentService;
-import com.school.service.TeacherService;
 import com.school.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -21,7 +18,6 @@ import java.util.List;
 public class StudentServiceImpl implements StudentService {
 
     private final UserService userService;
-    private final TeacherService teacherService;
     private final StudentRepository studentRepository;
     private final RoleService roleService;
 
@@ -63,23 +59,19 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public List<Student> findBySubjectName(String subjectName) {
-        return studentRepository.findStudentBySubjectName(subjectName);
+        return studentRepository.findStudentBySubjectNameContaining(subjectName);
     }
 
-    // TODO -------------------------------------------------------------------
-    // TODO -to-repository-
     @Override
     public List<Student> findStudentsByTeacherId(long teacherId) {
-        HashSet<Student> students = new HashSet<>();
-        teacherService.findById(teacherId).getSubjects()
-                .forEach(subject -> students.addAll(subject.getStudents()));
-        return new ArrayList<>(students);
+        return studentRepository.findAllByTeacherId(teacherId);
+
     }
 
     @Override
     public List<Student> findAllByUser_FirstNameAndAndUser_LastName(
              String firstName,
              String lastName) {
-        return studentRepository.findAllByUser_FirstNameAndUser_LastName(firstName, lastName);
+        return studentRepository.findAllByUser_FirstNameContainingAndUser_LastNameContaining(firstName, lastName);
     }
 }

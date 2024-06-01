@@ -66,14 +66,12 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public Teacher findBySubjectName(String subjectName) {
-        return teacherRepository.findBySubjectName(subjectName).orElseThrow(
-                () -> new EntityNotFoundException("Teacher with subject name " + subjectName + " not found")
-        );
+    public List<Teacher> findBySubjectName(String subjectName) {
+        return teacherRepository.findBySubjectName(subjectName);
     }
 
     @Override
     public List<Teacher> findAllByUser_FirstNameAndAndUser_LastName(String firstName, String lastName) {
-        return teacherRepository.findAllByUser_FirstNameAndUser_LastName(firstName, lastName);
+        return teacherRepository.findAllByUser_FirstNameContainingAndUser_LastNameContaining(firstName, lastName);
     }
 }

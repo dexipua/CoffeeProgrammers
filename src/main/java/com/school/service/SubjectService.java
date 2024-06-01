@@ -15,7 +15,7 @@ public interface SubjectService {
 
     List<Subject> getAllByOrderByName();
 
-    Subject findByName(String name);
+    List<Subject> findByNameContaining(String name);
 
     List<Subject> findByTeacher_Id(long teacherId);
 

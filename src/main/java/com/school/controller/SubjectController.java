@@ -1,7 +1,8 @@
 package com.school.controller;
 
 import com.school.dto.subject.SubjectRequest;
-import com.school.dto.subject.SubjectResponse;
+import com.school.dto.subject.SubjectResponseAll;
+import com.school.dto.subject.SubjectResponseToGet;
 import com.school.dto.subject.TransformSubject;
 import com.school.models.Subject;
 import com.school.service.SubjectService;
@@ -23,70 +24,73 @@ public class SubjectController {
     private final SubjectService subjectService;
 
     @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER')")
-    @PostMapping("/createSubject")
+    @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    public SubjectResponse create(@RequestBody SubjectRequest subjectRequest) {
+    public SubjectResponseToGet create(@RequestBody SubjectRequest subjectRequest) {
         Subject subject = TransformSubject.
                 transformFromRequestToModel(subjectRequest);
-        return new SubjectResponse(subjectService.create(subject));
+        return new SubjectResponseToGet(subjectService.create(subject));
     }
 
 
-    @GetMapping("/findById/{subject_id}")
+    @GetMapping("/getById/{subject_id}")
     @ResponseStatus(HttpStatus.OK)
-    public SubjectResponse getById(@PathVariable("subject_id") long subjectId) {
-        return new SubjectResponse(subjectService.findById(subjectId));
+    public SubjectResponseAll getById(@PathVariable("subject_id") long subjectId) {
+        return new SubjectResponseAll(subjectService.findById(subjectId));
     }
 
     @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER')")
-    @PutMapping("/updateSubject/{subject_id}")
+    @PutMapping("/update/{subject_id}")
     @ResponseStatus(HttpStatus.OK)
-    public SubjectResponse update(
+    public SubjectResponseAll update(
             @PathVariable("subject_id") long subjectId,
             @RequestBody SubjectRequest subjectRequest) {
 
         Subject subjectToUpdate = TransformSubject.transformFromRequestToModel(subjectRequest);
         subjectToUpdate.setId(subjectId);
 
-        return new SubjectResponse(subjectService.update(subjectToUpdate));
+        return new SubjectResponseAll(subjectService.update(subjectToUpdate));
 
 
     }
 
     @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER')")
-    @DeleteMapping("/deleteSubject/{subject_id}")
+    @DeleteMapping("/delete/{subject_id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("subject_id") long subjectId) {
         subjectService.delete(subjectId);
     }
 
-    @GetMapping("/findAll")
+    @GetMapping("/getAll")
     @ResponseStatus(HttpStatus.OK)
-    public List<SubjectResponse> getAllByOrderByName() {
+    public List<SubjectResponseToGet> getAllByOrderByName() {
         List<Subject> subjects = subjectService.getAllByOrderByName();
         return subjects.stream()
-                .map(SubjectResponse::new)
+                .map(SubjectResponseToGet::new)
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/findByName/{subject_name}")
+    @GetMapping("/getAllByName/")
     @ResponseStatus(HttpStatus.OK)
-    public SubjectResponse getByName(@NotNull @PathVariable("subject_name") String name) {
-        return new SubjectResponse(subjectService.findByName(name));
+    public List<SubjectResponseToGet> getByNameContaining(@NotNull @RequestParam("subject_name") String name) {
+       List<Subject> subjects = subjectService.findByNameContaining(name);
+        return subjects.stream()
+                .map(SubjectResponseToGet::new)
+                .collect(Collectors.toList());
     }
 
-    @GetMapping("/findByTeacherId/{teacher_id}")
+    @GetMapping("/getAllByTeacherId/{teacher_id}")
     @ResponseStatus(HttpStatus.OK)
-    public List<SubjectResponse> getByTeacherId(@PathVariable("teacher_id") long teacherId) {
+    public List<SubjectResponseToGet> getByTeacherId(@PathVariable("teacher_id") long teacherId) {
         List<Subject> subjects = subjectService.findByTeacher_Id(teacherId);
 
         return subjects.stream()
-                .map(SubjectResponse::new)
+                .map(SubjectResponseToGet::new)
                 .collect(Collectors.toList());
     }
 
     @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER')")
-    @PatchMapping("/updateSubject/{subject_id}/setTeacher/{teacher_id}")
+    @PatchMapping("/update/{subject_id}/setTeacher/{teacher_id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void setTeacher(
             @PathVariable("subject_id") long subjectId,
@@ -96,7 +100,7 @@ public class SubjectController {
     }
 
     @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER')")
-    @PatchMapping("/updateSubject/{subject_id}/deleteTeacher")
+    @PatchMapping("/update/{subject_id}/deleteTeacher")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteTeacher(@PathVariable("subject_id") long subjectId) {
         subjectService.deleteTeacher(subjectId);
@@ -104,18 +108,18 @@ public class SubjectController {
 
 
 
-    @GetMapping("/findByStudentId/{student_id}")
+    @GetMapping("/getAllByStudentId/{student_id}")
     @ResponseStatus(HttpStatus.OK)
-    public List<SubjectResponse> getByStudentId(@PathVariable("student_id") long studentId) {
+    public List<SubjectResponseToGet> getByStudentId(@PathVariable("student_id") long studentId) {
         List<Subject> subjects = subjectService.findByStudent_Id(studentId);
 
         return subjects.stream()
-                .map(SubjectResponse::new)
+                .map(SubjectResponseToGet::new)
                 .collect(Collectors.toList());
     }
 
     @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER') or @userSecurity.checkUserBySubject(#auth, #subjectId)")
-    @PatchMapping("/updateSubject/{subject_id}/addStudent/{student_id}")
+    @PatchMapping("/update/{subject_id}/addStudent/{student_id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void addStudent(
             @PathVariable("subject_id") long subjectId,
@@ -126,7 +130,7 @@ public class SubjectController {
     }
 
     @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER') or @userSecurity.checkUserBySubject(#auth, #subjectId)")
-    @PatchMapping("/updateSubject/{subject_id}/deleteStudent/{student_id}")
+    @PatchMapping("/update/{subject_id}/deleteStudent/{student_id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteStudent(
             @PathVariable("subject_id") long subjectId,

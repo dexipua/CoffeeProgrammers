@@ -196,7 +196,7 @@ class StudentServiceImplTest {
         // Given
         String subjectName = "Mathematics";
         Student student = new Student();
-        when(studentRepository.findStudentBySubjectName(eq(subjectName))).thenReturn(List.of(student));
+        when(studentRepository.findStudentBySubjectNameContaining(eq(subjectName))).thenReturn(List.of(student));
 
         // When
         List<Student> result = studentService.findBySubjectName(subjectName);

@@ -7,8 +7,10 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface StudentRepository extends JpaRepository<Student, Long> {
-    @Query("SELECT s.students FROM Subject s WHERE s.name = :subjectName")
-    List<Student> findStudentBySubjectName(String subjectName);
+    @Query("SELECT s.students FROM Subject s WHERE s.name LIKE %:subjectName%")
+    List<Student> findStudentBySubjectNameContaining(String subjectName);
     List<Student> findAllByOrderByUser();
-    List<Student> findAllByUser_FirstNameAndUser_LastName(String firstName, String lastName);
+    List<Student> findAllByUser_FirstNameContainingAndUser_LastNameContaining(String firstName, String lastName);
+    @Query("SELECT s.students FROM Subject s WHERE s.teacher.id = :teacherId")
+    List<Student> findAllByTeacherId(long teacherId);
 }

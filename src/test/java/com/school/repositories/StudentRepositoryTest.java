@@ -47,7 +47,7 @@ class StudentRepositoryTest {
         studentRepository.saveAll(List.of(student1, student2));
 
         // When
-        List<Student> res = studentRepository.findStudentBySubjectName("Math");
+        List<Student> res = studentRepository.findStudentBySubjectNameContaining("Math");
         boolean result = res.equals(List.of(student1));
 
         // Then
@@ -68,7 +68,7 @@ class StudentRepositoryTest {
         studentRepository.save(student1);
 
         // When
-        List<Student> res = studentRepository.findStudentBySubjectName("Art");
+        List<Student> res = studentRepository.findStudentBySubjectNameContaining("Art");
         boolean result = res.equals(List.of());
 
         // Then

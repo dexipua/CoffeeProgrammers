@@ -24,13 +24,13 @@ public class StudentController {
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER')")
-    public StudentResponseAll createStudent(@RequestBody StudentRequest studentRequest) {
+    public StudentResponseToGet createStudent(@RequestBody StudentRequest studentRequest) {
         Student student = StudentRequest.toStudent(studentRequest);
         Student createdStudent = studentService.create(student);
-        return new StudentResponseAll(createdStudent);
+        return new StudentResponseToGet(createdStudent);
     }
 
-    @GetMapping("/get/{id}")
+    @GetMapping("/getById/{id}")
     @ResponseStatus(HttpStatus.OK)
     public StudentResponseAll getStudentById(@PathVariable long id) {
         return new StudentResponseAll(studentService.findById(id));
@@ -52,7 +52,7 @@ public class StudentController {
         studentService.deleteById(id);
     }
 
-    @GetMapping("/all")
+    @GetMapping("/getAll")
     @ResponseStatus(HttpStatus.OK)
     public List<StudentResponseToGet> getAllStudents() {
         List<Student> students = studentService.findAllOrderedByName();
@@ -61,16 +61,18 @@ public class StudentController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/bySubjectName/{subject_name}")
+    @GetMapping("/getAllBySubjectName/")
     @ResponseStatus(HttpStatus.OK)
-    public List<StudentResponseToGet> getStudentsBySubjectName(@PathVariable("subject_name") String subjectName) {
+    public List<StudentResponseToGet> getStudentsBySubjectName(
+            @RequestParam("subject_name") String subjectName) {
+
         List<Student> students = studentService.findBySubjectName(subjectName);
         return students.stream()
                 .map(StudentResponseToGet::new)
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/byTeacherId/{teacher_id}")
+    @GetMapping("/getAllByTeacherId/{teacher_id}")
     @ResponseStatus(HttpStatus.OK)
     public List<StudentResponseToGet> getStudentsByTeacherId( @PathVariable("teacher_id") long teacherId) {
         List<Student> students = studentService.findStudentsByTeacherId(teacherId);
@@ -79,12 +81,12 @@ public class StudentController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/byName/")
+    @GetMapping("/getAllByName/")
     @ResponseStatus(HttpStatus.OK)
-    public List<StudentResponseAll> getStudentsByName( @RequestParam String firstName, @RequestParam String lastName) {
+    public List<StudentResponseToGet> getStudentsByName( @RequestParam String firstName, @RequestParam String lastName) {
         List<Student> students = studentService.findAllByUser_FirstNameAndAndUser_LastName(firstName, lastName);
         return students.stream()
-                .map(StudentResponseAll::new)
+                .map(StudentResponseToGet::new)
                 .collect(Collectors.toList());
     }
 }
