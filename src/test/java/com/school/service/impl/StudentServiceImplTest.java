@@ -1,246 +1,217 @@
-//package com.school.service.impl;
-//
-//import com.school.exception.StudentExistException;
-//import com.school.exception.StudentNotFoundException;
-//import com.school.models.Role;
-//import com.school.models.Student;
-//import com.school.models.User;
-//import com.school.repositories.RoleRepository;
-//import com.school.repositories.StudentRepository;
-//import com.school.service.TeacherService;
-//import org.junit.jupiter.api.BeforeEach;
-//import org.junit.jupiter.api.Test;
-//import org.junit.jupiter.api.extension.ExtendWith;
-//import org.mockito.Mock;
-//import org.mockito.junit.jupiter.MockitoExtension;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-//
-//import java.util.Arrays;
-//import java.util.List;
-//import java.util.Optional;
-//
-//import static org.junit.jupiter.api.Assertions.*;
-//import static org.mockito.Mockito.*;
-//
-//@DataJpaTest
-//@ExtendWith(MockitoExtension.class)
-//class StudentServiceImplTest {
-//
-//    @Mock
-//    private TeacherService teacherService;
-//    @Mock
-//    private StudentRepository studentRepository;
-//    @Autowired
-//    private RoleRepository roleRepository;
-//    private StudentServiceImpl studentService;
-//
-//    @BeforeEach
-//    void setUp() {
-//        studentService = new StudentServiceImpl(teacherService, studentRepository, roleRepository);
-//        roleRepository.save(new Role("STUDENT"));
-//    }
-//
-//    @Test
-//    void tryCreateWithWrongInformation(){
-//        Student studentExist = new Student(new User("Vladobrod", "Vlad", "Bulakovskyi", "Vlad123"));
-//        studentRepository.save(studentExist);
-//        when(studentRepository.findByUserEmail(studentExist.getUser().getEmail())).thenReturn(Optional.of(studentExist));
-//        Student student = new Student(new User("Vladobrod", "Vlad", "Bulakovskyi", "Vlad123"));
-//        assertThrows(StudentExistException.class, () -> studentService.create(student));
-//    }
-//
-//    @Test
-//    void createValidStudent() {
-//        //Given & When & Then
-//        studentService.create(new Student(new User("Userrrr", "Vadym", "Honcharuk", "User123")));
-//    }
-//
-//
-//    @Test
-//    void findByExitingId() {
-//        //Given
-//        long id = 1;
-//        Student student = new Student();
-//        when(studentRepository.findById(eq(id))).thenReturn(Optional.of(student));
-//
-//        //When
-//        Student foundStudent = studentService.findById(id);
-//
-//        //Then
-//        assertEquals(student, foundStudent);
-//    }
-//
-//    @Test
-//    void findByNotExitingId() {
-//        //Given
-//        when(studentRepository.findById(-1L)).thenReturn(Optional.empty());
-//
-//        //When & Then
-//        assertThrows(StudentNotFoundException.class, () -> studentService.findById(-1L));
-//        }
-//
-//    @Test
-//    void tryToUpdateWithException(){
-//        //given
-//        Student student = new Student(new User("Artem", "Moseichenko",  "am@gmil.com","Abubekir257"));
-//        student.setId(1);
-//        studentService.create(student);
-//        Student studentExist = new Student(new User("Artem", "Moseichenko",  "Newpassword@gmil.com","Abubekir257"));
-//        studentExist.setId(2);
-//        studentService.create(studentExist);
-//        //when
-//        when(studentRepository.findById(eq(1L))).thenReturn(Optional.of(student));
-//        //then
-//        Student updatedStudent = new Student(new User("rename", "surname",  "Newpassword@gmil.com", "Password441324"));
-//        updatedStudent.setId(1);
-//        when(studentRepository.findByUserEmail("Newpassword@gmil.com")).thenReturn(Optional.of(studentExist));
-//        assertThrowsExactly(StudentExistException.class, () -> {
-//            studentService.update(updatedStudent);
-//        });
-//    }
-//    @Test
-//    void tryToUpdateWithOutException(){
-//        //given
-//        Student student = new Student(new User("Artem", "Moseichenko",  "am@gmil.com","Abubekir257"));
-//        student.setId(1);
-//        studentService.create(student);
-//        //when
-//        when(studentRepository.findById(eq(1L))).thenReturn(Optional.of(student));
-//        Student updatedStudent = new Student(new User("rename", "surname",  "am@gmil.com", "Password441324"));
-//        updatedStudent.setId(1);
-//        when(studentRepository.findByUserEmail(student.getUser().getEmail())).thenReturn(Optional.of(student));
-//        studentService.update(updatedStudent);
-//        when(studentRepository.findById(eq(1L))).thenReturn(Optional.of(updatedStudent));
-//        //then
-//        Student res = studentService.findById(updatedStudent.getId());
-//        assertEquals(updatedStudent, res);
-//    }
-//
-//    @Test
-//    void tryUpdate(){
-//        //given
-//        Student student = new Student(new User("Artem", "Moseichenko",  "am@gmil.com","Abubekir257"));
-//        student.setId(1);
-//        studentService.create(student);
-//        //then
-//        Student updatedStudent = new Student(new User("rename", "surname",  "Newpassword@gmil.com", "Password441324"));
-//        updatedStudent.setId(1);
-//        when(studentRepository.findById(1L)).thenReturn(Optional.of(updatedStudent));
-//        studentService.update(updatedStudent);
-//        //when
-//        Student res = studentService.findById(1L);
-//        assertEquals(updatedStudent, res);
-//    }
-//
-//    @Test
-//    void tryUpdateWithOurOwnEmail(){
-//        //given
-//        Student student = new Student(new User("Artem", "Moseichenko",  "am@gmil.com","Abubekir257"));
-//        student.setId(1);
-//        studentService.create(student);
-//        //then
-//        Student updatedStudent = new Student(new User("rename", "surname",  "am@gmil.com", "Password441324"));
-//        updatedStudent.setId(1);
-//        when(studentRepository.findById(1L)).thenReturn(Optional.of(student));
-//        studentService.update(updatedStudent);
-//        when(studentRepository.findById(1L)).thenReturn(Optional.of(updatedStudent));
-//        //when
-//        Student res = studentService.findById(1L);
-//        assertEquals(updatedStudent, res);
-//    }
-//
-//
-//    @Test
-//    void deleteById_Success() {
-//        // Given
-//        long id = 1;
-//        Student student = new Student();
-//        student.setId(id);
-//        when(studentRepository.findById(id)).thenReturn(Optional.of(student));
-//
-//        // When
-//        studentService.deleteById(id);
-//
-//        // Then
-//        verify(studentRepository).findById(id);
-//        verify(studentRepository).delete(student);
-//    }
-//
-//    @Test
-//    void deleteById_StudentNotFound() {
-//        // Given
-//        long id = -1;
-//        when(studentRepository.findById(id)).thenReturn(Optional.empty());
-//
-//        // When & Then
-//        assertThrows(StudentNotFoundException.class, () -> studentService.deleteById(id));
-//    }
-//
-//    @Test
-//    void findAllOrderedByName(){
-//        // Given
-//        List<Student> students = Arrays.asList(
-//                new Student(new User("Artem", "Moseichenko",  "am@gmil.com","Abubekir257")),
-//                new Student(new User("Body", "Roseichenko",  "am@gmil.com","Abubekir257")));
-//        when(studentRepository.findAll()).thenReturn(students);
-//
-//        // When
-//        List<Student> result = studentService.findAllOrderedByName();
-//
-//        // Then
-//        assertEquals(students, result);
-//
-//    }
-//
-//    @Test
-//    void findBySubjectName_Exists() {
-//        // Given
-//        String subjectName = "Mathematics";
-//        Student student = new Student();
-//        when(studentRepository.findStudentBySubjectsContains(eq(subjectName))).thenReturn(Optional.of(List.of(student)));
-//
-//        // When
-//        List<Student> result = studentService.findBySubjectName(subjectName);
-//
-//        // Then
-//        assertEquals(student, result.get(0));
-//    }
-//
-//    @Test
-//    void findBySubjectName_NotExists() {
-//        // Given
-//        String subjectName = "Physics";
-//        when(studentRepository.findStudentBySubjectsContains(eq(subjectName))).thenReturn(Optional.empty());
-//
-//        // When & Then
-//        assertThrows(StudentNotFoundException.class, () -> studentService.findBySubjectName(subjectName));
-//    }
-//
-//
-//    @Test
-//    void findByEmail_Exists() {
-//        // Given
-//        String email = "useruser@gmail.com";
-//        Student student = new Student();
-//        when(studentRepository.findByUserEmail(eq(email))).thenReturn(Optional.of(student));
-//
-//        // When
-//        Student result = studentService.findByEmail(email);
-//
-//        // Then
-//        assertEquals(student, result);
-//    }
-//
-//    @Test
-//    void findByEmail_NotExists() {
-//        // Given
-//        String email = "notexisting@hhh.kkk";
-//        when(studentRepository.findByUserEmail(eq(email))).thenReturn(Optional.empty());
-//
-//        // When & Then
-//        assertThrows(StudentNotFoundException.class, () -> studentService.findByEmail(email));
-//    }
-//
-//}
-//
+package com.school.service.impl;
+
+import com.school.models.Role;
+import com.school.models.Student;
+import com.school.models.Subject;
+import com.school.models.Teacher;
+import com.school.models.User;
+import com.school.repositories.StudentRepository;
+import com.school.service.RoleService;
+import com.school.service.TeacherService;
+import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.*;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@ExtendWith(MockitoExtension.class)
+class StudentServiceImplTest {
+
+    @Mock
+    private TeacherService teacherService;
+
+    @Mock
+    private StudentRepository studentRepository;
+
+    @Mock
+    private RoleService roleService;
+
+    @InjectMocks
+    private StudentServiceImpl studentService;
+
+    private Student student;
+    private User user;
+
+    @BeforeEach
+    void setUp() {
+        user = new User("FirstName", "LastName", "email@gm.com", "Password123");
+        student = new Student(user);
+        student.setId(1L);
+    }
+
+    @Test
+    void create_WhenStudentDoesNotExist() {
+        when(studentRepository.findByUserEmail(user.getEmail())).thenReturn(Optional.empty());
+        when(roleService.findByName("STUDENT")).thenReturn(new Role("STUDENT"));
+        when(studentRepository.save(student)).thenReturn(student);
+
+        Student createdStudent = studentService.create(student);
+
+        assertEquals(student, createdStudent);
+        verify(studentRepository).findByUserEmail(user.getEmail());
+        verify(roleService).findByName("STUDENT");
+        verify(studentRepository).save(student);
+    }
+
+    @Test
+    void create_WhenStudentExists() {
+        when(studentRepository.findByUserEmail(user.getEmail())).thenReturn(Optional.of(student));
+
+        EntityExistsException exception = assertThrows(EntityExistsException.class, () -> studentService.create(student));
+
+        assertEquals("Student with such email already exist", exception.getMessage());
+        verify(studentRepository).findByUserEmail(user.getEmail());
+        verify(studentRepository, never()).save(student);
+    }
+
+    @Test
+    void findById_WhenStudentExists() {
+        when(studentRepository.findById(1L)).thenReturn(Optional.of(student));
+
+        Student foundStudent = studentService.findById(1L);
+
+        assertEquals(student, foundStudent);
+        verify(studentRepository).findById(1L);
+    }
+
+    @Test
+    void findById__WhenStudentNotExists() {
+        when(studentRepository.findById(1L)).thenReturn(Optional.empty());
+
+        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> studentService.findById(1L));
+
+        assertEquals("Student with id 1 not found", exception.getMessage());
+        verify(studentRepository).findById(1L);
+    }
+
+    @Test
+    void update_WhenStudentExists() {
+        Student updatedStudent = new Student(new User("NewFirstName", "NewLastName", "newemail@example.com", "NewPassword123"));
+        updatedStudent.setId(1L);
+
+        when(studentRepository.findById(1L)).thenReturn(Optional.of(student));
+        when(studentRepository.findByUserEmail("newemail@example.com")).thenReturn(Optional.empty());
+        when(roleService.findByName("STUDENT")).thenReturn(new Role("STUDENT"));
+        when(studentRepository.save(any(Student.class))).thenReturn(updatedStudent);
+
+        Student result = studentService.update(updatedStudent);
+
+        assertEquals(updatedStudent, result);
+        verify(studentRepository).findById(1L);
+        verify(studentRepository).findByUserEmail("newemail@example.com");
+        verify(roleService).findByName("STUDENT");
+        verify(studentRepository).save(updatedStudent);
+    }
+
+    @Test
+    void deleteById_WhenStudentExists() {
+        when(studentRepository.findById(1L)).thenReturn(Optional.of(student));
+
+        studentService.deleteById(1L);
+
+        verify(studentRepository).findById(1L);
+        verify(studentRepository).delete(student);
+    }
+
+    @Test
+    void deleteById_WhenStudentNotExists() {
+        when(studentRepository.findById(1L)).thenReturn(Optional.empty());
+
+        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> studentService.deleteById(1L));
+
+        assertEquals("Student with id 1 not found", exception.getMessage());
+        verify(studentRepository).findById(1L);
+        verify(studentRepository, never()).delete(student);
+    }
+
+    @Test
+    void findAllOrderedByName_ShouldReturnOrderedStudents() {
+        List<Student> students = Arrays.asList(
+                new Student(new User("email1@gm.com", "Pavlo", "Last", "password")),
+                new Student(new User("email2@gm.com", "Alice", "First", "password"))
+        );
+        when(studentRepository.findAllByOrderByUser()).thenReturn(Optional.of(students));
+
+        List<Student> result = studentService.findAllOrderedByName();
+
+        assertEquals(students, result);
+        verify(studentRepository).findAllByOrderByUser();
+    }
+
+    @Test
+    void findBySubjectName_WhenSubjectExists() {
+        List<Student> students = Arrays.asList(student);
+        when(studentRepository.findStudentBySubjectName("Mathematics")).thenReturn(Optional.of(students));
+
+        List<Student> result = studentService.findBySubjectName("Mathematics");
+
+        assertEquals(students, result);
+        verify(studentRepository).findStudentBySubjectName("Mathematics");
+    }
+
+    @Test
+    void findBySubjectName_WhenSubjectNotExists() {
+        when(studentRepository.findStudentBySubjectName("Mathematics")).thenReturn(Optional.empty());
+
+        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> studentService.findBySubjectName("Mathematics"));
+
+        assertEquals("Student with Mathematics not found", exception.getMessage());
+        verify(studentRepository).findStudentBySubjectName("Mathematics");
+    }
+
+    @Test
+    void findByEmail_WhenStudentExists() {
+        when(studentRepository.findByUserEmail("email@gm.com")).thenReturn(Optional.of(student));
+
+        Student result = studentService.findByEmail("email@gm.com");
+
+        assertEquals(student, result);
+        verify(studentRepository).findByUserEmail("email@gm.com");
+    }
+
+    @Test
+    void findByEmail_WhenStudentNotExists() {
+        when(studentRepository.findByUserEmail("email@gm.com")).thenReturn(Optional.empty());
+
+        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> studentService.findByEmail("email@gm.com"));
+
+        assertEquals("Student with email@gm.com not found", exception.getMessage());
+        verify(studentRepository).findByUserEmail("email@gm.com");
+    }
+
+    @Test
+    void findStudentsByTeacherId_WhenTeacherExists() {
+        Subject subject = new Subject();
+        subject.setStudents(List.of(student));
+        Teacher teacher = new Teacher();
+        teacher.setSubjects(List.of(subject));
+
+        when(teacherService.findById(1L)).thenReturn(teacher);
+
+        List<Student> result = studentService.findStudentsByTeacherId(1L);
+
+        assertEquals(List.of(student), result);
+        verify(teacherService).findById(1L);
+    }
+
+    @Test
+    void findStudentsByTeacherId_WhenTeacherHasNoStudents() {
+        Teacher teacher = new Teacher();
+        teacher.setSubjects(new ArrayList<>());
+
+        when(teacherService.findById(1L)).thenReturn(teacher);
+
+        List<Student> result = studentService.findStudentsByTeacherId(1L);
+
+        assertTrue(result.isEmpty());
+        verify(teacherService).findById(1L);
+    }
+}
