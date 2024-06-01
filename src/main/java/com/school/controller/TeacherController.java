@@ -24,8 +24,8 @@ public class TeacherController {
     @PostMapping("/addTeacher")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER')")
-    public TeacherResponseAll create(@RequestBody TeacherRequest teacherRequest){
-        return new TeacherResponseAll(TeacherRequest.toTeacher(teacherRequest));
+    public TeacherResponseToGet create(@RequestBody TeacherRequest teacherRequest){
+        return new TeacherResponseToGet(teacherService.create(TeacherRequest.toTeacher(teacherRequest)));
     }
 
     @PutMapping("/update/{id}")
@@ -33,6 +33,8 @@ public class TeacherController {
     @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER') or @userSecurity.checkUserByTeacher(#auth, #id)")
     public TeacherResponseAll update(@RequestBody TeacherRequest teacherRequest, @PathVariable("id") long id, Authentication auth){
         Teacher teacher = teacherService.findById(id);
+        teacher.getUser().setEmail(teacherRequest.getEmail());
+        teacher.getUser().setPassword(teacherRequest.getPassword());
         teacher.getUser().setFirstName(teacherRequest.getFirstName());
         teacher.getUser().setLastName(teacherRequest.getLastName());
         return new TeacherResponseAll(teacherService.update(teacher));

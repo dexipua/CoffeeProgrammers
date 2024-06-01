@@ -2,14 +2,10 @@ package com.school.service.impl;
 
 import com.school.exception.TeacherExistException;
 import com.school.exception.TeacherNotFoundException;
-import com.school.exception.UserExistsException;
 import com.school.models.*;
-import com.school.repositories.RoleRepository;
-import com.school.repositories.SubjectRepository;
 import com.school.repositories.TeacherRepository;
 import com.school.service.RoleService;
 import com.school.service.SubjectService;
-import com.school.service.TeacherService;
 
 
 import org.junit.jupiter.api.BeforeEach;
@@ -154,7 +150,7 @@ public class TeacherServiceImplTest {
         teacherService.create(teacher);
         //when
         when(teacherRepository.findById(1L)).thenReturn(Optional.of(teacher));
-        when(subjectService.findByTeacher_Id(1L));
+        when(subjectService.findByTeacher_Id(1L)).thenReturn(new ArrayList<>(Arrays.asList(new Subject("Maths"))));
         //then
         teacherService.delete(1L);
 

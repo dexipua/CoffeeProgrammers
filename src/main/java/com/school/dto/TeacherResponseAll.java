@@ -1,8 +1,13 @@
 package com.school.dto;
 
 import com.school.models.Teacher;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @Data
 public class TeacherResponseAll {
     private long id;
@@ -11,7 +16,7 @@ public class TeacherResponseAll {
     private String email;
     private String[] subjects;
 
-    public TeacherResponseAll(Teacher teacher){
+    public TeacherResponseAll(@NotNull Teacher teacher){
         this.firstName = teacher.getUser().getFirstName();
         this.lastName = teacher.getUser().getLastName();
         this.email = teacher.getUser().getEmail();
