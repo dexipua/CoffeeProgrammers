@@ -19,7 +19,7 @@ public class HomeResponse {
     private long amountOfStudents;
 
     public HomeResponse(TeacherService teacherService, SubjectService subjectService, StudentService studentService) {
-        List<Teacher> teachers = teacherService.findAllByOrderByUser();
+        List<Teacher> teachers = teacherService.findAll();
         for (Teacher teacher : teachers) {
             teacherResponseToGetList.add(new TeacherResponseToGet(teacher));
         }
