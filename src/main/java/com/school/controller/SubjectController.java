@@ -41,15 +41,12 @@ public class SubjectController {
     @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER')")
     @PutMapping("/updateSubject/{subject_id}")
     @ResponseStatus(HttpStatus.OK)
-    public SubjectResponse update( //TODO
+    public SubjectResponse update(
             @PathVariable("subject_id") long subjectId,
             @RequestBody SubjectRequest subjectRequest) {
 
-        Subject subject = subjectService.findById(subjectId);
         Subject subjectToUpdate = TransformSubject.transformFromRequestToModel(subjectRequest);
         subjectToUpdate.setId(subjectId);
-        subjectToUpdate.setTeacher(subject.getTeacher());
-        subjectToUpdate.setStudents(subject.getStudents());
 
         return new SubjectResponse(subjectService.update(subjectToUpdate));
 

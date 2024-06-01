@@ -40,9 +40,11 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     @Override
-    public Subject update(@NotNull Subject subject) {
-        String updatedName = subject.getName();
-        String actualName = findById(subject.getId()).getName();
+    public Subject update(@NotNull Subject updatedSubject) {
+        Subject actualSubject = findById(updatedSubject.getId());
+
+        String updatedName = updatedSubject.getName();
+        String actualName = actualSubject.getName();
 
         if (!updatedName.equals(actualName) &&
                 subjectRepository.findByName(updatedName).isPresent()){
@@ -51,7 +53,10 @@ public class SubjectServiceImpl implements SubjectService {
             );
         }
 
-        return subjectRepository.save(subject);
+        updatedSubject.setTeacher(actualSubject.getTeacher());
+        updatedSubject.setStudents(actualSubject.getStudents());
+
+        return subjectRepository.save(updatedSubject);
     }
 
     @Override
