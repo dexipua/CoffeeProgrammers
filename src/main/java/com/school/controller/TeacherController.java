@@ -24,7 +24,9 @@ public class TeacherController {
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER')")
     public TeacherResponseToGet create(@RequestBody TeacherRequest teacherRequest){
-        return new TeacherResponseToGet(TeacherRequest.toTeacher(teacherRequest));
+        Teacher teacher = TeacherRequest.toTeacher(teacherRequest);
+        teacherService.create(teacher);
+        return new TeacherResponseToGet(teacher);
     }
 
     @PutMapping("/update/{id}")

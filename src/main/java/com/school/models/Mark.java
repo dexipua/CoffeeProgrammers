@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -16,8 +16,8 @@ public class Mark {
     private int id;
     @Column(name = "status")
     private String status;
-    @Column(name = "time")
-    private LocalDateTime time;
+    @Column(name = "date")
+    private LocalDate date;
     @ManyToOne()
     @JoinColumn(name = "student_id")
     private Student student;
