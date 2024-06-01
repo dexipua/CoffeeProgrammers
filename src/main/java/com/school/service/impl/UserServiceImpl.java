@@ -25,6 +25,7 @@ public class UserServiceImpl implements UserService {
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             throw new EntityExistsException("User with email " + user.getEmail() + " already exists");
         }
+        userRepository.save(user);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
@@ -44,6 +45,7 @@ public class UserServiceImpl implements UserService {
             throw new EntityExistsException("User with email " + updatedEmail + " already exists");
         }
 
+        userRepository.save(user);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }

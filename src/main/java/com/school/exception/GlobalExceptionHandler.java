@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,6 +27,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         return e.getConstraintViolations().stream()
                 .map((ex) -> new ExceptionResponse(ex.getMessage()))
+                .sorted(Comparator.comparing((ExceptionResponse::getMessage)))
                 .collect(Collectors.toList());
     }
 
@@ -52,6 +54,4 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         log.error("handleBadCredentialsException: {}", e.getMessage());
         return new ExceptionResponse(e.getMessage());
     }
-
-
 }
