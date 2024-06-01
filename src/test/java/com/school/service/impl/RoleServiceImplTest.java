@@ -2,20 +2,19 @@ package com.school.service.impl;
 
 import com.school.models.Role;
 import com.school.repositories.RoleRepository;
-import com.school.service.RoleService;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -23,111 +22,99 @@ class RoleServiceImplTest {
 
     @Mock
     private RoleRepository roleRepository;
-    private RoleService roleService;
+
+    @InjectMocks
+    private RoleServiceImpl roleService;
+
+    private Role role;
 
     @BeforeEach
     void setUp() {
-        roleService = new RoleServiceImpl(roleRepository);
+        role = new Role();
+        role.setId(1);
+        role.setName("ADMIN");
     }
 
     @Test
-    void tryToCreateWithCorrectInformation() {
-        //given
-        Role role = new Role("Dexip");
-        roleService.create(role);
-
-        //when
-        ArgumentCaptor<Role> userArgumentCaptor = ArgumentCaptor.forClass(Role.class);
-        verify(roleRepository).save(userArgumentCaptor.capture());
-
-        //then
-        Role actualRole = userArgumentCaptor.getValue();
-        assertThat(actualRole).isEqualTo(role);
-    }
-
-    @Test
-    void tryToReadWithCorrectInformation() {
-        //given
-        Role role = new Role("Dexip");
-        roleService.create(role);
-
-        //when
-        when(roleRepository.findById(1L)).thenReturn(Optional.of(role));
-
-        //then
-        Role res = roleService.findById(1L);
-        assertThat(res).isEqualTo(role);
-    }
-
-    @Test
-    void tryToReadWithWrongInformation() {
-        //given
-        Role role = new Role("Dexip");
-        roleService.create(role);
-        //when&then
-        assertThrowsExactly(EntityNotFoundException.class, () -> roleService.findById(2L));
-    }
-
-    @Test
-    void tryToUpdateWithCorrectInformation() {
-        //given
-        Role role = new Role("Dexip");
-        when(roleRepository.findById((long) role.getId())).thenReturn(Optional.of(role));
+    void create() {
         when(roleRepository.save(role)).thenReturn(role);
-        //when
+        Role createdRole = roleService.create(role);
+        assertEquals(role, createdRole);
+        verify(roleRepository).save(role);
+    }
+
+    @Test
+    void findById_WhenRoleExists() {
+        when(roleRepository.findById(1L)).thenReturn(Optional.of(role));
+        Role foundRole = roleService.findById(1L);
+        assertEquals(role, foundRole);
+        verify(roleRepository).findById(1L);
+    }
+
+    @Test
+    void findById_WhenRoleNotExists() {
+        when(roleRepository.findById(1L)).thenReturn(Optional.empty());
+        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> roleService.findById(1L));
+        assertEquals("Role with id 1 not found", exception.getMessage());
+        verify(roleRepository).findById(1L);
+    }
+
+    @Test
+    void update_WhenRoleExists() {
+        when(roleRepository.findById(1L)).thenReturn(Optional.of(role));
+        when(roleRepository.save(role)).thenReturn(role);
         Role updatedRole = roleService.update(role);
-        //then
         assertEquals(role, updatedRole);
-        verify(roleRepository, times(1)).findById((long) role.getId());
-        verify(roleRepository, times(1)).save(role);
+        verify(roleRepository).findById(1L);
+        verify(roleRepository).save(role);
     }
 
     @Test
-    void tryToDelete() {
-        //given
-        Role role = new Role("Some");
-        roleService.create(role);
-        //when
-        when(roleRepository.findById((long) role.getId())).thenReturn(Optional.of(role));
-        roleService.delete(role.getId());
-        //then
-        verify(roleRepository, times(1)).findById((long) role.getId());
-        verify(roleRepository, times(1)).delete(role);
+    void update_WhenRoleNotExists() {
+        when(roleRepository.findById(1L)).thenReturn(Optional.empty());
+        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> roleService.update(role));
+        assertEquals("Role with id 1 not found", exception.getMessage());
+        verify(roleRepository).findById(1L);
     }
 
     @Test
-    void tryToGetAll() {
+    void delete_WhenRoleExists() {
+        when(roleRepository.findById(1L)).thenReturn(Optional.of(role));
+        roleService.delete(1L);
+        verify(roleRepository).findById(1L);
+        verify(roleRepository).delete(role);
+    }
 
-        //given
-        roleService.getAll();
+    @Test
+    void delete_WhenRoleNotExists() {
+        when(roleRepository.findById(1L)).thenReturn(Optional.empty());
+        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> roleService.delete(1L));
+        assertEquals("Role with id 1 not found", exception.getMessage());
+        verify(roleRepository).findById(1L);
+    }
 
-        //when&then
+    @Test
+    void getAll() {
+        List<Role> roles = Arrays.asList(role, new Role("USER"));
+        when(roleRepository.findAll()).thenReturn(roles);
+        List<Role> allRoles = roleService.getAll();
+        assertEquals(roles, allRoles);
         verify(roleRepository).findAll();
     }
 
     @Test
-    void tryToFindByNameWithCorrectInformation() {
-        //given
-        Role role = new Role("Dexip");
-        roleService.create(role);
-
-        //when
-        when(roleRepository.findByName("Dexip")).thenReturn(Optional.of(role));
-
-        //then
-        Role res = roleService.findByName("Dexip");
-        assertThat(res).isEqualTo(role);
+    void findByName_WhenRoleExists() {
+        when(roleRepository.findByName("ADMIN")).thenReturn(Optional.of(role));
+        Role foundRole = roleService.findByName("ADMIN");
+        assertEquals(role, foundRole);
+        verify(roleRepository).findByName("ADMIN");
     }
 
     @Test
-    void tryToFindByNameWithWrongInformation() {
-        //given
-        Role role = new Role("Dexip");
-        roleService.create(role);
-
-        //when & then
-        assertThrowsExactly(EntityNotFoundException.class,
-                () -> roleService.findByName("Dexipbr"));
-
+    void findByName_WhenRoleNotExists() {
+        when(roleRepository.findByName("ADMIN")).thenReturn(Optional.empty());
+        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> roleService.findByName("ADMIN"));
+        assertEquals("Role with name ADMIN not found", exception.getMessage());
+        verify(roleRepository).findByName("ADMIN");
     }
 }
