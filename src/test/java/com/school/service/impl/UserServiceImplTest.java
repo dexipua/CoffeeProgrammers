@@ -130,26 +130,6 @@ class UserServiceImplTest {
         assertEquals(updatedUser, res);
     }
 
-    @Test
-    void tryToDeleteWithCorrectInformation() {
-        //given
-        User user = new User("Artem", "Moseichenko",  "am@gmil.com","Abekpr257");
-        userService.create(user);
-        // When
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
-        userService.delete(1L);
-        //then
-        verify(userRepository, times(1)).findById(1L);
-        verify(userRepository, times(1)).delete(user);
-    }
-
-    @Test
-    void tryToGetAll() {
-        //given
-        userService.getAllUsers();
-        //when&then
-        verify(userRepository).findAll();
-    }
 
 
     @Test

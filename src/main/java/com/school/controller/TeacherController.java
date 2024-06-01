@@ -32,9 +32,8 @@ public class TeacherController {
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER') or @userSecurity.checkUserByTeacher(#auth, #id)")
     public TeacherResponseAll update(@RequestBody TeacherRequest teacherRequest, @PathVariable("id") long id, Authentication auth){
-        Teacher teacher = teacherService.findById(id);
-        teacher.getUser().setFirstName(teacherRequest.getFirstName());
-        teacher.getUser().setLastName(teacherRequest.getLastName());
+        Teacher teacher = TeacherRequest.toTeacher(teacherRequest);
+        teacher.setId(id);
         return new TeacherResponseAll(teacherService.update(teacher));
     }
 

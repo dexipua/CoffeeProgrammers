@@ -5,6 +5,7 @@ import com.school.models.Teacher;
 import com.school.repositories.TeacherRepository;
 import com.school.service.RoleService;
 import com.school.service.TeacherService;
+import com.school.service.UserService;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.constraints.NotNull;
@@ -18,15 +19,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TeacherServiceImpl implements TeacherService {
 
+    private final UserService userService;
     private final TeacherRepository teacherRepository;
     private final RoleService roleService;
 
     @Override
     public Teacher create(@NotNull Teacher teacher) {
-        if (teacherRepository.findByUserEmail(teacher.getUser().getEmail()).isPresent()) {
-            throw new EntityExistsException("Teacher already exists");
-        }
         teacher.getUser().setRole(roleService.findByName("TEACHER"));
+        userService.create(teacher.getUser());
         return teacherRepository.save(teacher);
     }
 
@@ -38,14 +38,13 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public Teacher update(@NotNull Teacher teacher) {
-        String updatedEmail = teacher.getUser().getEmail();
-        String actualEmail = findById(teacher.getId()).getUser().getEmail();
-
-        if (!updatedEmail.equals(actualEmail) && teacherRepository.findByUserEmail(updatedEmail).isPresent()) {
-            throw new EntityExistsException("Teacher with such email already exists");
-        }
-
-        return teacherRepository.save(teacher);
+        Teacher oldTeacher = findById(teacher.getId());
+        teacher.getUser().setEmail(oldTeacher.getUser().getEmail());
+        teacher.getUser().setId(oldTeacher.getUser().getId());
+        teacher.getUser().setRole(oldTeacher.getUser().getRole());
+        teacher.setSubjects(oldTeacher.getSubjects());
+        userService.update(teacher.getUser());
+        return teacher;
     }
 
     @Override

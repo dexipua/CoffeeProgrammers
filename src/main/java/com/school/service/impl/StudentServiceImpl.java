@@ -6,7 +6,7 @@ import com.school.repositories.StudentRepository;
 import com.school.service.RoleService;
 import com.school.service.StudentService;
 import com.school.service.TeacherService;
-import jakarta.persistence.EntityExistsException;
+import com.school.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -20,16 +20,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StudentServiceImpl implements StudentService {
 
+    private final UserService userService;
     private final TeacherService teacherService;
     private final StudentRepository studentRepository;
     private final RoleService roleService;
 
     @Override
     public Student create(@NotNull Student student) {
-        if (studentRepository.findByUserEmail(student.getUser().getEmail()).isPresent()) {
-            throw new EntityExistsException("Student with such email already exist");
-        }
         student.getUser().setRole(roleService.findByName("STUDENT"));
+        userService.create(student.getUser());
         return studentRepository.save(student);
     }
 
@@ -41,17 +40,13 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Student update(@NotNull Student student) {
-
-        String updatedEmail = student.getUser().getEmail();
-        String actualEmail = findById(student.getId()).getUser().getEmail();
-
-        if(!updatedEmail.equals(actualEmail) &&
-                studentRepository.findByUserEmail(updatedEmail).isPresent()) {
-            throw new EntityExistsException("Student with such email already exist");
-        }
-
-        student.getUser().setRole(roleService.findByName("STUDENT"));
-        return studentRepository.save(student);
+        Student oldStudent = findById(student.getId());
+        student.getUser().setEmail(oldStudent.getUser().getEmail());
+        student.getUser().setRole(oldStudent.getUser().getRole());
+        student.getUser().setId(oldStudent.getUser().getId());
+        student.setSubjects(oldStudent.getSubjects());
+        userService.update(student.getUser());
+        return student;
     }
 
     @Override

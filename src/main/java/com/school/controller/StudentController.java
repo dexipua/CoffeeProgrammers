@@ -40,14 +40,9 @@ public class StudentController {
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER') or @userSecurity.checkUserByStudent(#auth, #id)")
     public StudentResponseAll updateStudent(@PathVariable long id, @RequestBody StudentRequest studentRequest, Authentication auth) {
-        Student student = studentService.findById(id);
-
-        student.getUser().setEmail(studentRequest.getEmail());
-        student.getUser().setPassword(studentRequest.getPassword());
-        student.getUser().setFirstName(studentRequest.getFirstName());
-        student.getUser().setLastName(studentRequest.getLastName());
-
-        return new StudentResponseAll(studentService.update(student));
+        Student updateStudent = StudentRequest.toStudent(studentRequest);
+        updateStudent.setId(id);
+        return new StudentResponseAll(studentService.update(updateStudent));
     }
 
     @DeleteMapping("/delete/{id}")

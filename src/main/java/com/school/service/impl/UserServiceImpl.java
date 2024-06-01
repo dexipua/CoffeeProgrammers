@@ -11,8 +11,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -39,7 +37,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User update(@NotNull User user) {
-
         String updatedEmail = user.getEmail();
         String actualEmail = findById(user.getId()).getEmail();
 
@@ -47,20 +44,8 @@ public class UserServiceImpl implements UserService {
             throw new EntityExistsException("User with email " + updatedEmail + " already exists");
         }
 
-        delete(user.getId());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
-    }
-
-    @Override
-    public void delete(long id) {
-        User user = findById(id);
-        userRepository.delete(user);
-    }
-
-    @Override
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
     }
 
     public User findByEmail(String email) {
