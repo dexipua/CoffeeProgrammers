@@ -36,11 +36,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler({
-            EntityExistsException.class
+            EntityExistsException.class,
+            UnsupportedOperationException.class
     })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ExceptionResponse handleEntityExistsException(RuntimeException e) {
-        log.error("handleEntityExistsException: {}", e.getMessage());
+    public ExceptionResponse handleBadRequestExceptions(RuntimeException e) {
+        log.error("handleBadRequestExceptions: {}", e.getMessage());
         return new ExceptionResponse(e.getMessage());
     }
 

@@ -11,6 +11,5 @@ public interface TeacherService {
     void delete(long id);
     List<Teacher> findAll();
     Teacher findBySubjectName(String subjectName);
-    Teacher findByEmail(String email);
     List<Teacher> findAllByUser_FirstNameAndAndUser_LastName(String firstName, String lastName);
 }

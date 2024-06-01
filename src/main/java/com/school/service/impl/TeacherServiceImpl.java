@@ -6,7 +6,6 @@ import com.school.repositories.TeacherRepository;
 import com.school.service.RoleService;
 import com.school.service.TeacherService;
 import com.school.service.UserService;
-import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -51,7 +50,8 @@ public class TeacherServiceImpl implements TeacherService {
     public void delete(long id) {
         Teacher teacher = findById(id);
         if (teacher.getUser().getRole().getName().equals("CHIEF_TEACHER")) {
-            throw new EntityExistsException("Cannot delete teacher with role CHIEF_TEACHER");
+            throw new UnsupportedOperationException(
+                    "Cannot delete teacher with role CHIEF_TEACHER");
         } else {
             List<Subject> subjects = teacher.getSubjects();
             subjects.forEach(subject -> subject.setTeacher(null));
@@ -73,14 +73,7 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public Teacher findByEmail(String email) {
-        return teacherRepository.findByUserEmail(email).orElseThrow(
-                () -> new EntityNotFoundException("Teacher not found with such email" + email)
-        );
-    }
-
-    @Override
     public List<Teacher> findAllByUser_FirstNameAndAndUser_LastName(String firstName, String lastName) {
-        return teacherRepository.findAllByUser_FirstNameAndAndUser_LastName(firstName, lastName);
+        return teacherRepository.findAllByUser_FirstNameAndUser_LastName(firstName, lastName);
     }
 }

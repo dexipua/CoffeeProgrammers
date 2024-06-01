@@ -1,13 +1,11 @@
 package com.school.controller;
 
-import com.school.dto.student.StudentResponseToGet;
 import com.school.dto.teacher.TeacherRequest;
 import com.school.dto.teacher.TeacherResponseAll;
 import com.school.dto.teacher.TeacherResponseToGet;
 import com.school.models.Teacher;
 import com.school.service.TeacherService;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;

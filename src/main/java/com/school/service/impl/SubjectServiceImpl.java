@@ -41,11 +41,11 @@ public class SubjectServiceImpl implements SubjectService {
 
     @Override
     public Subject update(@NotNull Subject subject) {
-
         String updatedName = subject.getName();
         String actualName = findById(subject.getId()).getName();
 
-        if (!updatedName.equals(actualName) && subjectRepository.findByName(updatedName).isPresent()){
+        if (!updatedName.equals(actualName) &&
+                subjectRepository.findByName(updatedName).isPresent()){
             throw new EntityExistsException(
                     "Subject with name " + updatedName + " already exists"
             );

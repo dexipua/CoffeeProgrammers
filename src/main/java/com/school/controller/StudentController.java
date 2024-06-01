@@ -11,7 +11,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -60,12 +59,6 @@ public class StudentController {
         return students.stream()
                 .map(StudentResponseToGet::new)
                 .collect(Collectors.toList());
-    }
-
-    @GetMapping("/byEmail/{email}")
-    @ResponseStatus(HttpStatus.OK)
-    public StudentResponseToGet getByEmail(@PathVariable("email") String email){
-        return new StudentResponseToGet(studentService.findByEmail(email));
     }
 
     @GetMapping("/bySubjectName/{subject_name}")

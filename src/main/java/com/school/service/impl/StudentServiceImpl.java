@@ -2,7 +2,6 @@ package com.school.service.impl;
 
 
 import com.school.models.Student;
-import com.school.models.Teacher;
 import com.school.repositories.StudentRepository;
 import com.school.service.RoleService;
 import com.school.service.StudentService;
@@ -61,11 +60,6 @@ public class StudentServiceImpl implements StudentService {
         return studentRepository.findAllByOrderByUser();
     }
 
-    @Override
-    public Student findByEmail(String email) {
-        return studentRepository.findByUserEmail(email).orElseThrow(
-                () -> new EntityNotFoundException("Student with " + email + " not found"));
-    }
 
     @Override
     public List<Student> findBySubjectName(String subjectName) {
@@ -83,7 +77,9 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public List<Student> findAllByUser_FirstNameAndAndUser_LastName(String firstName, String lastName) {
-        return studentRepository.findAllByUser_FirstNameAndAndUser_LastName(firstName, lastName);
+    public List<Student> findAllByUser_FirstNameAndAndUser_LastName(
+             String firstName,
+             String lastName) {
+        return studentRepository.findAllByUser_FirstNameAndUser_LastName(firstName, lastName);
     }
 }

@@ -1,7 +1,6 @@
 package com.school.service;
 
 import com.school.models.Student;
-import com.school.models.Teacher;
 
 import java.util.List;
 
@@ -12,7 +11,6 @@ public interface StudentService {
     void deleteById(long id);
     List<Student> findAllOrderedByName();
     List<Student> findBySubjectName(String subName);
-    Student findByEmail(String email);
     List<Student> findStudentsByTeacherId(long teacherId);
     List<Student> findAllByUser_FirstNameAndAndUser_LastName(String firstName, String lastName);
 }

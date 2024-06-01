@@ -9,9 +9,8 @@ import java.util.Optional;
 
 public interface TeacherRepository extends JpaRepository<Teacher, Long> {
     Optional<Teacher> findByUserId(long id);
-    Optional<Teacher> findByUserEmail(String email);
     @Query("SELECT s.teacher FROM Subject s WHERE s.name =:subject")
     Optional<Teacher> findBySubjectName(String subject);
     List<Teacher> findAllByOrderByUser();
-    List<Teacher> findAllByUser_FirstNameAndAndUser_LastName(String firstName, String lastName);
+    List<Teacher> findAllByUser_FirstNameAndUser_LastName(String firstName, String lastName);
 }
