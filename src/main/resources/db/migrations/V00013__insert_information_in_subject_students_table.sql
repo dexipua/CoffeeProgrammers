@@ -4,3 +4,5 @@ insert into subject_Students(student_id, subject_id) values (2, 1);
 insert into subject_Students(student_id, subject_id) values (2, 3);
 insert into subject_Students(student_id, subject_id) values (3, 3);
 insert into subject_Students(student_id, subject_id) values (3, 2);
+insert into subject_Students(student_id, subject_id) values (2, 4);
+insert into subject_Students(student_id, subject_id) values (1, 5);

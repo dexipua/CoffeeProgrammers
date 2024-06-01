@@ -24,13 +24,13 @@ public class StudentController {
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER')")
-    public StudentResponseAll createStudent(@RequestBody StudentRequest studentRequest) {
+    public StudentResponseToGet createStudent(@RequestBody StudentRequest studentRequest) {
         Student student = StudentRequest.toStudent(studentRequest);
         Student createdStudent = studentService.create(student);
-        return new StudentResponseAll(createdStudent);
+        return new StudentResponseToGet(createdStudent);
     }
 
-    @GetMapping("/get/{id}")
+    @GetMapping("/getById/{id}")
     @ResponseStatus(HttpStatus.OK)
     public StudentResponseAll getStudentById(@PathVariable long id) {
         return new StudentResponseAll(studentService.findById(id));
@@ -40,14 +40,9 @@ public class StudentController {
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER') or @userSecurity.checkUserByStudent(#auth, #id)")
     public StudentResponseAll updateStudent(@PathVariable long id, @RequestBody StudentRequest studentRequest, Authentication auth) {
-        Student student = studentService.findById(id);
-
-        student.getUser().setEmail(studentRequest.getEmail());
-        student.getUser().setPassword(studentRequest.getPassword());
-        student.getUser().setFirstName(studentRequest.getFirstName());
-        student.getUser().setLastName(studentRequest.getLastName());
-
-        return new StudentResponseAll(studentService.update(student));
+        Student updateStudent = StudentRequest.toStudent(studentRequest);
+        updateStudent.setId(id);
+        return new StudentResponseAll(studentService.update(updateStudent));
     }
 
     @DeleteMapping("/delete/{id}")
@@ -57,7 +52,7 @@ public class StudentController {
         studentService.deleteById(id);
     }
 
-    @GetMapping("/all")
+    @GetMapping("/getAll")
     @ResponseStatus(HttpStatus.OK)
     public List<StudentResponseToGet> getAllStudents() {
         List<Student> students = studentService.findAllOrderedByName();
@@ -66,25 +61,30 @@ public class StudentController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/byEmail/{email}")
+    @GetMapping("/getAllBySubjectName/")
     @ResponseStatus(HttpStatus.OK)
-    public StudentResponseToGet getByEmail(@PathVariable("email") String email){
-        return new StudentResponseToGet(studentService.findByEmail(email));
-    }
+    public List<StudentResponseToGet> getStudentsBySubjectName(
+            @RequestParam("subject_name") String subjectName) {
 
-    @GetMapping("/bySubjectName/{subject_name}")
-    @ResponseStatus(HttpStatus.OK)
-    public List<StudentResponseToGet> getStudentsBySubjectName(@PathVariable("subject_name") String subjectName) {
         List<Student> students = studentService.findBySubjectName(subjectName);
         return students.stream()
                 .map(StudentResponseToGet::new)
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/byTeacherId/{teacher_id}")
+    @GetMapping("/getAllByTeacherId/{teacher_id}")
     @ResponseStatus(HttpStatus.OK)
     public List<StudentResponseToGet> getStudentsByTeacherId( @PathVariable("teacher_id") long teacherId) {
         List<Student> students = studentService.findStudentsByTeacherId(teacherId);
+        return students.stream()
+                .map(StudentResponseToGet::new)
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/getAllByName/")
+    @ResponseStatus(HttpStatus.OK)
+    public List<StudentResponseToGet> getStudentsByName( @RequestParam String firstName, @RequestParam String lastName) {
+        List<Student> students = studentService.findAllByUser_FirstNameAndAndUser_LastName(firstName, lastName);
         return students.stream()
                 .map(StudentResponseToGet::new)
                 .collect(Collectors.toList());

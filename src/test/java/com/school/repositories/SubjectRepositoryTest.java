@@ -74,7 +74,7 @@ class SubjectRepositoryTest {
         subjectRepository.saveAll(subjects);
 
         //when
-        List<Subject> result = subjectRepository.findAllByOrderByName().get();
+        List<Subject> result = subjectRepository.findAllByOrderByName();
         subjects.sort(Comparator.comparing(Subject::getName));
         boolean expected = result.equals(subjects);
 
@@ -103,7 +103,7 @@ class SubjectRepositoryTest {
         subjectRepository.saveAll(subjects);
 
         //when
-        List<Subject> result = subjectRepository.findByTeacher_Id(teacher.getId()).get();
+        List<Subject> result = subjectRepository.findByTeacher_Id(teacher.getId());
         boolean expected = result.equals(new ArrayList<>(List.of(
                 subject1,
                 subject2
@@ -132,7 +132,7 @@ class SubjectRepositoryTest {
         subjectRepository.saveAll(subjects);
 
         //when
-        List<Subject> result = subjectRepository.findByTeacher_Id(teacher.getId()).get();
+        List<Subject> result = subjectRepository.findByTeacher_Id(teacher.getId());
         boolean expected = result.equals(new ArrayList<>());
 
         //then
@@ -165,7 +165,7 @@ class SubjectRepositoryTest {
         subjectRepository.saveAll(subjects);
 
         //when
-        List<Subject> result = subjectRepository.findByStudent_Id(student.getId()).get();
+        List<Subject> result = subjectRepository.findByStudent_Id(student.getId());
         boolean expected = result.equals(new ArrayList<>(List.of(
                 subject1,
                 subject3
@@ -197,7 +197,7 @@ class SubjectRepositoryTest {
         subjectRepository.saveAll(subjects);
 
         //when
-        List<Subject> result = subjectRepository.findByStudent_Id(student.getId()).get();
+        List<Subject> result = subjectRepository.findByStudent_Id(student.getId());
         boolean expected = result.equals(new ArrayList<>());
 
         //then

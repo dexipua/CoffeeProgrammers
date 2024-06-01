@@ -5,32 +5,26 @@ import com.school.models.Student;
 import com.school.repositories.StudentRepository;
 import com.school.service.RoleService;
 import com.school.service.StudentService;
-import com.school.service.TeacherService;
-import jakarta.persistence.EntityExistsException;
+import com.school.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class StudentServiceImpl implements StudentService {
 
-    private final TeacherService teacherService;
+    private final UserService userService;
     private final StudentRepository studentRepository;
     private final RoleService roleService;
 
     @Override
     public Student create(@NotNull Student student) {
-        if (studentRepository.findByUserEmail(student.getUser().getEmail()).isPresent()) {
-            throw new EntityExistsException("Student with such email already exist");
-        }
         student.getUser().setRole(roleService.findByName("STUDENT"));
+        userService.create(student.getUser());
         return studentRepository.save(student);
     }
 
@@ -42,17 +36,13 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Student update(@NotNull Student student) {
-
-        String updatedEmail = student.getUser().getEmail();
-        String actualEmail = findById(student.getId()).getUser().getEmail();
-
-        if(!updatedEmail.equals(actualEmail) &&
-                studentRepository.findByUserEmail(updatedEmail).isPresent()) {
-            throw new EntityExistsException("Student with such email already exist");
-        }
-
-        student.getUser().setRole(roleService.findByName("STUDENT"));
-        return studentRepository.save(student);
+        Student oldStudent = findById(student.getId());
+        student.getUser().setEmail(oldStudent.getUser().getEmail());
+        student.getUser().setRole(oldStudent.getUser().getRole());
+        student.getUser().setId(oldStudent.getUser().getId());
+        student.setSubjects(oldStudent.getSubjects());
+        userService.update(student.getUser());
+        return student;
     }
 
     @Override
@@ -63,29 +53,25 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public List<Student> findAllOrderedByName() {
-        Optional<List<Student>> students = studentRepository.findAllByOrderByUser();
-        return students.orElseGet(ArrayList::new);
+        return studentRepository.findAllByOrderByUser();
     }
 
-    @Override
-    public Student findByEmail(String email) {
-        return studentRepository.findByUserEmail(email).orElseThrow(
-                () -> new EntityNotFoundException("Student with " + email + " not found"));
-    }
 
     @Override
     public List<Student> findBySubjectName(String subjectName) {
-        return studentRepository.findStudentBySubjectName(subjectName).orElseThrow(
-                () -> new EntityNotFoundException("Student with " + subjectName + " not found"));
+        return studentRepository.findStudentBySubjectNameContaining(subjectName);
     }
 
-    // TODO -------------------------------------------------------------------
-    // TODO -to-repository-
     @Override
     public List<Student> findStudentsByTeacherId(long teacherId) {
-        HashSet<Student> students = new HashSet<>();
-        teacherService.findById(teacherId).getSubjects()
-                .forEach(subject -> students.addAll(subject.getStudents()));
-        return new ArrayList<>(students);
+        return studentRepository.findAllByTeacherId(teacherId);
+
+    }
+
+    @Override
+    public List<Student> findAllByUser_FirstNameAndAndUser_LastName(
+             String firstName,
+             String lastName) {
+        return studentRepository.findAllByUser_FirstNameContainingAndUser_LastNameContaining(firstName, lastName);
     }
 }

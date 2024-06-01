@@ -5,7 +5,7 @@ import com.school.models.Teacher;
 import com.school.repositories.TeacherRepository;
 import com.school.service.RoleService;
 import com.school.service.TeacherService;
-import jakarta.persistence.EntityExistsException;
+import com.school.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -13,21 +13,19 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class TeacherServiceImpl implements TeacherService {
 
+    private final UserService userService;
     private final TeacherRepository teacherRepository;
     private final RoleService roleService;
 
     @Override
     public Teacher create(@NotNull Teacher teacher) {
-        if (teacherRepository.findByUserEmail(teacher.getUser().getEmail()).isPresent()) {
-            throw new EntityExistsException("Teacher already exists");
-        }
         teacher.getUser().setRole(roleService.findByName("TEACHER"));
+        userService.create(teacher.getUser());
         return teacherRepository.save(teacher);
     }
 
@@ -39,21 +37,21 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public Teacher update(@NotNull Teacher teacher) {
-        String updatedEmail = teacher.getUser().getEmail();
-        String actualEmail = findById(teacher.getId()).getUser().getEmail();
-
-        if (!updatedEmail.equals(actualEmail) && teacherRepository.findByUserEmail(updatedEmail).isPresent()) {
-            throw new EntityExistsException("Teacher with such email already exists");
-        }
-
-        return teacherRepository.save(teacher);
+        Teacher oldTeacher = findById(teacher.getId());
+        teacher.getUser().setEmail(oldTeacher.getUser().getEmail());
+        teacher.getUser().setId(oldTeacher.getUser().getId());
+        teacher.getUser().setRole(oldTeacher.getUser().getRole());
+        teacher.setSubjects(oldTeacher.getSubjects());
+        userService.update(teacher.getUser());
+        return teacher;
     }
 
     @Override
     public void delete(long id) {
         Teacher teacher = findById(id);
         if (teacher.getUser().getRole().getName().equals("CHIEF_TEACHER")) {
-            throw new EntityExistsException("Cannot delete teacher with role CHIEF_TEACHER");
+            throw new UnsupportedOperationException(
+                    "Cannot delete teacher with role CHIEF_TEACHER");
         } else {
             List<Subject> subjects = teacher.getSubjects();
             subjects.forEach(subject -> subject.setTeacher(null));
@@ -64,21 +62,16 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public List<Teacher> findAll() {
-        Optional<List<Teacher>> teachers = teacherRepository.findAllByOrderByUser();
-        return teachers.orElseGet(ArrayList::new);
+        return teacherRepository.findAllByOrderByUser();
     }
 
     @Override
-    public Teacher findBySubjectName(String subjectName) {
-        return teacherRepository.findBySubjectName(subjectName).orElseThrow(
-                () -> new EntityNotFoundException("Teacher with subject name " + subjectName + " not found")
-        );
+    public List<Teacher> findBySubjectName(String subjectName) {
+        return teacherRepository.findBySubjectName(subjectName);
     }
 
     @Override
-    public Teacher findByEmail(String email) {
-        return teacherRepository.findByUserEmail(email).orElseThrow(
-                () -> new EntityNotFoundException("Teacher not found with such email" + email)
-        );
+    public List<Teacher> findAllByUser_FirstNameAndAndUser_LastName(String firstName, String lastName) {
+        return teacherRepository.findAllByUser_FirstNameContainingAndUser_LastNameContaining(firstName, lastName);
     }
 }

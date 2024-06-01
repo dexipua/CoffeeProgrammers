@@ -10,6 +10,6 @@ public interface TeacherService {
     Teacher update(Teacher teacher);
     void delete(long id);
     List<Teacher> findAll();
-    Teacher findBySubjectName(String subjectName);
-    Teacher findByEmail(String email);
+    List<Teacher> findBySubjectName(String subjectName);
+    List<Teacher> findAllByUser_FirstNameAndAndUser_LastName(String firstName, String lastName);
 }

@@ -3,6 +3,7 @@ package com.school.repositories;
 import com.school.models.Student;
 import com.school.models.Subject;
 import com.school.models.User;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,6 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DataJpaTest
 class StudentRepositoryTest {
@@ -32,49 +32,43 @@ class StudentRepositoryTest {
     }
 
     @Test
-    void findStudentBySubjectsContains() {
+    void findStudentBySubjectName() {
         // Given
-        Subject mathSubject = new Subject("Mathematics");
-        Subject artSubject = new Subject("Art");
+        Subject subject1 = new Subject("Math");
+        Subject subject2 = new Subject("Art");
 
         Student student1 = new Student();
-        student1.setSubjects(new ArrayList<>(List.of(mathSubject)));
+        student1.setSubjects(new ArrayList<>(List.of(subject1)));
 
         Student student2 = new Student();
-        student2.setSubjects(new ArrayList<>(List.of(mathSubject)));
+        student2.setSubjects(new ArrayList<>(List.of(subject2)));
 
-        subjectRepository.saveAll(List.of(mathSubject, artSubject));
+        subjectRepository.saveAll(List.of(subject1, subject2));
         studentRepository.saveAll(List.of(student1, student2));
 
         // When
-        List<Student> res = studentRepository.findStudentBySubjectName("Mathematics").get();
-        boolean result = res.equals(List.of(student1, student2));
+        List<Student> res = studentRepository.findStudentBySubjectNameContaining("Math");
+        boolean result = res.equals(List.of(student1));
 
         // Then
         assertThat(result).isTrue();
     }
 
     @Test
-    void NotFindStudentBySubjectsContains(){
+    void NotFindStudentBySubjectName(){
         // Given
-        Subject mathSubject = new Subject("Mathematics");
-        Subject algebraSubject = new Subject("algebra");
+        Subject subject1 = new Subject("Math");
+        Subject subject2 = new Subject("Art");
 
         Student student1 = new Student();
-        student1.setSubjects(new ArrayList<>(List.of(algebraSubject)));
+        student1.setSubjects(new ArrayList<>(List.of(subject1)));
 
-        Student student2 = new Student();
-        student2.setSubjects(new ArrayList<>(List.of(mathSubject)));
 
-        Student student3 = new Student();
-        student3.setSubjects(new ArrayList<>(List.of(algebraSubject)));
-
-        subjectRepository.save(algebraSubject);
-        subjectRepository.save(mathSubject);
-        studentRepository.saveAll(List.of(student1, student2));
+        subjectRepository.saveAll(List.of(subject1, subject2));
+        studentRepository.save(student1);
 
         // When
-        List<Student> res = studentRepository.findStudentBySubjectName("dgdsgs").get();
+        List<Student> res = studentRepository.findStudentBySubjectNameContaining("Art");
         boolean result = res.equals(List.of());
 
         // Then
@@ -107,9 +101,10 @@ class StudentRepositoryTest {
 
         //then
         Optional<Student> res = studentRepository.findByUserEmail("sgfdfsd@gkf.com");
-        assertThrows(NoSuchElementException.class, () -> {
-            Student value = res.get();
-        });
+        Assertions.assertThatExceptionOfType(NoSuchElementException.class)
+                //when
+                .isThrownBy(res::get);
+
 
     }
 }

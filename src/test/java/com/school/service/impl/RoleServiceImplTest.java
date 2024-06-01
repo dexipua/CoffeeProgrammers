@@ -1,8 +1,6 @@
 package com.school.service.impl;
 
-import com.school.exception.RoleNotFoundException;
 import com.school.models.Role;
-import com.school.models.User;
 import com.school.repositories.RoleRepository;
 import com.school.service.RoleService;
 import jakarta.persistence.EntityNotFoundException;
@@ -37,9 +35,11 @@ class RoleServiceImplTest {
         //given
         Role role = new Role("Dexip");
         roleService.create(role);
+
         //when
         ArgumentCaptor<Role> userArgumentCaptor = ArgumentCaptor.forClass(Role.class);
         verify(roleRepository).save(userArgumentCaptor.capture());
+
         //then
         Role actualRole = userArgumentCaptor.getValue();
         assertThat(actualRole).isEqualTo(role);
@@ -50,10 +50,12 @@ class RoleServiceImplTest {
         //given
         Role role = new Role("Dexip");
         roleService.create(role);
+
         //when
-        when(roleRepository.findById(1l)).thenReturn(Optional.of(role));
+        when(roleRepository.findById(1L)).thenReturn(Optional.of(role));
+
         //then
-        Role res = roleService.findById(1l);
+        Role res = roleService.findById(1L);
         assertThat(res).isEqualTo(role);
     }
 
@@ -63,9 +65,7 @@ class RoleServiceImplTest {
         Role role = new Role("Dexip");
         roleService.create(role);
         //when&then
-        assertThrowsExactly(RoleNotFoundException.class, () -> {
-            roleService.findById(2l);
-        });
+        assertThrowsExactly(EntityNotFoundException.class, () -> roleService.findById(2L));
     }
 
     @Test
@@ -97,8 +97,10 @@ class RoleServiceImplTest {
 
     @Test
     void tryToGetAll() {
+
         //given
         roleService.getAll();
+
         //when&then
         verify(roleRepository).findAll();
     }
@@ -108,8 +110,10 @@ class RoleServiceImplTest {
         //given
         Role role = new Role("Dexip");
         roleService.create(role);
+
         //when
         when(roleRepository.findByName("Dexip")).thenReturn(Optional.of(role));
+
         //then
         Role res = roleService.findByName("Dexip");
         assertThat(res).isEqualTo(role);
@@ -120,10 +124,10 @@ class RoleServiceImplTest {
         //given
         Role role = new Role("Dexip");
         roleService.create(role);
-        //when&then
-        assertThrowsExactly(RoleNotFoundException.class, () -> {
-            Role res = roleService.findByName("Dexipbr");
-        });
+
+        //when & then
+        assertThrowsExactly(EntityNotFoundException.class,
+                () -> roleService.findByName("Dexipbr"));
 
     }
 }
