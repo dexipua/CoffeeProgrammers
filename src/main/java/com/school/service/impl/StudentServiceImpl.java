@@ -2,6 +2,7 @@ package com.school.service.impl;
 
 
 import com.school.models.Student;
+import com.school.models.Teacher;
 import com.school.repositories.StudentRepository;
 import com.school.service.RoleService;
 import com.school.service.StudentService;
@@ -79,5 +80,10 @@ public class StudentServiceImpl implements StudentService {
         teacherService.findById(teacherId).getSubjects()
                 .forEach(subject -> students.addAll(subject.getStudents()));
         return new ArrayList<>(students);
+    }
+
+    @Override
+    public List<Student> findAllByUser_FirstNameAndAndUser_LastName(String firstName, String lastName) {
+        return studentRepository.findAllByUser_FirstNameAndAndUser_LastName(firstName, lastName);
     }
 }

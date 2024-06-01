@@ -11,6 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -82,6 +83,15 @@ public class StudentController {
         List<Student> students = studentService.findStudentsByTeacherId(teacherId);
         return students.stream()
                 .map(StudentResponseToGet::new)
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/byName/")
+    @ResponseStatus(HttpStatus.OK)
+    public List<StudentResponseAll> getStudentsByName( @RequestParam String firstName, @RequestParam String lastName) {
+        List<Student> students = studentService.findAllByUser_FirstNameAndAndUser_LastName(firstName, lastName);
+        return students.stream()
+                .map(StudentResponseAll::new)
                 .collect(Collectors.toList());
     }
 }

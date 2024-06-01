@@ -78,4 +78,9 @@ public class TeacherServiceImpl implements TeacherService {
                 () -> new EntityNotFoundException("Teacher not found with such email" + email)
         );
     }
+
+    @Override
+    public List<Teacher> findAllByUser_FirstNameAndAndUser_LastName(String firstName, String lastName) {
+        return teacherRepository.findAllByUser_FirstNameAndAndUser_LastName(firstName, lastName);
+    }
 }

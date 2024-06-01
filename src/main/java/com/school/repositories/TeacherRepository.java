@@ -13,4 +13,5 @@ public interface TeacherRepository extends JpaRepository<Teacher, Long> {
     @Query("SELECT s.teacher FROM Subject s WHERE s.name =:subject")
     Optional<Teacher> findBySubjectName(String subject);
     List<Teacher> findAllByOrderByUser();
+    List<Teacher> findAllByUser_FirstNameAndAndUser_LastName(String firstName, String lastName);
 }

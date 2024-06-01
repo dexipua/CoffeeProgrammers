@@ -1,5 +1,6 @@
 package com.school.controller;
 
+import com.school.dto.student.StudentResponseToGet;
 import com.school.dto.teacher.TeacherRequest;
 import com.school.dto.teacher.TeacherResponseAll;
 import com.school.dto.teacher.TeacherResponseToGet;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
@@ -65,5 +67,14 @@ public class TeacherController {
     @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER')")
     public void deleteById(@PathVariable("teacher_id") long teacher_id){
         teacherService.delete(teacher_id);
+    }
+
+    @GetMapping("/byName/")
+    @ResponseStatus(HttpStatus.OK)
+    public List<TeacherResponseAll> getByName(@RequestParam String firstName, @RequestParam String lastName){
+        List<Teacher> teachers = teacherService.findAllByUser_FirstNameAndAndUser_LastName(firstName, lastName);
+        return teachers.stream()
+                .map(TeacherResponseAll::new)
+                .collect(Collectors.toList());
     }
 }
