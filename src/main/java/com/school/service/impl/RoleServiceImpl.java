@@ -21,6 +21,7 @@ public class RoleServiceImpl implements RoleService {
         return roleRepository.save(role);
     }
 
+    @Override
     public Role findById(long id) {
         return roleRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Role with id " + id + " not found"));
