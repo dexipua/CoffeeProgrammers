@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
 import java.util.HashMap;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,10 +22,13 @@ public class SubjectDateServiceImpl implements SubjectDateService {
 
     @Override
     public SubjectDate create(SubjectDate subjectDate) {
-        if(subjectDateRepository.findAll().stream().filter(subjectDate1 ->
+        List<SubjectDate> subjectsWithTheSameDateAndTime = subjectDateRepository.findAll().stream().filter(subjectDate1 ->
                 subjectDate1.getDayOfWeek().equals(subjectDate.getDayOfWeek())
-                && subjectDate1.getNumOfLesson().equals(subjectDate.getNumOfLesson())).count() == 1){
-            throw new EntityExistsException("Subject on this time and date already exists");
+                        && subjectDate1.getNumOfLesson().equals(subjectDate.getNumOfLesson())).toList();
+        if(!subjectsWithTheSameDateAndTime.stream().filter(subjectDateSame -> {
+            return subjectDate.getSubject().getTeacher().equals(subjectDate.getSubject().getTeacher());
+        }).toList().isEmpty()){
+            throw new EntityExistsException("Subject time with the same option already exists");
         }
         return subjectDateRepository.save(subjectDate);
     }
@@ -34,7 +38,6 @@ public class SubjectDateServiceImpl implements SubjectDateService {
         SubjectDate find = subjectDateRepository.findAll().stream().filter(subjectDate1
                 -> subjectDate1.getDayOfWeek().equals(subjectDate.getDayOfWeek())
                         && subjectDate1.getNumOfLesson().equals(subjectDate.getNumOfLesson())).toList().get(1);
-
         return subjectDateRepository.save(subjectDate);
     }
 
