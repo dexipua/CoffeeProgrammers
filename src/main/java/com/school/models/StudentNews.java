@@ -27,5 +27,11 @@ public class StudentNews {
         this.time = LocalDateTime.now();
     }
 
+    public StudentNews(String title, Student student, LocalDateTime time) {
+        this.title = title;
+        this.student = student;
+        this.time = time;
+    }
+
     public StudentNews() {}
 }
