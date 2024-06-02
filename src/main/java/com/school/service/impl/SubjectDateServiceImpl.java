@@ -6,10 +6,12 @@ import com.school.repositories.SubjectDateRepository;
 import com.school.service.SubjectDateService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
 import java.util.HashMap;
 
+@Service
 @RequiredArgsConstructor
 public class SubjectDateServiceImpl implements SubjectDateService {
 
