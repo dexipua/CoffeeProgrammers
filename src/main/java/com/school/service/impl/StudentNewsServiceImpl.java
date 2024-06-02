@@ -12,7 +12,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class StudentNewsServiceImpl implements StudentNewsService {
-    private StudentNewsRepository studentNewsRepository;
+    private final StudentNewsRepository studentNewsRepository;
 
     @Override
     public StudentNews create(StudentNews news) {
