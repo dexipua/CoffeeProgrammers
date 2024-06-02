@@ -16,7 +16,7 @@ public class SubjectDate {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
     @Column(name = "day_of_week")
     private DayOfWeek dayOfWeek;
     @Column(name = "num_of_lesson")
@@ -28,12 +28,13 @@ public class SubjectDate {
     public SubjectDate(Subject subject, DayOfWeek dayOfWeek, int numOfLesson) {
         this.subject = subject;
         this.dayOfWeek = dayOfWeek;
-        this.numOfLesson = NumOfLesson.values()[numOfLesson-1];
+        this.numOfLesson = NumOfLesson.values()[numOfLesson - 1];
     }
 
-    public SubjectDate() {}
+    public SubjectDate() {
+    }
 
-    public enum NumOfLesson{
+    public enum NumOfLesson {
         FIRST(LocalTime.of(8, 0), LocalTime.of(8, 45)),
         SECOND(LocalTime.of(9, 0), LocalTime.of(9, 45)),
         THIRD(LocalTime.of(10, 0), LocalTime.of(10, 45)),
@@ -44,12 +45,25 @@ public class SubjectDate {
         EIGHTH(LocalTime.of(15, 0), LocalTime.of(15, 45)),
         NINTH(LocalTime.of(16, 0), LocalTime.of(16, 45));
 
-        LocalTime start;
-        LocalTime end;
+        final LocalTime start;
+        final LocalTime end;
 
         NumOfLesson(LocalTime start, LocalTime end) {
             this.start = start;
             this.end = end;
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof SubjectDate that)) return false;
+
+        return id == that.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return (int) id;
     }
 }
