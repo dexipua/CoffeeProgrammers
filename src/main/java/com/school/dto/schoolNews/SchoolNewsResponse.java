@@ -5,17 +5,17 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Data
 @Getter
 @Setter
 public class SchoolNewsResponse {
     private String title;
-    private LocalDateTime time;
+    private String time;
 
     public SchoolNewsResponse(SchoolNews schoolNews) {
         this.title = schoolNews.getTitle();
-        this.time = schoolNews.getTime();
+        this.time = schoolNews.getTime().withNano(0).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 }
