@@ -8,9 +8,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 import java.time.DayOfWeek;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 @RequiredArgsConstructor
 public class SubjectDateServiceImpl implements SubjectDateService {
@@ -42,10 +40,12 @@ public class SubjectDateServiceImpl implements SubjectDateService {
     @Override
     public HashMap<DayOfWeek, HashMap<SubjectDate.NumOfLesson, Subject>> findAllBySubject_Students_Id(long studentId) {
         HashMap<DayOfWeek, HashMap<SubjectDate.NumOfLesson, Subject>> result = new HashMap<>();
-        List<HashMap<SubjectDate.NumOfLesson, Subject>> temp = new ArrayList<>();
+        HashMap<SubjectDate.NumOfLesson, Subject> tempMap;
         for(SubjectDate subjectDate : subjectDateRepository.findAllBySubject_Students_Id(studentId)) {
-            result.getOrDefault(subjectDate.getDayOfWeek(), new HashMap<>());
-
+            tempMap = result.getOrDefault(subjectDate.getDayOfWeek(), new HashMap<>());
+            tempMap.put(subjectDate.getNumOfLesson(), subjectDate.getSubject());
+            result.put(subjectDate.getDayOfWeek(), tempMap);
         }
+        return result;
     }
 }
