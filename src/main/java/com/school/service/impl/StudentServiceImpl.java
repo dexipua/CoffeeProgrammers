@@ -5,6 +5,7 @@ import com.school.models.Student;
 import com.school.repositories.StudentRepository;
 import com.school.service.RoleService;
 import com.school.service.StudentService;
+import com.school.service.TeacherService;
 import com.school.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.constraints.NotNull;
@@ -20,6 +21,7 @@ public class StudentServiceImpl implements StudentService {
     private final UserService userService;
     private final StudentRepository studentRepository;
     private final RoleService roleService;
+    private final TeacherService teacherService;
 
     @Override
     public Student create(@NotNull Student student) {
@@ -64,6 +66,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public List<Student> findStudentsByTeacherId(long teacherId) {
+        teacherService.findById(teacherId);
         return studentRepository.findAllByTeacherId(teacherId);
 
     }
