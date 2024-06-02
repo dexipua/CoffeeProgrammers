@@ -12,12 +12,11 @@ import java.time.DayOfWeek;
 @Setter
 @Data
 public class SubjectDateRequest {
-    private long subject_id;
     private int dayOfWeek;
-    private String numOfLesson;
-    public static SubjectDate toSubject(SubjectDateRequest subjectDateRequest, SubjectService subjectService){
+    private int numOfLesson;
+    public static SubjectDate toSubject(SubjectDateRequest subjectDateRequest, SubjectService subjectService, long subjectId){
         return new SubjectDate(
-                subjectService.findById(subjectDateRequest.getSubject_id()),
+                subjectService.findById(subjectId),
                 DayOfWeek.of(subjectDateRequest.dayOfWeek),
                 subjectDateRequest.numOfLesson
         );
