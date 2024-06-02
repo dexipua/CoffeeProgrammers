@@ -1,6 +1,8 @@
 package com.school.service.impl;
 
 import com.school.models.Mark;
+import com.school.models.Student;
+import com.school.models.Subject;
 import com.school.repositories.MarkRepository;
 import com.school.service.MarkService;
 import jakarta.persistence.EntityNotFoundException;
@@ -9,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -32,9 +36,6 @@ public class MarkServiceImpl implements MarkService {
     public Mark update(@NotNull Mark mark) {
         Mark oldMark = findById(mark.getId());
         mark.setTime(LocalDateTime.now());
-        if(mark.getStatus() == null || mark.getStatus().isEmpty()) {
-            mark.setStatus(oldMark.getStatus());
-        }
         mark.setSubject(oldMark.getSubject());
         mark.setStudent(oldMark.getStudent());
         return markRepository.save(mark);
@@ -47,32 +48,26 @@ public class MarkServiceImpl implements MarkService {
     }
 
     @Override
-    public List<Mark> findAllByStudentId(long studentId) {
-        return markRepository.findAllByStudentId(studentId);
+    public HashMap<Subject, List<Mark>> findAllByStudentId(long studentId) {
+        HashMap<Subject, List<Mark>> result = new HashMap<>();
+        List<Mark> temp;
+        for(Mark mark : markRepository.findAllByStudentId(studentId)) {
+            temp = result.getOrDefault(mark.getSubject(), new ArrayList<>());
+            temp.add(mark);
+            result.put(mark.getSubject(), temp);
+        }
+        return result;
     }
 
     @Override
-    public List<Mark> findAllBySubjectId(long subjectId) {
-        return markRepository.findAllBySubjectId(subjectId);
-    }
-
-    @Override
-    public List<Mark> findAllByFirstNameAndAndLastName(String firstName, String lastName) {
-        return markRepository.findAllByStudent_User_FirstNameContainingAndStudent_User_LastNameContaining(firstName, lastName);
-    }
-
-    @Override
-    public List<Mark> findAllBySubjectName(String subjectName) {
-        return markRepository.findAllBySubject_Name(subjectName);
-    }
-
-    @Override
-    public List<Mark> findAllByStudentIdAndSubjectId(long studentId, long subjectId) {
-        return markRepository.findAllByStudentIdAndSubjectId(studentId, subjectId);
-    }
-
-    @Override
-    public List<Mark> findAllByStudentNameAndSubjectName(String firstName, String lastName, String subjectName) {
-        return markRepository.findAllByStudent_User_FirstNameContainingAndStudent_User_LastNameContainingAndSubject_NameContaining(firstName, lastName, subjectName);
+    public HashMap<Student, List<Mark>> findAllBySubjectId(long subjectId) {
+        HashMap<Student, List<Mark>> result = new HashMap<>();
+        List<Mark> temp;
+        for(Mark mark : markRepository.findAllBySubjectId(subjectId)) {
+            temp = result.getOrDefault(mark.getStudent(), new ArrayList<>());
+            temp.add(mark);
+            result.put(mark.getStudent(), temp);
+        }
+        return result;
     }
 }
