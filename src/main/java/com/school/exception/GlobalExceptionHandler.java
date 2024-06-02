@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.time.DateTimeException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -52,6 +53,16 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ExceptionResponse handleBadCredentialsException(BadCredentialsException e) {
         log.error("handleBadCredentialsException: {}", e.getMessage());
+        return new ExceptionResponse(e.getMessage());
+    }
+
+    @ExceptionHandler({
+            IllegalArgumentException.class,
+            DateTimeException.class
+    })
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionResponse handleIllegalArgumentException(RuntimeException e) {
+        log.error("handleIllegalArgumentException: {}", e.getMessage());
         return new ExceptionResponse(e.getMessage());
     }
 }

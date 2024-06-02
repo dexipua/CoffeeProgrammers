@@ -33,13 +33,20 @@ public class SubjectDateController {
                 SubjectDateRequest.toSubject(subjectDateRequest, subjectService, subjectId)));
     }
 
+    @PutMapping("/update/{subject_date_id}")
+    @ResponseStatus(HttpStatus.OK)
+    public SubjectDateResponse updateSubjectDate(@RequestBody SubjectDateRequest subjectDateRequest,
+                                                 @PathVariable("subject_date_id") long subjectDateId) {
+        return new SubjectDateResponse(subjectDateService.update(SubjectDateRequest.toSubject(subjectDateRequest,
+                subjectService, subjectDateId)));
+    }
+
     @GetMapping("/getAllByStudent/{student_id}")
     @ResponseStatus(HttpStatus.OK)
     public List<SubjectDateResponseByStudentId> getAllByStudentId(@PathVariable("student_id") int student_id) {
         HashMap<DayOfWeek, HashMap<SubjectDate.NumOfLesson, Subject>> hashMap =
                 subjectDateService.findAllBySubject_Students_Id(student_id);
         List<SubjectDateResponseByStudentId> subjectDateResponseByStudentIds = new ArrayList<>();
-        HashMap<SubjectDate.NumOfLesson, Subject> tempMap;
         for (Map.Entry<DayOfWeek, HashMap<SubjectDate.NumOfLesson, Subject>> entry : hashMap.entrySet()) {
             for (Map.Entry<SubjectDate.NumOfLesson, Subject> inEntry : entry.getValue().entrySet()) {
                 subjectDateResponseByStudentIds.add(new SubjectDateResponseByStudentId(entry.getKey(), inEntry.getKey(), inEntry.getValue()));
