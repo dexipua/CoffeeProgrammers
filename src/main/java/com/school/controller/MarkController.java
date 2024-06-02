@@ -10,9 +10,9 @@ import com.school.service.impl.SubjectServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,53 +26,54 @@ public class MarkController {
     private final StudentServiceImpl studentService;
     private final SubjectServiceImpl subjectService;
 
-    @PostMapping("/{subject_id}/{student_id}/createMark")
+    @PostMapping("/subject/{subject_id}/student/{student_id}/createMark")
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasRole('ROLE_TEACHER') or hasRole('ROLE_CHIEF_TEACHER')") // TODO PreAuthorize
+    @PreAuthorize("@userSecurity.checkUserBySubject(#auth, #subject_id)")
     public MarkResponseAll createMark(
             @RequestBody MarkRequest markRequest,
             @PathVariable("subject_id") long subject_id,
-            @PathVariable("student_id") long student_id) {
-        Mark mark = MarkRequest.toMark(markRequest);
-        mark.setSubject(subjectService.findById(subject_id));
-        mark.setStudent(studentService.findById(student_id));
-        mark.setTime(LocalDateTime.now());
+            @PathVariable("student_id") long student_id,
+            Authentication auth) {
+        Mark mark = MarkRequest.toMark(markRequest, subject_id, student_id, subjectService, studentService);
         return new MarkResponseAll(markService.create(mark));
     }
 
     @GetMapping("/getById/{id}")
     @ResponseStatus(HttpStatus.OK)
-    // TODO PreAutorize
+    @PreAuthorize("@userSecurity.checkUserByMarkByStudent(#auth, #id) " +
+            "or @userSecurity.checkUserByMarkByTeacher(#auth, #id)")
     public MarkResponseAll getByMarkId(
-            @PathVariable long id) {
+            @PathVariable long id,
+            Authentication auth) {
         return new MarkResponseAll(markService.findById(id));
     }
 
     @PutMapping("/update/{id}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasRole('ROLE_TEACHER') or hasRole('ROLE_CHIEF_TEACHER')") // TODO PreAuthorize
+    @PreAuthorize("@userSecurity.checkUserByMarkByTeacher(#auth, #id)")
     public MarkResponseAll updateMark(
             @PathVariable long id,
-            @RequestBody MarkRequest markRequest) {
+            @RequestBody MarkRequest markRequest,
+            Authentication auth) {
         Mark updateMark = MarkRequest.toMark(markRequest);
         updateMark.setId(id);
-        updateMark.setTime(LocalDateTime.now());
         return new MarkResponseAll(markService.update(updateMark));
     }
 
     @DeleteMapping("/delete/{id}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasRole('ROLE_TEACHER') or hasRole('ROLE_CHIEF_TEACHER')") // TODO PreAutorize
+    @PreAuthorize("@userSecurity.checkUserByMarkByTeacher(#auth, #id)")
     public void deleteMark(
-            @PathVariable long id) {
+            @PathVariable long id,
+            Authentication auth) {
         markService.delete(id);
     }
 
     @GetMapping("/getAllByStudentId/{student_id}")
     @ResponseStatus(HttpStatus.OK)
-    // TODO PreAutorize
+    @PreAuthorize("@userSecurity.checkUserByStudent(#auth, #student_id)")
     public List<MarkResponseToGetByStudent> getAllByStudentId(
-            @PathVariable long student_id) {
+            @PathVariable long student_id, Authentication auth) {
         HashMap<Subject, List<Mark>> marks = markService.findAllByStudentId(student_id);
         List<MarkResponseToGetByStudent> result = new ArrayList<>();
         for(Map.Entry<Subject, List<Mark>> entry : marks.entrySet()) {
@@ -83,9 +84,9 @@ public class MarkController {
 
     @GetMapping("/getAllBySubjectId/{subject_id}")
     @ResponseStatus(HttpStatus.OK)
-    // TODO PreAutorize
+    @PreAuthorize("@userSecurity.checkUserBySubject(#auth, #subject_id)")
     public List<MarkResponseToGetBySubject> getAllBySubjectId(
-            @PathVariable long subject_id) {
+            @PathVariable long subject_id, Authentication auth) {
         HashMap<Student, List<Mark>> marks = markService.findAllBySubjectId(subject_id);
         List<MarkResponseToGetBySubject> result = new ArrayList<>();
         for(Map.Entry<Student, List<Mark>> entry : marks.entrySet()) {

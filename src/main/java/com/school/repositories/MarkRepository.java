@@ -10,8 +10,8 @@ import java.util.Optional;
 
 public interface MarkRepository extends JpaRepository<Mark, Long> {
     Optional<Mark> findById(long id);
-    @Query("SELECT s.marks FROM Student s WHERE s.id = :studentId")
+    @Query("SELECT m FROM Mark m WHERE m.student.id = :studentId")
     List<Mark> findAllByStudentId(long studentId);
-    @Query("SELECT s.marks FROM Subject s WHERE s.id = :subjectId")
+    @Query("SELECT m FROM Mark m WHERE m.subject.id = :subjectId")
     List<Mark> findAllBySubjectId(long subjectId);
 }

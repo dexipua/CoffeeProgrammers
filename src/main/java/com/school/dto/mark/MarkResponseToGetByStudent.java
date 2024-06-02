@@ -14,13 +14,13 @@ import java.util.List;
 @Getter
 public class MarkResponseToGetByStudent {
     private SubjectResponseToGet subjectResponseToGet;
-    private MarkResponseToGet[] marks;
+    private int[] marks;
 
     public MarkResponseToGetByStudent(Subject subject, List<Mark> marks) {
         this.subjectResponseToGet = new SubjectResponseToGet(subject);
-        this.marks = new MarkResponseToGet[marks.size()];
+        this.marks = new int[marks.size()];
         for(int i = 0; i < marks.size(); i++) {
-            this.marks[i] = new MarkResponseToGet(marks.get(i));
+            this.marks[i] = marks.get(i).getMark();
         }
     }
 }

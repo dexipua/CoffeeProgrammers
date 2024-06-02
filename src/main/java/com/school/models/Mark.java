@@ -3,7 +3,6 @@ package com.school.models;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import jakarta.websocket.server.PathParam;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,7 +23,7 @@ public class Mark {
     @Max(value = 12, message = "Mark must be at most 12")
     private int mark;
     @Column(name = "timeOfMark")
-    private LocalDateTime time = LocalDateTime.now();
+    private LocalDateTime time;
     @ManyToOne
     @JoinColumn(name = "student_id")
     private Student student;
@@ -33,6 +32,7 @@ public class Mark {
     private Subject subject;
 
     public Mark(int mark, Student student, Subject subject) {
+        this.time = LocalDateTime.now();
         this.mark = mark;
         this.student = student;
         this.subject = subject;
