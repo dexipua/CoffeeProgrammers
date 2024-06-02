@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Setter
 @Entity
 @Table(name = "news")
-public class News {
+public class StudentNews {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -21,9 +21,11 @@ public class News {
     @ManyToOne()
     @JoinColumn(name = "subject_id")
     private Student student;
-    public News(String title, Student student) {
+    public StudentNews(String title, Student student) {
         this.title = title;
         this.student = student;
         this.time = LocalDateTime.now();
     }
+
+    public StudentNews() {}
 }
