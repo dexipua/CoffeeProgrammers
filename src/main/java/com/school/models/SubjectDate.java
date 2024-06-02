@@ -25,10 +25,10 @@ public class SubjectDate {
     @JoinColumn(name = "subject_id")
     private Subject subject;
 
-    public SubjectDate(Subject subject, DayOfWeek dayOfWeek, String numOfLesson) {
+    public SubjectDate(Subject subject, DayOfWeek dayOfWeek, int numOfLesson) {
         this.subject = subject;
         this.dayOfWeek = dayOfWeek;
-        this.numOfLesson = NumOfLesson.valueOf(numOfLesson);
+        this.numOfLesson = NumOfLesson.values()[numOfLesson-1];
     }
 
     public SubjectDate() {}
