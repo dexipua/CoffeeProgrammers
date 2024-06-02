@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -15,10 +16,12 @@ import java.util.List;
 public class StudentNewsController {
     private final StudentNewsService newsService;
 
-    @GetMapping("/{student_id}")
-    @ResponseStatus(HttpStatus.CREATED)
+    @GetMapping("/getByStudentId/{student_id}")
+    @ResponseStatus(HttpStatus.OK)
     public List<StudentNewsResponse> getAllNewsByStudentId(@PathVariable("student_id") int studentId) {
         List<StudentNews> news = newsService.getAllNewsByStudentId(studentId);
-        return news.stream().map(StudentNewsResponse::new).toList();
+        return news.stream()
+                .map(StudentNewsResponse::new)
+                .collect(Collectors.toList());
     }
 }
