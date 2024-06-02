@@ -41,6 +41,18 @@ public class SubjectDateController {
                 subjectService, subjectDateId)));
     }
 
+    @DeleteMapping("/delete/{subject_date_id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteSubjectDate(@PathVariable("subject_date_id") long subjectDateId) {
+        subjectDateService.delete(subjectDateService.findById(subjectDateId));
+    }
+
+    @GetMapping("/getById/{}")
+    @ResponseStatus(HttpStatus.OK)
+    public SubjectDateResponse getById(@PathVariable("subject_date_id") long subjectDateId) {
+        return new SubjectDateResponse(subjectDateService.findById(subjectDateId));
+    }
+
     @GetMapping("/getAllByStudent/{student_id}")
     @ResponseStatus(HttpStatus.OK)
     public List<SubjectDateResponseByStudentId> getAllByStudentId(@PathVariable("student_id") int student_id) {
