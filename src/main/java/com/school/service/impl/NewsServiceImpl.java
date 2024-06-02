@@ -3,6 +3,7 @@ package com.school.service.impl;
 import com.school.models.News;
 import com.school.repositories.NewsRepository;
 import com.school.service.NewsService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,8 +20,8 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public void delete(News news) {
-        newsRepository.delete(news);
+    public News findById(long id) {
+        return newsRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
     @Override
