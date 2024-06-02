@@ -39,9 +39,13 @@ public class SubjectDateController {
     @ResponseStatus(HttpStatus.OK)
     public SubjectDateResponse updateSubjectDate(@RequestBody SubjectDateRequest subjectDateRequest,
                                                  @PathVariable("subject_date_id") long subjectDateId) {
-        return new SubjectDateResponse(subjectDateService.update(SubjectDateRequest.toSubject(subjectDateRequest,
-                subjectService, subjectDateId)));
+        long subjectId = subjectDateService.findById(subjectDateId).getId();
+        SubjectDate subjectDate = SubjectDateRequest.toSubject(subjectDateRequest,
+                subjectService, subjectId);
+        subjectDate.setId(subjectDateId);
+        return new SubjectDateResponse(subjectDateService.update(subjectDate));
     }
+
 
     @DeleteMapping("/delete/{subject_date_id}")
     @ResponseStatus(HttpStatus.OK)

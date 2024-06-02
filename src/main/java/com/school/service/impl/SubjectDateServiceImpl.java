@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -35,7 +36,7 @@ public class SubjectDateServiceImpl implements SubjectDateService {
             throw new EntityExistsException("Subject time with the same option already exists(TEACHER)");
         }
 
-        for (Student student : subjectDate.getSubject().getStudents()){
+        for (Student student : subjectDate.getSubject().getStudents()) {
             if (!subjectsWithTheSameDateAndTime.stream()
                     .filter(subjectDateSame -> subjectDateSame.getSubject().getStudents().contains(student))
                     .toList()
@@ -49,10 +50,32 @@ public class SubjectDateServiceImpl implements SubjectDateService {
 
     @Override
     public SubjectDate update(SubjectDate subjectDate) {
-        SubjectDate find = subjectDateRepository.findAll().stream().filter(subjectDate1
-                -> subjectDate1.getDayOfWeek().equals(subjectDate.getDayOfWeek())
-                && subjectDate1.getNumOfLesson().equals(subjectDate.getNumOfLesson())).toList().get(1);
+        List<SubjectDate> subjectsWithTheSameDateAndTime =
+                new ArrayList<>(
+                        subjectDateRepository.findAll().stream()
+                                .filter(subjectDate1 ->
+                                        subjectDate1.getDayOfWeek().equals(subjectDate.getDayOfWeek())
+                                                && subjectDate1.getNumOfLesson().equals(subjectDate.getNumOfLesson())
+                                                && subjectDate1.getId() != subjectDate.getId()
+                                )
+                                .toList()
+                );
 
+        if (!subjectsWithTheSameDateAndTime.stream()
+                .filter(subjectDateSame -> subjectDate.getSubject().getTeacher().equals(subjectDateSame.getSubject().getTeacher()))
+                .toList()
+                .isEmpty()) {
+            throw new EntityExistsException("Subject time with the same option already exists(TEACHER)");
+        }
+
+        for (Student student : subjectDate.getSubject().getStudents()) {
+            if (!subjectsWithTheSameDateAndTime.stream()
+                    .filter(subjectDateSame -> subjectDateSame.getSubject().getStudents().contains(student))
+                    .toList()
+                    .isEmpty()) {
+                throw new EntityExistsException("Subject time with the same option already exists(STUDENT)");
+            }
+        }
         return subjectDateRepository.save(subjectDate);
     }
 
