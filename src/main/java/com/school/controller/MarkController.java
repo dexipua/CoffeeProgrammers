@@ -29,7 +29,7 @@ public class MarkController {
     @PostMapping("/{subject_id}/{student_id}/createMark")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('ROLE_TEACHER') or hasRole('ROLE_CHIEF_TEACHER')") // TODO PreAuthorize
-    public MarkResponseAll createStudent(
+    public MarkResponseAll createMark(
             @RequestBody MarkRequest markRequest,
             @PathVariable("subject_id") long subject_id,
             @PathVariable("student_id") long student_id) {
