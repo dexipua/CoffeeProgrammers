@@ -3,14 +3,14 @@ package com.school.service.impl;
 import com.school.models.News;
 import com.school.repositories.NewsRepository;
 import com.school.service.NewsService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class NewsServiceImpl implements NewsService {
-    @Autowired
     private NewsRepository newsRepository;
 
     @Override
