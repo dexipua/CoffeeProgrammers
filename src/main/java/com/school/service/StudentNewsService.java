@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface StudentNewsService {
     StudentNews create(StudentNews news);
-    void delete(StudentNews news);
+    StudentNews findById(long id);
     List<StudentNews> getAllNewsByStudentId(long id);
 }
