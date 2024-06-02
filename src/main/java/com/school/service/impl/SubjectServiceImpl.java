@@ -113,7 +113,7 @@ public class SubjectServiceImpl implements SubjectService {
         Student student = studentService.findById(studentId);
 
         if (subject.getStudents().contains(student)) {
-            throw new EntityExistsException(
+            throw new UnsupportedOperationException(
                     "Subject already have this student"
             );
         }
@@ -129,7 +129,7 @@ public class SubjectServiceImpl implements SubjectService {
         Student student = studentService.findById(studentId);
 
         if (!subject.getStudents().contains(student)) {
-            throw new EntityNotFoundException(
+            throw new UnsupportedOperationException(
                     "Subject doesn't have this student"
             );
         }
