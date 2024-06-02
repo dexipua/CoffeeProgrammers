@@ -7,6 +7,7 @@ import com.school.models.Subject;
 import com.school.models.SubjectDate;
 import com.school.service.SubjectDateService;
 import com.school.service.SubjectService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -27,8 +28,9 @@ public class SubjectDateController {
 
     @PostMapping("/create/subject/{subject_id}")
     @ResponseStatus(HttpStatus.CREATED)
-    public SubjectDateResponse createSubjectDate(@RequestBody SubjectDateRequest subjectDateRequest,
-                                                 @PathVariable("subject_id") long subjectId) {
+    public SubjectDateResponse createSubjectDate(
+            @Valid @RequestBody SubjectDateRequest subjectDateRequest,
+            @PathVariable("subject_id") long subjectId) {
         return new SubjectDateResponse(subjectDateService.create(
                 SubjectDateRequest.toSubject(subjectDateRequest, subjectService, subjectId)));
     }
