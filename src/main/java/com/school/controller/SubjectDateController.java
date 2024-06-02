@@ -47,7 +47,7 @@ public class SubjectDateController {
         subjectDateService.delete(subjectDateService.findById(subjectDateId));
     }
 
-    @GetMapping("/getById/{}")
+    @GetMapping("/getById/{subject_date_id}")
     @ResponseStatus(HttpStatus.OK)
     public SubjectDateResponse getById(@PathVariable("subject_date_id") long subjectDateId) {
         return new SubjectDateResponse(subjectDateService.findById(subjectDateId));
