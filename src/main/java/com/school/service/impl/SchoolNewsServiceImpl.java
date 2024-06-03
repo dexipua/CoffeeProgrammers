@@ -11,10 +11,8 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-
 public class SchoolNewsServiceImpl implements SchoolNewsService {
 
-    private SchoolNewsRepository schoolNewsRepository;
     private final SchoolNewsRepository schoolNewsRepository;
 
     @Override

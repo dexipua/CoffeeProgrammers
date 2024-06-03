@@ -2,11 +2,11 @@ package com.school.service.impl;
 
 import com.school.models.Mark;
 import com.school.models.Student;
-import com.school.models.StudentNews;
 import com.school.models.Subject;
+import com.school.models.UserNews;
 import com.school.repositories.MarkRepository;
 import com.school.service.MarkService;
-import com.school.service.StudentNewsService;
+import com.school.service.UserNewsService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -22,13 +22,13 @@ import java.util.List;
 public class MarkServiceImpl implements MarkService {
 
     private final MarkRepository markRepository;
-    private final StudentNewsService studentNewsService;
+    private final UserNewsService userNewsService;
 
     @Override
     public Mark create(Mark mark) {
-        studentNewsService.create(new StudentNews(
+        userNewsService.create(new UserNews(
                 "Ви отримали нову оцінку " + mark.getMark() + " з предмету: " + mark.getSubject().getName(),
-                mark.getStudent(), mark.getTime())
+                mark.getStudent().getUser(), mark.getTime())
         );
         return markRepository.save(mark);
     }
@@ -45,9 +45,9 @@ public class MarkServiceImpl implements MarkService {
         mark.setTime(LocalDateTime.now());
         mark.setSubject(oldMark.getSubject());
         mark.setStudent(oldMark.getStudent());
-        studentNewsService.create(new StudentNews(
+        userNewsService.create(new UserNews(
                 "Оцінка змінена на " + mark.getMark() + " з предмету: " + mark.getSubject().getName(),
-                mark.getStudent(), mark.getTime())
+                mark.getStudent().getUser(), mark.getTime())
         );
         return markRepository.save(mark);
     }
