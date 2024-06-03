@@ -36,7 +36,7 @@ public class UserRequestCreate {
         return new User(
                 userRequestCreate.firstName,
                 userRequestCreate.lastName,
-                userRequestCreate.getEmail(),
+                userRequestCreate.email,
                 userRequestCreate.password
         );
 
