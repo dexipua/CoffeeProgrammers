@@ -2,11 +2,11 @@ package com.school.service.impl;
 
 import com.school.dto.subject.SubjectRequest;
 import com.school.models.Student;
-import com.school.models.StudentNews;
 import com.school.models.Subject;
 import com.school.models.Teacher;
+import com.school.models.UserNews;
 import com.school.repositories.SubjectRepository;
-import com.school.service.StudentNewsService;
+import com.school.service.UserNewsService;
 import com.school.service.StudentService;
 import com.school.service.SubjectService;
 import com.school.service.TeacherService;
@@ -24,7 +24,7 @@ public class SubjectServiceImpl implements SubjectService {
     private final SubjectRepository subjectRepository;
     private final TeacherService teacherService;
     private final StudentService studentService;
-    private final StudentNewsService studentNewsService;
+    private final UserNewsService userNewsService;
 
     @Override
     public Subject create(SubjectRequest subjectRequest) {
@@ -121,9 +121,9 @@ public class SubjectServiceImpl implements SubjectService {
 
         subject.getStudents().add(student);
 
-        studentNewsService.create(new StudentNews(
+        userNewsService.create(new UserNews(
                 "Вас додали до предмету " + subject.getName(),
-                student
+                student.getUser()
         ));
         subjectRepository.save(subject);
     }
@@ -139,9 +139,9 @@ public class SubjectServiceImpl implements SubjectService {
             );
         }
 
-        studentNewsService.create(new StudentNews(
+        userNewsService.create(new UserNews(
                 "Вас видалили з предмету " + subject.getName(),
-                student
+                student.getUser()
         ));
         subject.getStudents().remove(student);
 

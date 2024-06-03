@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Setter
 @Entity
 @Table(name = "news")
-public class StudentNews { //TODO userNews
+public class UserNews {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -20,18 +20,18 @@ public class StudentNews { //TODO userNews
     private LocalDateTime time;
     @ManyToOne()
     @JoinColumn(name = "subject_id")
-    private Student student;
-    public StudentNews(String title, Student student) {
+    private User user;
+    public UserNews(String title, User user) {
         this.title = title;
-        this.student = student;
+        this.user = user;
         this.time = LocalDateTime.now();
     }
 
-    public StudentNews(String title, Student student, LocalDateTime time) {
+    public UserNews(String title, User user, LocalDateTime time) {
         this.title = title;
-        this.student = student;
+        this.user = user;
         this.time = time;
     }
 
-    public StudentNews() {}
+    public UserNews() {}
 }
