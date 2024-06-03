@@ -44,7 +44,7 @@ class MarkRepositoryTest {
     }
 
     @Test
-    void findAllBySubjectId() {
+    void findAllBySubject_Id() {
         Student student = new Student(new User("Id", "Od", "cemnc@idv.fi", "piehvhuoe08475780ldkjfIHFGEROSIg"));
         Subject subject = new Subject("Maths");
         studentRepository.save(student);
