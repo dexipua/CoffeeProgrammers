@@ -1,7 +1,10 @@
 package com.school.service.impl;
 
+import com.school.dto.user.UserRequestCreate;
+import com.school.dto.user.UserRequestUpdate;
 import com.school.models.Subject;
 import com.school.models.Teacher;
+import com.school.models.User;
 import com.school.repositories.TeacherRepository;
 import com.school.service.RoleService;
 import com.school.service.TeacherService;
@@ -23,10 +26,11 @@ public class TeacherServiceImpl implements TeacherService {
     private final RoleService roleService;
 
     @Override
-    public Teacher create(@NotNull Teacher teacher) {
-        teacher.getUser().setRole(roleService.findByName("TEACHER"));
-        userService.create(teacher.getUser());
-        return teacherRepository.save(teacher);
+    public Teacher create(@NotNull UserRequestCreate userRequest) {
+        User userToCreate = UserRequestCreate.toUser(userRequest);
+        userToCreate.setRole(roleService.findByName("STUDENT"));
+        userService.create(userToCreate);
+        return teacherRepository.save(new Teacher(userToCreate));
     }
 
     @Override
@@ -36,14 +40,10 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public Teacher update(@NotNull Teacher teacher) {
-        Teacher oldTeacher = findById(teacher.getId());
-        teacher.getUser().setEmail(oldTeacher.getUser().getEmail());
-        teacher.getUser().setId(oldTeacher.getUser().getId());
-        teacher.getUser().setRole(oldTeacher.getUser().getRole());
-        teacher.setSubjects(oldTeacher.getSubjects());
-        userService.update(teacher.getUser());
-        return teacher;
+    public Teacher update(long teacherToUpdateId, UserRequestUpdate userRequest) {
+        Teacher teacherToUpdate = findById(teacherToUpdateId);
+        userService.update(teacherToUpdate.getUser().getId(), userRequest);
+        return teacherToUpdate;
     }
 
     @Override

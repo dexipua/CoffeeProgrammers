@@ -1,10 +1,12 @@
 package com.school.controller;
 
-import com.school.dto.student.StudentRequest;
 import com.school.dto.student.StudentResponseAll;
 import com.school.dto.student.StudentResponseToGet;
+import com.school.dto.user.UserRequestCreate;
+import com.school.dto.user.UserRequestUpdate;
 import com.school.models.Student;
 import com.school.service.impl.StudentServiceImpl;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,10 +26,9 @@ public class StudentController {
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER') or hasRole('ROLE_TEACHER')")
-    public StudentResponseToGet create(@RequestBody StudentRequest studentRequest) {
-        Student student = StudentRequest.toStudent(studentRequest);
-        Student createdStudent = studentService.create(student);
-        return new StudentResponseToGet(createdStudent);
+    public StudentResponseToGet create(
+            @Valid @RequestBody UserRequestCreate userRequest) {
+        return new StudentResponseToGet(studentService.create(userRequest));
     }
 
     @GetMapping("/getById/{id}")
@@ -39,10 +40,11 @@ public class StudentController {
     @PutMapping("/update/{id}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER') or @userSecurity.checkUserByStudent(#auth, #id)")
-    public StudentResponseAll update(@PathVariable long id, @RequestBody StudentRequest studentRequest, Authentication auth) {
-        Student updateStudent = StudentRequest.toStudent(studentRequest);
-        updateStudent.setId(id);
-        return new StudentResponseAll(studentService.update(updateStudent));
+    public StudentResponseAll update(
+            @PathVariable long id,
+            @Valid @RequestBody UserRequestUpdate userRequest,
+            Authentication auth) {
+        return new StudentResponseAll(studentService.update(id, userRequest));
     }
 
     @DeleteMapping("/delete/{id}")

@@ -1,5 +1,6 @@
 package com.school.service.impl;
 
+import com.school.dto.user.UserRequestUpdate;
 import com.school.models.User;
 import com.school.repositories.UserRepository;
 import com.school.service.UserService;
@@ -25,7 +26,7 @@ public class UserServiceImpl implements UserService {
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             throw new EntityExistsException("User with email " + user.getEmail() + " already exists");
         }
-        userRepository.save(user);
+        userRepository.save(user); //TODO remove after correct validation
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
@@ -37,17 +38,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User update(@NotNull User user) {
-        String updatedEmail = user.getEmail();
-        String actualEmail = findById(user.getId()).getEmail();
+    public User update(long userToUpdateId, @NotNull UserRequestUpdate userRequest) {
+        User userToUpdate = findById(userToUpdateId);
 
-        if (!updatedEmail.equals(actualEmail) && userRepository.findByEmail(updatedEmail).isPresent()) {
-            throw new EntityExistsException("User with email " + updatedEmail + " already exists");
-        }
+        userToUpdate.setFirstName(userRequest.getFirstName());
+        userToUpdate.setLastName(userRequest.getLastName());
+        userToUpdate.setPassword(userRequest.getPassword());
 
-        userRepository.save(user);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepository.save(user);
+        userRepository.save(userToUpdate);
+        userToUpdate.setPassword(passwordEncoder.encode(userToUpdate.getPassword()));
+        return userRepository.save(userToUpdate);
     }
 
     public User findByEmail(String email) {

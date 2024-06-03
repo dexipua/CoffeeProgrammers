@@ -1,7 +1,10 @@
 package com.school.service.impl;
 
 
+import com.school.dto.user.UserRequestCreate;
+import com.school.dto.user.UserRequestUpdate;
 import com.school.models.Student;
+import com.school.models.User;
 import com.school.repositories.StudentRepository;
 import com.school.service.RoleService;
 import com.school.service.StudentService;
@@ -24,10 +27,11 @@ public class StudentServiceImpl implements StudentService {
     private final TeacherService teacherService;
 
     @Override
-    public Student create(@NotNull Student student) {
-        student.getUser().setRole(roleService.findByName("STUDENT"));
-        userService.create(student.getUser());
-        return studentRepository.save(student);
+    public Student create(@NotNull UserRequestCreate userRequest) {
+        User userToCreate = UserRequestCreate.toUser(userRequest);
+        userToCreate.setRole(roleService.findByName("STUDENT"));
+        userService.create(userToCreate);
+        return studentRepository.save(new Student(userToCreate));
     }
 
     @Override
@@ -37,14 +41,10 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Student update(@NotNull Student student) {
-        Student oldStudent = findById(student.getId());
-        student.getUser().setEmail(oldStudent.getUser().getEmail());
-        student.getUser().setRole(oldStudent.getUser().getRole());
-        student.getUser().setId(oldStudent.getUser().getId());
-        student.setSubjects(oldStudent.getSubjects());
-        userService.update(student.getUser());
-        return student;
+    public Student update(long studentToUpdateId, @NotNull UserRequestUpdate userRequest) {
+        Student studentToUpdate = findById(studentToUpdateId);
+        userService.update(studentToUpdate.getUser().getId(), userRequest);
+        return studentToUpdate;
     }
 
     @Override

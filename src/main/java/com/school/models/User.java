@@ -23,6 +23,7 @@ public class User implements UserDetails, Comparable<User>{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    //TODO Patterns is required?
     @Pattern(regexp = "[A-Z][a-z]+",
             message = "First name must start with a capital letter followed by one or more lowercase letters")
     @Column(name = "first_name", nullable = false)
@@ -52,6 +53,19 @@ public class User implements UserDetails, Comparable<User>{
     @JoinColumn(name = "role_id")
     private Role role;
 
+    public User(String firstName, String lastName, String email, String password) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.password = password;
+        this.email = email;
+    }
+
+    public User(String firstName, String lastName, String password) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.password = password;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -63,11 +77,11 @@ public class User implements UserDetails, Comparable<User>{
                 '}';
     }
 
-    public User(String firstName, String lastName, String email, String password) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.password = password;
-        this.email = email;
+    @Override
+    public int compareTo(User o) {
+        int result = this.lastName.compareTo(o.lastName);
+        result = result == 0 ? this.firstName.compareTo(o.firstName) : result;
+        return result;
     }
 
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -102,12 +116,5 @@ public class User implements UserDetails, Comparable<User>{
     @Override
     public boolean isEnabled() {
         return true;
-    }
-
-    @Override
-    public int compareTo(User o) {
-        int result = this.lastName.compareTo(o.lastName);
-        result = result == 0 ? this.firstName.compareTo(o.firstName) : result;
-        return result;
     }
 }
