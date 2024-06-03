@@ -14,6 +14,7 @@ import java.util.List;
 
 public class SchoolNewsServiceImpl implements SchoolNewsService {
 
+    private SchoolNewsRepository schoolNewsRepository;
     private final SchoolNewsRepository schoolNewsRepository;
 
     @Override
