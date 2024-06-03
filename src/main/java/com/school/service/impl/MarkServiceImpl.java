@@ -62,7 +62,7 @@ public class MarkServiceImpl implements MarkService {
     public HashMap<Subject, List<Mark>> findAllByStudentId(long studentId) {
         HashMap<Subject, List<Mark>> result = new HashMap<>();
         List<Mark> temp;
-        for (Mark mark : markRepository.findAllByStudentId(studentId)) {
+        for (Mark mark : markRepository.findAllByStudent_Id(studentId)) {
             temp = result.getOrDefault(mark.getSubject(), new ArrayList<>());
             temp.add(mark);
             result.put(mark.getSubject(), temp);
@@ -74,7 +74,7 @@ public class MarkServiceImpl implements MarkService {
     public HashMap<Student, List<Mark>> findAllBySubjectId(long subjectId) {
         HashMap<Student, List<Mark>> result = new HashMap<>();
         List<Mark> temp;
-        for (Mark mark : markRepository.findAllBySubjectId(subjectId)) {
+        for (Mark mark : markRepository.findAllBySubject_Id(subjectId)) {
             temp = result.getOrDefault(mark.getStudent(), new ArrayList<>());
             temp.add(mark);
             result.put(mark.getStudent(), temp);

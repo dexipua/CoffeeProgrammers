@@ -40,16 +40,16 @@ class MarkRepositoryTest {
 //        markRepository.save(new Mark(1, student, subject));
 //        markRepository.save(new Mark(1, student, subject));
 //        markRepository.save(new Mark(1, student, subject));
-        assertFalse(markRepository.findAllByStudentId(student.getId()).isEmpty());
+        assertFalse(markRepository.findAllByStudent_Id(student.getId()).isEmpty());
     }
 
     @Test
-    void findAllBySubjectId() {
+    void findAllBySubject_Id() {
         Student student = new Student(new User("Id", "Od", "cemnc@idv.fi", "piehvhuoe08475780ldkjfIHFGEROSIg"));
         Subject subject = new Subject("Maths");
         studentRepository.save(student);
         subjectRepository.save(subject);
         markRepository.save(new Mark(1, student, subject));
-        assertFalse(markRepository.findAllByStudentId(student.getId()).isEmpty());
+        assertFalse(markRepository.findAllByStudent_Id(student.getId()).isEmpty());
     }
 }
