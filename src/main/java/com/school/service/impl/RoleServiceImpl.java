@@ -4,7 +4,6 @@ import com.school.models.Role;
 import com.school.repositories.RoleRepository;
 import com.school.service.RoleService;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +16,7 @@ public class RoleServiceImpl implements RoleService {
     private final RoleRepository roleRepository;
 
     @Override
-    public Role create(@NotNull Role role) {
+    public Role create(Role role) {
         return roleRepository.save(role);
     }
 
@@ -27,7 +26,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Role update(@NotNull Role role) {
+    public Role update(Role role) {
         findById(role.getId());
         return roleRepository.save(role);
     }
@@ -44,7 +43,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Role findByName(@NotNull String name) {
+    public Role findByName(String name) {
         return roleRepository.findByName(name).orElseThrow(
                 () -> new EntityNotFoundException("Role with name " + name + " not found"));
     }

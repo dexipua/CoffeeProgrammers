@@ -1,6 +1,8 @@
 package com.school.dto.user;
 
 import com.school.models.User;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 import lombok.Getter;
@@ -11,28 +13,30 @@ import lombok.Setter;
 @Data
 public class UserRequestCreate {
 
+    @NotBlank(message = "First name must be provided")
     @Pattern(regexp = "[A-Z][a-z]+",
             message = "First name must start with a capital letter followed by one or more lowercase letters")
     private String firstName;
 
+    @NotBlank(message = "Last name must be provided")
     @Pattern(regexp = "[A-Z][a-z]+",
             message = "Last name must start with a capital letter followed by one or more lowercase letters")
     private String lastName;
 
-    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d).{6,}$",
-            message = "Password must be minimum 6 symbols long, using digits and latin letters")
-    @Pattern(regexp = ".*\\d.*",
-            message = "Password must contain at least one digit")
-    @Pattern(regexp = ".*[A-Z].*",
-            message = "Password must contain at least one uppercase letter")
-    @Pattern(regexp = ".*[a-z].*",
-            message = "Password must contain at least one lowercase letter")
+    @NotBlank(message = "Password must be provided")
+    @Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d).{6,}$",
+            message =
+                    "Password must be minimum 6 characters long, " +
+                            "containing at least one digit, " +
+                            "one uppercase letter, " +
+                            "and one lowercase letter")
     private String password;
 
-    @Pattern(regexp = "[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}", message = "Must be a valid e-mail address")
+    @NotBlank(message = "Email must be provided")
+    @Email(message = "Must be a valid e-mail address")
     private String email;
 
-    public static User toUser(UserRequestCreate userRequestCreate) { //TODO maybe constructor
+    public static User toUser(UserRequestCreate userRequestCreate) {
         return new User(
                 userRequestCreate.firstName,
                 userRequestCreate.lastName,

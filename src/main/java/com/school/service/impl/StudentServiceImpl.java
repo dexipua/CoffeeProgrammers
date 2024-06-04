@@ -11,7 +11,6 @@ import com.school.service.StudentService;
 import com.school.service.TeacherService;
 import com.school.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +26,7 @@ public class StudentServiceImpl implements StudentService {
     private final TeacherService teacherService;
 
     @Override
-    public Student create(@NotNull UserRequestCreate userRequest) {
+    public Student create(UserRequestCreate userRequest) {
         User userToCreate = UserRequestCreate.toUser(userRequest);
         userToCreate.setRole(roleService.findByName("STUDENT"));
         userService.create(userToCreate);
@@ -41,7 +40,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Student update(long studentToUpdateId, @NotNull UserRequestUpdate userRequest) {
+    public Student update(long studentToUpdateId, UserRequestUpdate userRequest) {
         Student studentToUpdate = findById(studentToUpdateId);
         userService.update(studentToUpdate.getUser().getId(), userRequest);
         return studentToUpdate;
@@ -73,8 +72,8 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public List<Student> findAllByUser_FirstNameAndAndUser_LastName(
-             String firstName,
-             String lastName) {
+            String firstName,
+            String lastName) {
         return studentRepository.findAllByUser_FirstNameContainingAndUser_LastNameContaining(firstName, lastName);
     }
 }

@@ -3,7 +3,6 @@ package com.school.exception;
 import com.school.dto.exception.ExceptionResponse;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -19,34 +18,16 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @RestControllerAdvice
-public class GlobalExceptionHandler{
+public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public List<ExceptionResponse> handleValidationError(MethodArgumentNotValidException e) {
         log.error("handleValidationError: {}", e.getMessage());
-
         return e.getBindingResult().getFieldErrors()
                 .stream()
                 .map(FieldError::getDefaultMessage)
                 .map(ExceptionResponse::new)
-                .sorted(Comparator.comparing((ExceptionResponse::getMessage)))
-                .collect(Collectors.toList());
-    }
-
-    @ExceptionHandler(ConstraintViolationException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public List<ExceptionResponse> ConstraintViolationException(ConstraintViolationException e) {
-        log.error("handleEntityExistsException: {}", e.getMessage());
-
-
-        if (true){
-            throw new ArithmeticException("---Заміни на @Valid---");
-        }
-
-
-        return e.getConstraintViolations().stream()
-                .map((ex) -> new ExceptionResponse(ex.getMessage()))
                 .sorted(Comparator.comparing((ExceptionResponse::getMessage)))
                 .collect(Collectors.toList());
     }
@@ -60,18 +41,12 @@ public class GlobalExceptionHandler{
 
     @ExceptionHandler({
             EntityExistsException.class,
-            UnsupportedOperationException.class
+            UnsupportedOperationException.class,
+            BadCredentialsException.class
     })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionResponse handleBadRequestExceptions(RuntimeException e) {
         log.error("handleBadRequestExceptions: {}", e.getMessage());
-        return new ExceptionResponse(e.getMessage());
-    }
-
-    @ExceptionHandler(BadCredentialsException.class)
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public ExceptionResponse handleBadCredentialsException(BadCredentialsException e) {
-        log.error("handleBadCredentialsException: {}", e.getMessage());
         return new ExceptionResponse(e.getMessage());
     }
 }

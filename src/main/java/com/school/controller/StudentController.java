@@ -43,7 +43,8 @@ public class StudentController {
     public StudentResponseAll update(
             @PathVariable long id,
             @Valid @RequestBody UserRequestUpdate userRequest,
-            Authentication auth) {
+            Authentication auth
+    ) {
         return new StudentResponseAll(studentService.update(id, userRequest));
     }
 
@@ -66,8 +67,8 @@ public class StudentController {
     @GetMapping("/getAllBySubjectName/")
     @ResponseStatus(HttpStatus.OK)
     public List<StudentResponseToGet> getBySubjectName(
-            @RequestParam("subject_name") String subjectName) {
-
+            @RequestParam("subject_name") String subjectName
+    ) {
         List<Student> students = studentService.findBySubjectName(subjectName);
         return students.stream()
                 .map(StudentResponseToGet::new)
@@ -76,7 +77,7 @@ public class StudentController {
 
     @GetMapping("/getAllByTeacherId/{teacher_id}")
     @ResponseStatus(HttpStatus.OK)
-    public List<StudentResponseToGet> getByTeacherId( @PathVariable("teacher_id") long teacherId) {
+    public List<StudentResponseToGet> getByTeacherId(@PathVariable("teacher_id") long teacherId) {
         List<Student> students = studentService.findStudentsByTeacherId(teacherId);
         return students.stream()
                 .map(StudentResponseToGet::new)
@@ -85,7 +86,10 @@ public class StudentController {
 
     @GetMapping("/getAllByName/")
     @ResponseStatus(HttpStatus.OK)
-    public List<StudentResponseToGet> getByName( @RequestParam String firstName, @RequestParam String lastName) {
+    public List<StudentResponseToGet> getByName(
+            @RequestParam("first_name") String firstName,
+            @RequestParam("last_name") String lastName
+    ) {
         List<Student> students = studentService.findAllByUser_FirstNameAndAndUser_LastName(firstName, lastName);
         return students.stream()
                 .map(StudentResponseToGet::new)

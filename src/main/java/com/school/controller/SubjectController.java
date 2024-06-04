@@ -3,10 +3,9 @@ package com.school.controller;
 import com.school.dto.subject.SubjectRequest;
 import com.school.dto.subject.SubjectResponseAll;
 import com.school.dto.subject.SubjectResponseToGet;
-import com.school.dto.subject.TransformSubject;
 import com.school.models.Subject;
 import com.school.service.SubjectService;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,10 +25,10 @@ public class SubjectController {
     @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER')")
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    public SubjectResponseToGet create(@RequestBody SubjectRequest subjectRequest) {
-        Subject subject = TransformSubject.
-                transformFromRequestToModel(subjectRequest);
-        return new SubjectResponseToGet(subjectService.create(subject));
+    public SubjectResponseToGet create(
+            @Valid @RequestBody SubjectRequest subjectRequest
+    ) {
+        return new SubjectResponseToGet(subjectService.create(subjectRequest));
     }
 
 
@@ -44,12 +43,8 @@ public class SubjectController {
     @ResponseStatus(HttpStatus.OK)
     public SubjectResponseAll update(
             @PathVariable("subject_id") long subjectId,
-            @RequestBody SubjectRequest subjectRequest) {
-
-        Subject subjectToUpdate = TransformSubject.transformFromRequestToModel(subjectRequest);
-        subjectToUpdate.setId(subjectId);
-
-        return new SubjectResponseAll(subjectService.update(subjectToUpdate));
+            @Valid @RequestBody SubjectRequest subjectRequest) {
+        return new SubjectResponseAll(subjectService.update(subjectId, subjectRequest));
 
 
     }
@@ -72,7 +67,8 @@ public class SubjectController {
 
     @GetMapping("/getAllByName/")
     @ResponseStatus(HttpStatus.OK)
-    public List<SubjectResponseToGet> getByNameContaining(@NotNull @RequestParam("subject_name") String name) {
+    public List<SubjectResponseToGet> getByNameContaining(
+            @RequestParam("subject_name") String name) {
        List<Subject> subjects = subjectService.findByNameContaining(name);
         return subjects.stream()
                 .map(SubjectResponseToGet::new)

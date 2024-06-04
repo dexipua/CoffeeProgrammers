@@ -57,7 +57,8 @@ public class TeacherController {
 
     @GetMapping("/getAllBySubjectName/")
     @ResponseStatus(HttpStatus.OK)
-    public List<TeacherResponseToGet> getBySubjectName(@RequestParam("subject_name") String subjectName) {
+    public List<TeacherResponseToGet> getBySubjectName(
+           @RequestParam("subject_name")  String subjectName) {
         List<Teacher> teachers = teacherService.findBySubjectName(subjectName);
         return teachers.stream()
                 .map(TeacherResponseToGet::new)
@@ -73,7 +74,10 @@ public class TeacherController {
 
     @GetMapping("/getAllByName/")
     @ResponseStatus(HttpStatus.OK)
-    public List<TeacherResponseToGet> getByName(@RequestParam String firstName, @RequestParam String lastName) {
+    public List<TeacherResponseToGet> getByName(
+            @RequestParam("first_name") String firstName,
+            @RequestParam("last_name") String lastName
+    ) {
         List<Teacher> teachers = teacherService.findAllByUser_FirstNameAndAndUser_LastName(firstName, lastName);
         return teachers.stream()
                 .map(TeacherResponseToGet::new)

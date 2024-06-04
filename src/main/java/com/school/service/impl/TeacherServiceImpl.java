@@ -10,7 +10,6 @@ import com.school.service.RoleService;
 import com.school.service.TeacherService;
 import com.school.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +25,7 @@ public class TeacherServiceImpl implements TeacherService {
     private final RoleService roleService;
 
     @Override
-    public Teacher create(@NotNull UserRequestCreate userRequest) {
+    public Teacher create(UserRequestCreate userRequest) {
         User userToCreate = UserRequestCreate.toUser(userRequest);
         userToCreate.setRole(roleService.findByName("STUDENT"));
         userService.create(userToCreate);

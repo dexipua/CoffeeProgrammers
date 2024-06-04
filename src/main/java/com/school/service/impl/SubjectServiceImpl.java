@@ -1,5 +1,6 @@
 package com.school.service.impl;
 
+import com.school.dto.subject.SubjectRequest;
 import com.school.models.Student;
 import com.school.models.Subject;
 import com.school.models.Teacher;
@@ -9,7 +10,6 @@ import com.school.service.SubjectService;
 import com.school.service.TeacherService;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -24,13 +24,13 @@ public class SubjectServiceImpl implements SubjectService {
     private final StudentService studentService;
 
     @Override
-    public Subject create(@NotNull Subject subject) {
-        if (subjectRepository.findByName(subject.getName()).isPresent()){
+    public Subject create(SubjectRequest subjectRequest) {
+        if (subjectRepository.findByName(subjectRequest.getName()).isPresent()) {
             throw new EntityExistsException(
-                    "Subject with name " + subject.getName() + " already exists"
+                    "Subject with name " + subjectRequest.getName() + " already exists"
             );
         }
-        return subjectRepository.save(subject);
+        return subjectRepository.save(SubjectRequest.toSubject(subjectRequest));
     }
 
     @Override
@@ -40,23 +40,21 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     @Override
-    public Subject update(@NotNull Subject updatedSubject) {
-        Subject actualSubject = findById(updatedSubject.getId());
+    public Subject update(long subjectToUpdateId, SubjectRequest subjectRequest) {
+        Subject subjectToUpdate = findById(subjectToUpdateId);
 
-        String updatedName = updatedSubject.getName();
-        String actualName = actualSubject.getName();
+        String updatedName = subjectRequest.getName();
+        String actualName = subjectToUpdate.getName();
 
         if (!updatedName.equals(actualName) &&
-                subjectRepository.findByName(updatedName).isPresent()){
+                subjectRepository.findByName(updatedName).isPresent()) {
             throw new EntityExistsException(
                     "Subject with name " + updatedName + " already exists"
             );
         }
+        subjectToUpdate.setName(subjectRequest.getName());
 
-        updatedSubject.setTeacher(actualSubject.getTeacher());
-        updatedSubject.setStudents(actualSubject.getStudents());
-
-        return subjectRepository.save(updatedSubject);
+        return subjectRepository.save(subjectToUpdate);
     }
 
     @Override

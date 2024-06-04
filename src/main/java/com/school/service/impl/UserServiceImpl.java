@@ -6,12 +6,12 @@ import com.school.repositories.UserRepository;
 import com.school.service.UserService;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
 import java.util.Optional;
 
 @Service
@@ -22,11 +22,11 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public User create(@NotNull User user) {
+    public User create(User user) {
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             throw new EntityExistsException("User with email " + user.getEmail() + " already exists");
         }
-        userRepository.save(user); //TODO remove after correct validation
+
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
@@ -38,14 +38,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User update(long userToUpdateId, @NotNull UserRequestUpdate userRequest) {
+    public User update(long userToUpdateId, UserRequestUpdate userRequest) {
         User userToUpdate = findById(userToUpdateId);
 
         userToUpdate.setFirstName(userRequest.getFirstName());
         userToUpdate.setLastName(userRequest.getLastName());
         userToUpdate.setPassword(userRequest.getPassword());
 
-        userRepository.save(userToUpdate);
         userToUpdate.setPassword(passwordEncoder.encode(userToUpdate.getPassword()));
         return userRepository.save(userToUpdate);
     }
