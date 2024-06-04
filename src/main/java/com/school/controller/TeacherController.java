@@ -1,10 +1,12 @@
 package com.school.controller;
 
-import com.school.dto.teacher.TeacherRequest;
 import com.school.dto.teacher.TeacherResponseAll;
 import com.school.dto.teacher.TeacherResponseToGet;
+import com.school.dto.user.UserRequestCreate;
+import com.school.dto.user.UserRequestUpdate;
 import com.school.models.Teacher;
 import com.school.service.TeacherService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,22 +25,24 @@ public class TeacherController {
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER')")
-    public TeacherResponseToGet create(@RequestBody TeacherRequest teacherRequest){
-        return new TeacherResponseToGet(TeacherRequest.toTeacher(teacherRequest));
+    public TeacherResponseToGet create(
+            @Valid @RequestBody UserRequestCreate userRequest) {
+        return new TeacherResponseToGet(teacherService.create(userRequest));
     }
 
     @PutMapping("/update/{id}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER') or @userSecurity.checkUserByTeacher(#auth, #id)")
-    public TeacherResponseAll update(@RequestBody TeacherRequest teacherRequest, @PathVariable("id") long id, Authentication auth){
-        Teacher teacher = TeacherRequest.toTeacher(teacherRequest);
-        teacher.setId(id);
-        return new TeacherResponseAll(teacherService.update(teacher));
+    public TeacherResponseAll update(
+            @PathVariable long id,
+            @Valid @RequestBody UserRequestUpdate userRequest,
+            Authentication auth) {
+        return new TeacherResponseAll(teacherService.update(id, userRequest));
     }
 
     @GetMapping("/getAll")
     @ResponseStatus(HttpStatus.OK)
-    public List<TeacherResponseToGet> getAll(){
+    public List<TeacherResponseToGet> getAll() {
         List<Teacher> teachers = teacherService.findAll();
         return teachers.stream()
                 .map(TeacherResponseToGet::new)
@@ -47,13 +51,14 @@ public class TeacherController {
 
     @GetMapping("/getById/{teacher_id}")
     @ResponseStatus(HttpStatus.OK)
-    public TeacherResponseAll getById(@PathVariable("teacher_id") long teacher_id){
+    public TeacherResponseAll getById(@PathVariable("teacher_id") long teacher_id) {
         return new TeacherResponseAll(teacherService.findById(teacher_id));
     }
 
     @GetMapping("/getAllBySubjectName/")
     @ResponseStatus(HttpStatus.OK)
-    public List<TeacherResponseToGet> getBySubjectName(@RequestParam("subject_name") String subjectName){
+    public List<TeacherResponseToGet> getBySubjectName(
+           @RequestParam("subject_name")  String subjectName) {
         List<Teacher> teachers = teacherService.findBySubjectName(subjectName);
         return teachers.stream()
                 .map(TeacherResponseToGet::new)
@@ -63,13 +68,16 @@ public class TeacherController {
     @DeleteMapping("/delete/{teacher_id}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER')")
-    public void deleteById(@PathVariable("teacher_id") long teacher_id){
+    public void deleteById(@PathVariable("teacher_id") long teacher_id) {
         teacherService.delete(teacher_id);
     }
 
     @GetMapping("/getAllByName/")
     @ResponseStatus(HttpStatus.OK)
-    public List<TeacherResponseToGet> getByName(@RequestParam String firstName, @RequestParam String lastName){
+    public List<TeacherResponseToGet> getByName(
+            @RequestParam("first_name") String firstName,
+            @RequestParam("last_name") String lastName
+    ) {
         List<Teacher> teachers = teacherService.findAllByUser_FirstNameAndAndUser_LastName(firstName, lastName);
         return teachers.stream()
                 .map(TeacherResponseToGet::new)

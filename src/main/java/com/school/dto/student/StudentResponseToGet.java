@@ -9,11 +9,13 @@ import lombok.Setter;
 @Setter
 @Data
 public class StudentResponseToGet {
+    private long id;
     private String firstName;
     private String lastName;
     private long id;
 
     public StudentResponseToGet(Student student) {
+        this.id = student.getId();
         this.firstName = student.getUser().getFirstName();
         this.lastName = student.getUser().getLastName();
         this.id = student.getId();

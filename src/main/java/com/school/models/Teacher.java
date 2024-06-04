@@ -1,8 +1,10 @@
 package com.school.models;
 
 import jakarta.persistence.*;
-
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +15,8 @@ import java.util.List;
 @Setter
 @EqualsAndHashCode
 @Table(name = "teachers")
-public class Teacher implements Comparable<Teacher>{
+public class Teacher implements Comparable<Teacher> {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -25,22 +28,18 @@ public class Teacher implements Comparable<Teacher>{
     @OneToMany(mappedBy = "teacher")
     private List<Subject> subjects;
 
-    @Override
-    public String toString() {
-        return "Teacher {" +
-                    "firstName:" + user.getFirstName() +
-                    ", lastName:" + user.getLastName() +
-                    ", subjects:" + subjects +
-                "}";
-    }
-
-    public void addSubject(Subject subject) {
-        subjects.add(subject);
-    }
-
     public Teacher(User user) {
         this.user = user;
         this.subjects = new ArrayList<>();
+    }
+
+    @Override
+    public String toString() {
+        return "Teacher {" +
+                "firstName:" + user.getFirstName() +
+                ", lastName:" + user.getLastName() +
+                ", subjects:" + subjects +
+                "}";
     }
 
     @Override
