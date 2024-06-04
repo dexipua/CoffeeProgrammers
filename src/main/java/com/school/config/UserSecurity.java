@@ -1,9 +1,6 @@
 package com.school.config;
 
-import com.school.service.StudentService;
-import com.school.service.SubjectService;
-import com.school.service.TeacherService;
-import com.school.service.UserService;
+import com.school.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,6 +14,7 @@ public class UserSecurity {
     private final StudentService studentService;
     private final TeacherService teacherService;
     private final SubjectService subjectService;
+    private final MarkService markService;
 
     private boolean checkUser(Authentication authentication, long userId) {
         UserDetails user = (UserDetails) authentication.getPrincipal();
@@ -32,5 +30,11 @@ public class UserSecurity {
     }
     public boolean checkUserBySubject(Authentication authentication, long subjectId){
         return checkUser(authentication, subjectService.findById(subjectId).getTeacher().getUser().getId());
+    }
+    public boolean checkUserByMarkByStudent(Authentication authentication, long markId){
+        return checkUser(authentication, markService.findById(markId).getStudent().getUser().getId());
+    }
+    public boolean checkUserByMarkByTeacher(Authentication authentication, long markId){
+        return checkUser(authentication, markService.findById(markId).getSubject().getTeacher().getUser().getId());
     }
 }
