@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -31,11 +31,4 @@ public class Mark {
     @ManyToOne
     @JoinColumn(name = "subject_id")
     private Subject subject;
-
-    public Mark(int value, Student student, Subject subject) {
-        this.time = LocalDateTime.now();
-        this.value = value;
-        this.student = student;
-        this.subject = subject;
-    }
 }

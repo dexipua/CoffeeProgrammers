@@ -2,8 +2,8 @@ package com.school.controller;
 
 import com.school.dto.mark.MarkRequest;
 import com.school.dto.mark.MarkResponseAll;
-import com.school.dto.mark.MarkResponseToGetByStudent;
-import com.school.dto.mark.MarkResponseToGetBySubject;
+import com.school.dto.mark.MarkResponseForStudent;
+import com.school.dto.mark.MarkResponseForSubject;
 import com.school.models.Mark;
 import com.school.models.Student;
 import com.school.models.Subject;
@@ -72,24 +72,24 @@ public class MarkController {
     @GetMapping("/getAllByStudentId/{student_id}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("@userSecurity.checkUserByStudent(#auth, #student_id)")
-    public List<MarkResponseToGetByStudent> getAllByStudentId(
+    public List<MarkResponseForStudent> getAllByStudentId(
             @PathVariable long student_id, Authentication auth
     ) {
         HashMap<Subject, List<Mark>> marks = markService.findAllByStudentId(student_id);
         return marks.entrySet().stream()
-                .map(entry -> new MarkResponseToGetByStudent(entry.getKey(), entry.getValue()))
+                .map(entry -> new MarkResponseForStudent(entry.getKey(), entry.getValue()))
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/getAllBySubjectId/{subject_id}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("@userSecurity.checkUserBySubject(#auth, #subject_id)")
-    public List<MarkResponseToGetBySubject> getAllBySubjectId(
+    public List<MarkResponseForSubject> getAllBySubjectId(
             @PathVariable long subject_id, Authentication auth
     ) {
         HashMap<Student, List<Mark>> marks = markService.findAllBySubjectId(subject_id);
         return marks.entrySet().stream()
-                .map(entry -> new MarkResponseToGetBySubject(entry.getKey(), entry.getValue()))
+                .map(entry -> new MarkResponseForSubject(entry.getKey(), entry.getValue()))
                 .collect(Collectors.toList());
     }
 }

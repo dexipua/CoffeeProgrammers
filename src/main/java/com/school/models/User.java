@@ -69,11 +69,6 @@ public class User implements UserDetails, Comparable<User> {
     }
 
     @Override
-    public String getPassword() {
-        return password;
-    }
-
-    @Override
     public String getUsername() {
         return email;
     }

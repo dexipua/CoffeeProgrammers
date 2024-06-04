@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AuthResponse {
 
-    private String username; //TODO Check
+    private String username;
     private String accessToken;
 }

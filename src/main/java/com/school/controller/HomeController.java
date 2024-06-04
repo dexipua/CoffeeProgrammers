@@ -1,8 +1,8 @@
 package com.school.controller;
 
 import com.school.dto.home.HomeResponse;
-import com.school.dto.subject.SubjectResponseToGet;
-import com.school.dto.teacher.TeacherResponseToGet;
+import com.school.dto.subject.SubjectResponseSimple;
+import com.school.dto.teacher.TeacherResponseSimple;
 import com.school.service.StudentService;
 import com.school.service.SubjectService;
 import com.school.service.TeacherService;
@@ -28,12 +28,12 @@ public class HomeController {
     @ResponseStatus(HttpStatus.OK)
     public HomeResponse homePage() {
 
-        List<TeacherResponseToGet> teachers = teacherService.findAll().stream()
-                .map(TeacherResponseToGet::new)
+        List<TeacherResponseSimple> teachers = teacherService.findAll().stream()
+                .map(TeacherResponseSimple::new)
                 .collect(Collectors.toList());
 
-        List<SubjectResponseToGet> subjects = subjectService.getAllByOrderByName().stream()
-                .map(SubjectResponseToGet::new)
+        List<SubjectResponseSimple> subjects = subjectService.getAllByOrderByName().stream()
+                .map(SubjectResponseSimple::new)
                 .collect(Collectors.toList());
         long amountOfStudents = studentService.findAllOrderedByName().size();
 

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.school.config.JWT.JwtUtils;
 import com.school.dto.teacher.TeacherRequest;
 import com.school.dto.teacher.TeacherResponseAll;
-import com.school.dto.teacher.TeacherResponseToGet;
+import com.school.dto.teacher.TeacherResponseSimple;
 import com.school.models.Subject;
 import com.school.models.Teacher;
 import com.school.models.User;
@@ -64,7 +64,7 @@ class TeacherControllerTest {
                 .andExpect(status().isCreated())
                 .andReturn();
 
-        TeacherResponseToGet expectedResponseBody = new TeacherResponseToGet(teacher);
+        TeacherResponseSimple expectedResponseBody = new TeacherResponseSimple(teacher);
         String actualResponseBody = mvcResult.getResponse().getContentAsString();
 
         assertThat(actualResponseBody).isEqualToIgnoringWhitespace(
@@ -105,7 +105,7 @@ class TeacherControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        List<TeacherResponseToGet> expectedResponseBody = new ArrayList<>(Arrays.asList(new TeacherResponseToGet(t1), new TeacherResponseToGet(t2)));
+        List<TeacherResponseSimple> expectedResponseBody = new ArrayList<>(Arrays.asList(new TeacherResponseSimple(t1), new TeacherResponseSimple(t2)));
         String actualResponseBody = mvcResult.getResponse().getContentAsString();
 
         assertThat(actualResponseBody).isEqualToIgnoringWhitespace(
@@ -174,7 +174,7 @@ class TeacherControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        List<TeacherResponseToGet> expectedResponseBody = new ArrayList<>(Arrays.asList(new TeacherResponseToGet(t1)));
+        List<TeacherResponseSimple> expectedResponseBody = new ArrayList<>(Arrays.asList(new TeacherResponseSimple(t1)));
         String actualResponseBody = mvcResult.getResponse().getContentAsString();
 
         assertThat(actualResponseBody).isEqualToIgnoringWhitespace(

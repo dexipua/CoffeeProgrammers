@@ -1,7 +1,7 @@
 package com.school.controller;
 
 import com.school.dto.teacher.TeacherResponseAll;
-import com.school.dto.teacher.TeacherResponseToGet;
+import com.school.dto.teacher.TeacherResponseSimple;
 import com.school.dto.user.UserRequestCreate;
 import com.school.dto.user.UserRequestUpdate;
 import com.school.models.Teacher;
@@ -25,9 +25,9 @@ public class TeacherController {
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER')")
-    public TeacherResponseToGet create(
+    public TeacherResponseSimple create(
             @Valid @RequestBody UserRequestCreate userRequest) {
-        return new TeacherResponseToGet(teacherService.create(userRequest));
+        return new TeacherResponseSimple(teacherService.create(userRequest));
     }
 
     @PutMapping("/update/{id}")
@@ -42,10 +42,10 @@ public class TeacherController {
 
     @GetMapping("/getAll")
     @ResponseStatus(HttpStatus.OK)
-    public List<TeacherResponseToGet> getAll() {
+    public List<TeacherResponseSimple> getAll() {
         List<Teacher> teachers = teacherService.findAll();
         return teachers.stream()
-                .map(TeacherResponseToGet::new)
+                .map(TeacherResponseSimple::new)
                 .collect(Collectors.toList());
     }
 
@@ -57,11 +57,11 @@ public class TeacherController {
 
     @GetMapping("/getAllBySubjectName/")
     @ResponseStatus(HttpStatus.OK)
-    public List<TeacherResponseToGet> getBySubjectName(
+    public List<TeacherResponseSimple> getBySubjectName(
            @RequestParam("subject_name")  String subjectName) {
         List<Teacher> teachers = teacherService.findBySubjectName(subjectName);
         return teachers.stream()
-                .map(TeacherResponseToGet::new)
+                .map(TeacherResponseSimple::new)
                 .collect(Collectors.toList());
     }
 
@@ -74,13 +74,13 @@ public class TeacherController {
 
     @GetMapping("/getAllByName/")
     @ResponseStatus(HttpStatus.OK)
-    public List<TeacherResponseToGet> getByName(
+    public List<TeacherResponseSimple> getByName(
             @RequestParam("first_name") String firstName,
             @RequestParam("last_name") String lastName
     ) {
         List<Teacher> teachers = teacherService.findAllByUser_FirstNameAndAndUser_LastName(firstName, lastName);
         return teachers.stream()
-                .map(TeacherResponseToGet::new)
+                .map(TeacherResponseSimple::new)
                 .collect(Collectors.toList());
     }
 }

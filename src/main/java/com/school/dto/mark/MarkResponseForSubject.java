@@ -1,6 +1,6 @@
 package com.school.dto.mark;
 
-import com.school.dto.student.StudentResponseToGet;
+import com.school.dto.student.StudentResponseSimple;
 import com.school.models.Mark;
 import com.school.models.Student;
 import lombok.Data;
@@ -12,12 +12,12 @@ import java.util.List;
 @Data
 @Setter
 @Getter
-public class MarkResponseToGetBySubject {
-    private StudentResponseToGet studentResponseToGet;
+public class MarkResponseForSubject {
+    private StudentResponseSimple studentResponseSimple;
     private MarkResponseSimple[] marks;
 
-    public MarkResponseToGetBySubject(Student student, List<Mark> marks) {
-        this.studentResponseToGet = new StudentResponseToGet(student);
+    public MarkResponseForSubject(Student student, List<Mark> marks) {
+        this.studentResponseSimple = new StudentResponseSimple(student);
 
         int size = marks.size();
         this.marks = new MarkResponseSimple[size];

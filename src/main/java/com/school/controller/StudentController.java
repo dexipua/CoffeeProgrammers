@@ -1,7 +1,7 @@
 package com.school.controller;
 
 import com.school.dto.student.StudentResponseAll;
-import com.school.dto.student.StudentResponseToGet;
+import com.school.dto.student.StudentResponseSimple;
 import com.school.dto.user.UserRequestCreate;
 import com.school.dto.user.UserRequestUpdate;
 import com.school.models.Student;
@@ -26,9 +26,9 @@ public class StudentController {
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER') or hasRole('ROLE_TEACHER')")
-    public StudentResponseToGet create(
+    public StudentResponseSimple create(
             @Valid @RequestBody UserRequestCreate userRequest) {
-        return new StudentResponseToGet(studentService.create(userRequest));
+        return new StudentResponseSimple(studentService.create(userRequest));
     }
 
     @GetMapping("/getById/{id}")
@@ -57,42 +57,42 @@ public class StudentController {
 
     @GetMapping("/getAll")
     @ResponseStatus(HttpStatus.OK)
-    public List<StudentResponseToGet> getAll() {
+    public List<StudentResponseSimple> getAll() {
         List<Student> students = studentService.findAllOrderedByName();
         return students.stream()
-                .map(StudentResponseToGet::new)
+                .map(StudentResponseSimple::new)
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/getAllBySubjectName/")
     @ResponseStatus(HttpStatus.OK)
-    public List<StudentResponseToGet> getBySubjectName(
+    public List<StudentResponseSimple> getBySubjectName(
             @RequestParam("subject_name") String subjectName
     ) {
         List<Student> students = studentService.findBySubjectName(subjectName);
         return students.stream()
-                .map(StudentResponseToGet::new)
+                .map(StudentResponseSimple::new)
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/getAllByTeacherId/{teacher_id}")
     @ResponseStatus(HttpStatus.OK)
-    public List<StudentResponseToGet> getByTeacherId(@PathVariable("teacher_id") long teacherId) {
+    public List<StudentResponseSimple> getByTeacherId(@PathVariable("teacher_id") long teacherId) {
         List<Student> students = studentService.findStudentsByTeacherId(teacherId);
         return students.stream()
-                .map(StudentResponseToGet::new)
+                .map(StudentResponseSimple::new)
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/getAllByName/")
     @ResponseStatus(HttpStatus.OK)
-    public List<StudentResponseToGet> getByName(
+    public List<StudentResponseSimple> getByName(
             @RequestParam("first_name") String firstName,
             @RequestParam("last_name") String lastName
     ) {
         List<Student> students = studentService.findAllByUser_FirstNameAndAndUser_LastName(firstName, lastName);
         return students.stream()
-                .map(StudentResponseToGet::new)
+                .map(StudentResponseSimple::new)
                 .collect(Collectors.toList());
     }
 }

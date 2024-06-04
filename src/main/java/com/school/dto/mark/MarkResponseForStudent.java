@@ -12,11 +12,11 @@ import java.util.List;
 @Data
 @Setter
 @Getter
-public class MarkResponseToGetByStudent {
+public class MarkResponseForStudent {
     private SubjectResponseSimple subjectResponseSimple;
     private MarkResponseSimple[] marks;
 
-    public MarkResponseToGetByStudent(Subject subject, List<Mark> marks) {
+    public MarkResponseForStudent(Subject subject, List<Mark> marks) {
         this.subjectResponseSimple = new SubjectResponseSimple(subject);
 
         int size = marks.size();
