@@ -40,7 +40,7 @@ class MarkRepositoryTest {
 //        markRepository.save(new Mark(1, student, subject));
 //        markRepository.save(new Mark(1, student, subject));
 //        markRepository.save(new Mark(1, student, subject));
-        assertFalse(markRepository.findAllByStudentId(student.getId()).isEmpty());
+        assertFalse(markRepository.findAllByStudent_Id(student.getId()).isEmpty());
     }
 
     @Test
@@ -50,6 +50,6 @@ class MarkRepositoryTest {
         studentRepository.save(student);
         subjectRepository.save(subject);
         markRepository.save(new Mark(1, student, subject));
-        assertFalse(markRepository.findAllByStudentId(student.getId()).isEmpty());
+        assertFalse(markRepository.findAllByStudent_Id(student.getId()).isEmpty());
     }
 }

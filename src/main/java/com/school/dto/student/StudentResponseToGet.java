@@ -11,13 +11,11 @@ import lombok.Setter;
 public class StudentResponseToGet {
     private String firstName;
     private String lastName;
-    private String email;
     private long id;
 
     public StudentResponseToGet(Student student) {
         this.firstName = student.getUser().getFirstName();
         this.lastName = student.getUser().getLastName();
-        this.email = student.getUser().getEmail();
         this.id = student.getId();
     }
 }

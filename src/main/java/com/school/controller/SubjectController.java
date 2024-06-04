@@ -2,7 +2,7 @@ package com.school.controller;
 
 import com.school.dto.subject.SubjectRequest;
 import com.school.dto.subject.SubjectResponseAll;
-import com.school.dto.subject.SubjectResponseToGet;
+import com.school.dto.subject.SubjectResponseWithTeacher;
 import com.school.dto.subject.TransformSubject;
 import com.school.models.Subject;
 import com.school.service.SubjectService;
@@ -26,10 +26,10 @@ public class SubjectController {
     @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER')")
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    public SubjectResponseToGet create(@RequestBody SubjectRequest subjectRequest) {
+    public SubjectResponseWithTeacher create(@RequestBody SubjectRequest subjectRequest) {
         Subject subject = TransformSubject.
                 transformFromRequestToModel(subjectRequest);
-        return new SubjectResponseToGet(subjectService.create(subject));
+        return new SubjectResponseWithTeacher(subjectService.create(subject));
     }
 
 
@@ -63,29 +63,29 @@ public class SubjectController {
 
     @GetMapping("/getAll")
     @ResponseStatus(HttpStatus.OK)
-    public List<SubjectResponseToGet> getAllByOrderByName() {
+    public List<SubjectResponseWithTeacher> getAllByOrderByName() {
         List<Subject> subjects = subjectService.getAllByOrderByName();
         return subjects.stream()
-                .map(SubjectResponseToGet::new)
+                .map(SubjectResponseWithTeacher::new)
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/getAllByName/")
     @ResponseStatus(HttpStatus.OK)
-    public List<SubjectResponseToGet> getByNameContaining(@NotNull @RequestParam("subject_name") String name) {
+    public List<SubjectResponseWithTeacher> getByNameContaining(@NotNull @RequestParam("subject_name") String name) {
        List<Subject> subjects = subjectService.findByNameContaining(name);
         return subjects.stream()
-                .map(SubjectResponseToGet::new)
+                .map(SubjectResponseWithTeacher::new)
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/getAllByTeacherId/{teacher_id}")
     @ResponseStatus(HttpStatus.OK)
-    public List<SubjectResponseToGet> getByTeacherId(@PathVariable("teacher_id") long teacherId) {
+    public List<SubjectResponseWithTeacher> getByTeacherId(@PathVariable("teacher_id") long teacherId) {
         List<Subject> subjects = subjectService.findByTeacher_Id(teacherId);
 
         return subjects.stream()
-                .map(SubjectResponseToGet::new)
+                .map(SubjectResponseWithTeacher::new)
                 .collect(Collectors.toList());
     }
 
@@ -110,11 +110,11 @@ public class SubjectController {
 
     @GetMapping("/getAllByStudentId/{student_id}")
     @ResponseStatus(HttpStatus.OK)
-    public List<SubjectResponseToGet> getByStudentId(@PathVariable("student_id") long studentId) {
+    public List<SubjectResponseWithTeacher> getByStudentId(@PathVariable("student_id") long studentId) {
         List<Subject> subjects = subjectService.findByStudent_Id(studentId);
 
         return subjects.stream()
-                .map(SubjectResponseToGet::new)
+                .map(SubjectResponseWithTeacher::new)
                 .collect(Collectors.toList());
     }
 
