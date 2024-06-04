@@ -1,16 +1,17 @@
 package com.school.service.impl;
 
+import com.school.dto.user.UserRequestUpdate;
 import com.school.models.User;
 import com.school.repositories.UserRepository;
 import com.school.service.UserService;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
 import java.util.Optional;
 
 @Service
@@ -21,11 +22,11 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public User create(@NotNull User user) {
+    public User create(User user) {
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             throw new EntityExistsException("User with email " + user.getEmail() + " already exists");
         }
-        userRepository.save(user);
+
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
@@ -37,17 +38,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User update(@NotNull User user) {
-        String updatedEmail = user.getEmail();
-        String actualEmail = findById(user.getId()).getEmail();
+    public User update(long userToUpdateId, UserRequestUpdate userRequest) {
+        User userToUpdate = findById(userToUpdateId);
 
-        if (!updatedEmail.equals(actualEmail) && userRepository.findByEmail(updatedEmail).isPresent()) {
-            throw new EntityExistsException("User with email " + updatedEmail + " already exists");
-        }
+        userToUpdate.setFirstName(userRequest.getFirstName());
+        userToUpdate.setLastName(userRequest.getLastName());
+        userToUpdate.setPassword(userRequest.getPassword());
 
-        userRepository.save(user);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepository.save(user);
+        userToUpdate.setPassword(passwordEncoder.encode(userToUpdate.getPassword()));
+        return userRepository.save(userToUpdate);
     }
 
     public User findByEmail(String email) {

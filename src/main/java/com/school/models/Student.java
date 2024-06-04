@@ -16,6 +16,7 @@ import java.util.List;
 @Table(name = "students")
 @EqualsAndHashCode
 public class Student implements Comparable<Student> {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -30,8 +31,8 @@ public class Student implements Comparable<Student> {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-//    @OneToMany
-//    private List<Mark> marks = new ArrayList<>();
+    @OneToMany
+    private List<Mark> marks = new ArrayList<>();
 
     public Student(User user){
         this.user = user;
