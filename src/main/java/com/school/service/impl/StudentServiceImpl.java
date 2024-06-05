@@ -60,7 +60,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public List<Student> findBySubjectName(String subjectName) {
-        return studentRepository.findStudentBySubjectNameContaining(subjectName);
+        return studentRepository.findStudentBySubjectNameContainingIgnoreCase(subjectName);
     }
 
     @Override
@@ -74,6 +74,6 @@ public class StudentServiceImpl implements StudentService {
     public List<Student> findAllByUser_FirstNameAndAndUser_LastName(
             String firstName,
             String lastName) {
-        return studentRepository.findAllByUser_FirstNameContainingAndUser_LastNameContaining(firstName, lastName);
+        return studentRepository.findAllByUser_FirstNameContainingIgnoreCaseAndUser_LastNameContainingIgnoreCase(firstName, lastName);
     }
 }

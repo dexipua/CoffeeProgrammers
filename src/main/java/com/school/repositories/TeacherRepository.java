@@ -7,8 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface TeacherRepository extends JpaRepository<Teacher, Long> {
-    @Query("SELECT s.teacher FROM Subject s WHERE s.name LIKE %:subjectName%")
-    List<Teacher> findBySubjectName(String subjectName);
+    @Query("SELECT s.teacher FROM Subject s WHERE LOWER(s.name) LIKE LOWER(CONCAT('%', :subjectName, '%'))")
+    List<Teacher> findBySubjectNameIgnoreCase(String subjectName);
     List<Teacher> findAllByOrderByUser();
-    List<Teacher> findAllByUser_FirstNameContainingAndUser_LastNameContaining(String firstName, String lastName);
+    List<Teacher> findAllByUser_FirstNameContainingIgnoreCaseAndUser_LastNameContainingIgnoreCase(String firstName, String lastName);
 }

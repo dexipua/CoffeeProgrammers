@@ -71,7 +71,7 @@ public class SubjectServiceImpl implements SubjectService {
 
     @Override
     public List<Subject> findByNameContaining(String name) {
-        return subjectRepository.findByNameContaining(name);
+        return subjectRepository.findByNameContainingIgnoreCase(name);
     }
 
     @Override

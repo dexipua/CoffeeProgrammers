@@ -18,8 +18,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
@@ -186,7 +184,7 @@ public class TeacherServiceImplTest {
         subject.setTeacher(teacher);
         teacherService.create(teacher);
 
-        when(teacherRepository.findBySubjectName(subject.getName())).thenReturn(List.of(teacher));
+        when(teacherRepository.findBySubjectNameIgnoreCase(subject.getName())).thenReturn(List.of(teacher));
 
         List<Teacher> result = teacherService.findBySubjectName(subject.getName());
 
