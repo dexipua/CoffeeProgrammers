@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 
 const Home = () => {
@@ -24,7 +24,7 @@ const Home = () => {
         })
             .then((response) => {
                 console.log(response);
-                setTeachers(response.data.teacherResponseToGetList);
+                setTeachers(response.data.teacherResponseSimpleList);
                 setSubjects(response.data.subjectResponseAllList);
                 setStudentCount(response.data.amountOfStudents);
                 setLoading(false);
@@ -50,7 +50,7 @@ const Home = () => {
             <ul>
                 {teachers.map((teacher) => (
                     <li key={teacher.id}>
-                        {teacher.firstName} {teacher.lastName} ({teacher.email})
+                        {teacher.firstName} {teacher.lastName}
                     </li>
                 ))}
             </ul>
