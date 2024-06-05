@@ -5,7 +5,8 @@ import com.school.dto.student.StudentResponseSimple;
 import com.school.dto.user.UserRequestCreate;
 import com.school.dto.user.UserRequestUpdate;
 import com.school.models.Student;
-import com.school.service.impl.StudentServiceImpl;
+import com.school.service.MarkService;
+import com.school.service.StudentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,7 +22,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class StudentController {
 
-    private final StudentServiceImpl studentService;
+    private final StudentService studentService;
+    private final MarkService markService;
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
@@ -34,7 +36,10 @@ public class StudentController {
     @GetMapping("/getById/{id}")
     @ResponseStatus(HttpStatus.OK)
     public StudentResponseAll getById(@PathVariable long id) {
-        return new StudentResponseAll(studentService.findById(id));
+        return new StudentResponseAll(
+                studentService.findById(id),
+                markService.findAverageByStudentId(id)
+        );
     }
 
     @PutMapping("/update/{id}")
@@ -45,7 +50,10 @@ public class StudentController {
             @Valid @RequestBody UserRequestUpdate userRequest,
             Authentication auth
     ) {
-        return new StudentResponseAll(studentService.update(id, userRequest));
+        return new StudentResponseAll(
+                studentService.update(id, userRequest),
+                markService.findAverageByStudentId(id)
+        );
     }
 
     @DeleteMapping("/delete/{id}")

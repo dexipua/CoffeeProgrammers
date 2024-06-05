@@ -25,10 +25,10 @@ public class SubjectController {
     @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER')")
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    public SubjectResponseAll create(
+    public SubjectResponseSimple create(
             @Valid @RequestBody SubjectRequest subjectRequest
     ) {
-        return new SubjectResponseAll(subjectService.create(subjectRequest));
+        return new SubjectResponseSimple(subjectService.create(subjectRequest));
     }
 
 
@@ -101,7 +101,6 @@ public class SubjectController {
     public void deleteTeacher(@PathVariable("subject_id") long subjectId) {
         subjectService.deleteTeacher(subjectId);
     }
-
 
 
     @GetMapping("/getAllByStudentId/{student_id}")

@@ -82,4 +82,15 @@ public class MarkServiceImpl implements MarkService {
                         Collectors.toList())
                 );
     }
+
+    @Override
+    public double findAverageByStudentId(long studentId) {
+        studentService.findById(studentId);
+
+        List<Mark> marks = markRepository.findAllByStudent_Id(studentId);
+        return marks.stream()
+                .mapToInt(Mark::getValue)
+                .average()
+                .orElse(0.0);
+    }
 }

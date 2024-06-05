@@ -15,4 +15,6 @@ public interface MarkService {
     void delete(long id);
     HashMap<Subject, List<Mark>> findAllByStudentId(long studentId);
     HashMap<Student, List<Mark>> findAllBySubjectId(long subjectId);
+
+    double findAverageByStudentId(long studentId);
 }
