@@ -32,5 +32,11 @@ public class AuthController {
 
             return new AuthResponse(user.getId(), user.getUsername(), jwtToken, user.getRole().getName());
     }
+
+    @GetMapping("/getAuth")
+    public AuthResponse getAuth(Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        return new AuthResponse(user.getId(), user.getUsername(), null, user.getRole().getName());
+    }
 }
 
