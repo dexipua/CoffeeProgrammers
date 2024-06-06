@@ -34,7 +34,7 @@ public class MarkServiceImpl implements MarkService {
         Subject subject = subjectService.findById(subjectId);
         Student student = studentService.findById(studentId);
         if(subject.getStudents().contains(student)){
-            throw new EntityNotFoundException("Student with id " + studentId + " does not have subject with id " + subjectId);
+            throw new UnsupportedOperationException("Student with id " + studentId + " does not have subject with id " + subjectId);
         }
         Mark mark = MarkRequest.toMark(markRequest);
         mark.setSubject(subjectService.findById(subjectId));
