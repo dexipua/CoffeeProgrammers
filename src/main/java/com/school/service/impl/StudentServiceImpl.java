@@ -54,7 +54,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public List<Student> findAllOrderedByName() {
-        return studentRepository.findAllByOrderByUser();
+        return studentRepository.findAllByOrderByUser_LastNameAsc();
     }
 
 
