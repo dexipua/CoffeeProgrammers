@@ -61,7 +61,7 @@ class MarkService {
 
     async getByStudentId(studentId, token) {
         try {
-            const response = await axios.get(`${API_URL}/getAllByStudentId/${id}`, {
+            const response = await axios.get(`${API_URL}/getAllByStudentId/${studentId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }

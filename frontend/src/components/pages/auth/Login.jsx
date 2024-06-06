@@ -1,9 +1,13 @@
 import React, {useState} from 'react';
 import axios from 'axios';
 import {useNavigate} from "react-router-dom";
+import '../../../assets/styles/Login.css';
 
-const EMAIL1 = "am@gmail.com"; //TODO: better for testing
-const PASSWORD1 = "passWord1"; //TODO: better for testing
+const EMAIL_CHIEF_TEACHER = "am@gmail.com"; //TODO: better for testing
+const EMAIL_FIRST_STUDENT = "vk@gmail.com"; //TODO: better for testing
+
+const PASSWORD = "passWord1"; //TODO: better for testing
+
 const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -28,7 +32,7 @@ const Login = () => {
     };
 
     return (
-        <div>
+        <div className="login-container">
             <h2>Login</h2>
             <form onSubmit={handleLogin}>
                 <input
@@ -36,16 +40,16 @@ const Login = () => {
                     placeholder="Username"
                     value={username}
                     onChange={(e) =>
-                        //setUsername(e.target.value)} TODO: better for testing
-                        setUsername(EMAIL1)}
+                        //setUsername(e.target.value)}
+                        setUsername(EMAIL_FIRST_STUDENT)}
                 />
                 <input
                     type="password"
                     placeholder="Password"
                     value={password}
                     onChange={(e) =>
-                        //setPassword(e.target.value)} TODO: better for testing
-                        setPassword(PASSWORD1)}
+                        //setPassword(e.target.value)}
+                        setPassword(PASSWORD)}
                 />
                 <button type="submit">Login</button>
             </form>
