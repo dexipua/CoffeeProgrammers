@@ -14,7 +14,7 @@ const Login = () => {
 
     let navigate = useNavigate();
 
-    const handleLogin = async (e) => {
+    const handleLogin = async (e) => { //TODO
         e.preventDefault();
         try {
             const response = await axios.post('http://localhost:9091/api/auth/login', {
@@ -37,11 +37,11 @@ const Login = () => {
             <form onSubmit={handleLogin}>
                 <input
                     type="text"
-                    placeholder="Username"
+                    placeholder="Email"
                     value={username}
                     onChange={(e) =>
                         //setUsername(e.target.value)}
-                        setUsername(EMAIL_FIRST_STUDENT)}
+                        setUsername(EMAIL_CHIEF_TEACHER)}
                 />
                 <input
                     type="password"

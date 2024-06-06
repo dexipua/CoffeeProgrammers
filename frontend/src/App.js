@@ -5,6 +5,7 @@ import Login from './components/pages/auth/Login';
 import StudentProfile from "./components/pages/student/StudentProfile";
 import StudentMarks from "./components/pages/student/StudentMarks";
 import StudentsList from "./components/pages/student/StudentsList";
+import CreateUser from "./components/pages/CreateUser";
 
 function App() {
     return (
@@ -15,6 +16,7 @@ function App() {
                 <Route path="/students/getById/:id" element={<StudentProfile/>}/>
                 <Route path="/marks/getAllByStudentId/:id" element={<StudentMarks/>}/>
                 <Route path="/students/getAll" element={<StudentsList/>}/>
+                <Route path="/create_user" element={<CreateUser/>}/>
             </Routes>
         </Router>
     );
