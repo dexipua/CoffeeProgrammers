@@ -28,7 +28,7 @@ public class MarkController {
     @PostMapping("/subject/{subject_id}/student/{student_id}/createMark")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("@userSecurity.checkUserBySubject(#auth, #subjectId)")
-    public MarkResponseAll createMark(
+    public MarkResponseAll create(
             @Valid @RequestBody MarkRequest markRequest,
             @PathVariable("subject_id") long subjectId,
             @PathVariable("student_id") long studentId,
@@ -42,7 +42,7 @@ public class MarkController {
     @PreAuthorize(
             "@userSecurity.checkUserByMarkByStudent(#auth, #id) or " +
                     "@userSecurity.checkUserByMarkByTeacher(#auth, #id)")
-    public MarkResponseAll getByMarkId(
+    public MarkResponseAll getById(
             @PathVariable long id,
             Authentication auth) {
         return new MarkResponseAll(markService.findById(id));
@@ -51,7 +51,7 @@ public class MarkController {
     @PutMapping("/update/{id}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("@userSecurity.checkUserByMarkByTeacher(#auth, #id)")
-    public MarkResponseAll updateMark(
+    public MarkResponseAll update(
             @PathVariable long id,
             @Valid @RequestBody MarkRequest markRequest,
             Authentication auth
@@ -62,7 +62,7 @@ public class MarkController {
     @DeleteMapping("/delete/{id}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("@userSecurity.checkUserByMarkByTeacher(#auth, #id)")
-    public void deleteMark(
+    public void delete(
             @PathVariable long id,
             Authentication auth
     ) {

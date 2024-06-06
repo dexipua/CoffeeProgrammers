@@ -68,7 +68,7 @@ public class TeacherController {
     @DeleteMapping("/delete/{teacher_id}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER')")
-    public void deleteById(@PathVariable("teacher_id") long teacher_id) {
+    public void delete(@PathVariable("teacher_id") long teacher_id) {
         teacherService.delete(teacher_id);
     }
 
