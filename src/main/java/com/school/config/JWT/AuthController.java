@@ -1,5 +1,6 @@
 package com.school.config.JWT;
 
+import com.school.models.User;
 import com.school.dto.auth.AuthResponse;
 import com.school.dto.auth.LoginRequest;
 import jakarta.validation.Valid;
@@ -27,10 +28,10 @@ public class AuthController {
                     new UsernamePasswordAuthenticationToken(
                             loginRequest.getUsername(),
                             loginRequest.getPassword()));
-            UserDetails user = (UserDetails) authentication.getPrincipal();
+            User user = (User) authentication.getPrincipal();
             String jwtToken = jwtUtils.generateTokenFromUsername(user.getUsername());
 
-            return new AuthResponse(user.getUsername(), jwtToken);
+            return new AuthResponse(user.getId(), user.getUsername(), jwtToken, user.getRole().getName());
     }
 }
 
