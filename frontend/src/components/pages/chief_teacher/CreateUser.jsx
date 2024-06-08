@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {useNavigate} from "react-router-dom";
-import StudentService from "../../services/StudentService";
-import '../../assets/styles/CreateUser.css'
+import StudentService from "../../../services/StudentService";
+import '../../../assets/styles/CreateUser.css'
 
 const CreateUser = () => {
     const [firstName, setFirstname] = useState('');
@@ -41,9 +41,9 @@ const CreateUser = () => {
     //         console.error('Error fetching  data:', error);
     //     }
     // };
-    const student = ({id, first_name, last_name}) => {
-
-    }
+    // const student = ({id, first_name, last_name}) => {
+    //
+    // }
 
         let navigate = useNavigate();
 
@@ -51,7 +51,7 @@ const CreateUser = () => {
         e.preventDefault();
         const token = localStorage.getItem('jwtToken');
         try {
-            const student = await StudentService.create(
+            const response = await StudentService.create(
                 {
                     firstName,
                     lastName,
@@ -60,7 +60,7 @@ const CreateUser = () => {
                 },
                 token
             )
-            navigate(`/students/getById/${student.id}`);
+            navigate(`/students/getById/${response.id}`);
         } catch (error) {
             console.error('Error fetching  data:', error);
         }
@@ -75,20 +75,23 @@ const CreateUser = () => {
                     placeholder="First name"
                     value={firstName}
                     onChange={(e) =>
-                        setFirstname(e.target.value)}
+                        //setFirstname(e.target.value)}
+                        setFirstname("Student")}
                 />
                 <input
                     type="text"
                     placeholder="Last name"
                     value={lastName}
                     onChange={(e) =>
-                        setLastName(e.target.value)}
+                        // setLastName(e.target.value)}
+                        setLastName("Student")}
                 />
                 <input
                     type="text"
                     placeholder="Email"
                     value={email}
                     onChange={(e) =>
+                        //setEmail(e.target.value)}
                         setEmail(e.target.value)}
                 />
                 <input
@@ -96,7 +99,8 @@ const CreateUser = () => {
                     placeholder="Password"
                     value={password}
                     onChange={(e) =>
-                        setPassword(e.target.value)}
+                        // setPassword(e.target.value)}
+                        setPassword("Password1")}
                 />
                 <button type="submit">Create</button>
             </form>

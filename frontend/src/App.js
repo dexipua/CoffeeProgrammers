@@ -5,7 +5,7 @@ import Login from './components/pages/auth/Login';
 import StudentProfile from "./components/pages/student/StudentProfile";
 import StudentMarks from "./components/pages/student/StudentMarks";
 import StudentsList from "./components/pages/student/StudentsList";
-import CreateUser from "./components/pages/CreateUser";
+import CreateUser from "./components/pages/chief_teacher/CreateUser";
 
 function App() {
     return (

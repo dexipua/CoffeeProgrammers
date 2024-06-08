@@ -4,6 +4,7 @@ import {Link} from "react-router-dom";
 import SubjectService from "../../../services/SubjectService";
 import TeacherService from "../../../services/TeacherService";
 import '../../../assets/styles/Home.css';
+import ButtonAppBar from "../../layouts/ButtonAppBar";
 
 const Home = () => {
     const [teachers, setTeachers] = useState([]);
@@ -75,45 +76,51 @@ const Home = () => {
     }
 
     return (
-        <div className="home-container">
-            <header className="header">
-                <Link to={`/students/getAll`} className="students-link">
-                    <strong>
-                        Students list
-                    </strong>
-                </Link>
-                <p>Total number of students: {studentCount}</p>
-            </header>
-
-            <h1>Home Page</h1>
-
-            <div className="section">
-                <h2>Teachers</h2>
-                <div className="cards">
-                    {teachers.map((teacher) => (
-                        <div key={teacher.id} className="card">
-                            <div className="card-content">
-                                <span>{teacher.firstName} {teacher.lastName}</span>
-                            </div>
-                        </div>
-                    ))}
-                </div>
+        <div>
+            <div>
+                <ButtonAppBar/>
             </div>
+            <div className="home-container">
 
-            <div className="section">
-                <h2>Subjects</h2>
-                <div className="cards">
-                    {subjects.map((subject) => (
-                        <div key={subject.id} className="card">
-                            <div className="card-content">
-                                <span>{subject.name}</span>
-                                {subject.teacher && (
-                                    <span
-                                        className="taught-by"> (Taught by {subject.teacher.firstName} {subject.teacher.lastName})</span>
-                                )}
+                <header className="header">
+                    <Link to={`/students/getAll`} className="students-link">
+                        <strong>
+                            Students list
+                        </strong>
+                    </Link>
+                    <p>Total number of students: {studentCount}</p>
+                </header>
+
+                <h1>Home Page</h1>
+
+                <div className="section">
+                    <h2>Teachers</h2>
+                    <div className="cards">
+                        {teachers.map((teacher) => (
+                            <div key={teacher.id} className="card">
+                                <div className="card-content">
+                                    <span>{teacher.firstName} {teacher.lastName}</span>
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        ))}
+                    </div>
+                </div>
+
+                <div className="section">
+                    <h2>Subjects</h2>
+                    <div className="cards">
+                        {subjects.map((subject) => (
+                            <div key={subject.id} className="card">
+                                <div className="card-content">
+                                    <span>{subject.name}</span>
+                                    {subject.teacher && (
+                                        <span
+                                            className="taught-by"> (Taught by {subject.teacher.firstName} {subject.teacher.lastName})</span>
+                                    )}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </div>
         </div>
