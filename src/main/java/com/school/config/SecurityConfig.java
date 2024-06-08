@@ -1,7 +1,6 @@
 package com.school.config;
 
 
-import com.school.config.JWT.AuthEntryPointJwt;
 import com.school.config.JWT.AuthTokenFilter;
 import com.school.config.JWT.JwtUtils;
 import com.school.service.impl.UserServiceImpl;
@@ -29,7 +28,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final UserServiceImpl userDetailsService;
-    private final AuthEntryPointJwt authEntryPointJwt;
     private final JwtUtils jwtUtils;
 
     @Bean
@@ -53,8 +51,6 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                .exceptionHandling(eh -> eh
-                        .authenticationEntryPoint(authEntryPointJwt))
                 .authorizeHttpRequests(a -> a
                         .requestMatchers("/api/auth/login").permitAll()
                         .anyRequest().authenticated())

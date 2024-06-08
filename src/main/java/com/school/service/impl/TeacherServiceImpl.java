@@ -73,4 +73,9 @@ public class TeacherServiceImpl implements TeacherService {
     public List<Teacher> findAllByUser_FirstNameAndAndUser_LastName(String firstName, String lastName) {
         return teacherRepository.findAllByUser_FirstNameContainingIgnoreCaseAndUser_LastNameContainingIgnoreCase(firstName, lastName);
     }
+
+    @Override
+    public Teacher findByUserId(long userId) {
+        return teacherRepository.findByUserId(userId).orElseThrow(() -> new EntityNotFoundException("Teacher with id " + userId + " not found"));
+    }
 }

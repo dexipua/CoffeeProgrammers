@@ -76,4 +76,9 @@ public class StudentServiceImpl implements StudentService {
             String lastName) {
         return studentRepository.findAllByUser_FirstNameContainingIgnoreCaseAndUser_LastNameContainingIgnoreCase(firstName, lastName);
     }
+
+    @Override
+    public Student findByUserId(long userId) {
+        return studentRepository.findByUserId(userId).orElseThrow(() -> new EntityNotFoundException("Student with id " + userId + " not found"));
+    }
 }
