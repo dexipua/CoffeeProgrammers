@@ -71,7 +71,7 @@ public class SubjectDateServiceImpl implements SubjectDateService {
     @Override
     public SubjectDate findById(long id) {
         return subjectDateRepository.findById(id).orElseThrow(() ->
-                new EntityNotFoundException("Subject Date Not Found"));
+                new EntityNotFoundException("Subject Date with id "+ id + " Not Found"));
     }
 
     @Override
