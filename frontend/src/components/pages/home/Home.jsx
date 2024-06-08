@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
-import {Link} from "react-router-dom";
 import SubjectService from "../../../services/SubjectService";
 import TeacherService from "../../../services/TeacherService";
 import '../../../assets/styles/Home.css';
@@ -86,11 +85,6 @@ const Home = () => {
             <div className="home-container">
 
                 <header className="header">
-                    <Link to={`/students/getAll`} className="students-link">
-                        <strong>
-                            Students list
-                        </strong>
-                    </Link>
                     <p>Total number of students: {studentCount}</p>
                 </header>
 

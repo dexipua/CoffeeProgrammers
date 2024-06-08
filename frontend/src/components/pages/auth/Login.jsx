@@ -24,6 +24,7 @@ const Login = () => {
 
             const jwtToken = response.data.accessToken;
             localStorage.setItem('jwtToken', jwtToken);
+            localStorage.setItem('role', response.data.role)
             navigate("/home");
         } catch (error) {
             console.error('Login failed. Check your credentials.');

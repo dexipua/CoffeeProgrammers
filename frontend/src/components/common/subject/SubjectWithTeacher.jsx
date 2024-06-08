@@ -4,7 +4,7 @@ import TeacherData from "../teacher/TeacherData";
 
 const SubjectWithTeacher = ({subject, teacher}) => {
     return(
-        <div>
+        <div className="card">
             <SubjectData
                 name={subject.name}
             />
