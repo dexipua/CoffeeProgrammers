@@ -18,5 +18,6 @@ public class SchoolNewsResponse {
     public SchoolNewsResponse(SchoolNews schoolNews) {
         this.title = schoolNews.getTitle();
         this.time = schoolNews.getTime().withNano(0).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        this.id = schoolNews.getId();
     }
 }
