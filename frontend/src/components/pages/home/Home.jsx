@@ -5,6 +5,9 @@ import SubjectService from "../../../services/SubjectService";
 import TeacherService from "../../../services/TeacherService";
 import '../../../assets/styles/Home.css';
 import ButtonAppBar from "../../layouts/ButtonAppBar";
+import TeacherList from "../../common/teacher/TeacherList"
+import SubjectList from "../../common/subject/SubjectList";
+
 
 const Home = () => {
     const [teachers, setTeachers] = useState([]);
@@ -95,32 +98,14 @@ const Home = () => {
 
                 <div className="section">
                     <h2>Teachers</h2>
-                    <div className="cards">
-                        {teachers.map((teacher) => (
-                            <div key={teacher.id} className="card">
-                                <div className="card-content">
-                                    <span>{teacher.firstName} {teacher.lastName}</span>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
+                    <TeacherList
+                        teachers={teachers}/>
                 </div>
 
                 <div className="section">
                     <h2>Subjects</h2>
-                    <div className="cards">
-                        {subjects.map((subject) => (
-                            <div key={subject.id} className="card">
-                                <div className="card-content">
-                                    <span>{subject.name}</span>
-                                    {subject.teacher && (
-                                        <span
-                                            className="taught-by"> (Taught by {subject.teacher.firstName} {subject.teacher.lastName})</span>
-                                    )}
-                                </div>
-                            </div>
-                        ))}
-                    </div>
+                    <SubjectList
+                        subjects={subjects}/>
                 </div>
             </div>
         </div>
