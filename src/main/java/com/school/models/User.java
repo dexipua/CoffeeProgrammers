@@ -41,7 +41,7 @@ public class User implements UserDetails, Comparable<User>{
             message = "Password must contain at least one uppercase letter")
     @Pattern(regexp = ".*[a-z].*",
             message = "Password must contain at least one lowercase letter")
-    @Column(name = "password", nullable = false, unique = true)
+    @Column(name = "password", nullable = false)
     private String password;
 
     @Pattern(regexp = "[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}", message = "Must be a valid e-mail address")
