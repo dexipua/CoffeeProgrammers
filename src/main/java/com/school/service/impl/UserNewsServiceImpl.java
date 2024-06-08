@@ -21,7 +21,7 @@ public class UserNewsServiceImpl implements UserNewsService {
 
     @Override
     public UserNews findById(long id) {
-        return newsRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        return newsRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("UserNews with id " + id + " not found"));
     }
 
     @Override

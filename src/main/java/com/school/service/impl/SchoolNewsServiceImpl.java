@@ -28,7 +28,7 @@ public class SchoolNewsServiceImpl implements SchoolNewsService {
 
     @Override
     public SchoolNews findById(long id) {
-        return schoolNewsRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        return schoolNewsRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("SchoolNews with id " + id + " not found"));
     }
 
     @Override

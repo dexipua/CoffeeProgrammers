@@ -11,11 +11,12 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class SchoolNewsResponse {
+    private long id;
     private String title;
     private LocalDateTime time;
-
     public SchoolNewsResponse(SchoolNews schoolNews) {
         this.title = schoolNews.getTitle();
         this.time = schoolNews.getTime();
+        this.id = schoolNews.getId();
     }
 }
