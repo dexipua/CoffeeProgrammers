@@ -1,6 +1,6 @@
 import UserData from "./UserData";
 
-function UserContainer(user){
+function AccountContainer(user){
     return(
         <div>
             <p>Account</p>

@@ -3,6 +3,7 @@ package com.school.controller;
 import com.school.dto.subject.SubjectRequest;
 import com.school.dto.subject.SubjectResponseAll;
 import com.school.dto.subject.SubjectResponseSimple;
+import com.school.dto.subject.SubjectResponseWithTeacher;
 import com.school.models.Subject;
 import com.school.service.SubjectService;
 import jakarta.validation.Valid;
@@ -105,11 +106,11 @@ public class SubjectController {
 
     @GetMapping("/getAllByStudentId/{student_id}")
     @ResponseStatus(HttpStatus.OK)
-    public List<SubjectResponseSimple> getByStudentId(@PathVariable("student_id") long studentId) {
+    public List<SubjectResponseWithTeacher> getByStudentId(@PathVariable("student_id") long studentId) {
         List<Subject> subjects = subjectService.findByStudent_Id(studentId);
 
         return subjects.stream()
-                .map(SubjectResponseSimple::new)
+                .map(SubjectResponseWithTeacher::new)
                 .collect(Collectors.toList());
     }
 
