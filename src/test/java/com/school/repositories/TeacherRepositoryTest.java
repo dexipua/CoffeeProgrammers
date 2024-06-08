@@ -38,7 +38,8 @@ public class TeacherRepositoryTest {
         Subject artSubject = new Subject("Art");
 
         Teacher teacher = new Teacher(new User("Artem", "Moseichenko",  "am@gmil.com","Abekpr257"));
-        teacher.addSubject(mathSubject);
+        mathSubject.setTeacher(teacher);
+        artSubject.setTeacher(teacher);
 
         mathSubject.setTeacher(teacher);
 
@@ -46,7 +47,7 @@ public class TeacherRepositoryTest {
         teacherRepository.save(teacher);
 
         //when
-        List<Teacher> res = teacherRepository.findBySubjectName("Mathematics");
+        List<Teacher> res = teacherRepository.findBySubjectNameIgnoreCase("Mathematics");
 
         //then
         assertEquals(res, List.of(teacher));
@@ -59,7 +60,7 @@ public class TeacherRepositoryTest {
         Subject artSubject = new Subject("Art");
 
         Teacher teacher = new Teacher(new User("Artem", "Moseichenko",  "am@gmil.com","Abekpr257"));
-        teacher.addSubject(mathSubject);
+        mathSubject.setTeacher(teacher);
 
         mathSubject.setTeacher(teacher);
 
@@ -67,7 +68,7 @@ public class TeacherRepositoryTest {
         teacherRepository.save(teacher);
 
         //then
-        List<Teacher> res = teacherRepository.findBySubjectName("Art");
+        List<Teacher> res = teacherRepository.findBySubjectNameIgnoreCase("Art");
         assertEquals(0, res.size());
     }
 
@@ -78,7 +79,7 @@ public class TeacherRepositoryTest {
         teacherRepository.save(teacher);
 
         //when
-        Optional<Teacher> res = teacherRepository.findByUserId(teacher.getUser().getId());
+        Optional<Teacher> res = teacherRepository.findById(teacher.getId());
         boolean result = res.get().equals(teacher);
 
         //then
@@ -93,7 +94,7 @@ public class TeacherRepositoryTest {
         teacherRepository.save(teacher);
 
         //then
-        Optional<Teacher> res = teacherRepository.findByUserId(-1);
+        Optional<Teacher> res = teacherRepository.findById((long) -1);
         assertThrows(NoSuchElementException.class, res::get);
     }
 }

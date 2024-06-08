@@ -1,8 +1,6 @@
 package com.school.models;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Pattern;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -42,5 +40,16 @@ public class Subject {
                 "name='" + name + '\'' +
                 ", students=" + students +
                 '}';
+    }
+
+    public Subject(String name) {
+        this.name = name;
+        this.students = new ArrayList<>();
+    }
+
+    public Subject(String name, Teacher teacher) {
+        this.name = name;
+        this.teacher = teacher;
+        this.students = new ArrayList<>();
     }
 }

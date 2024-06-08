@@ -1,6 +1,6 @@
 package com.school.dto.subjectDate;
 
-import com.school.dto.subject.SubjectResponseToGet;
+import com.school.dto.subject.SubjectResponseSimple;
 import com.school.models.SubjectDate;
 import lombok.Data;
 
@@ -9,11 +9,11 @@ public class SubjectDateResponse {
     private long id;
     private String dayOfWeek;
     private String numOfLesson;
-    private SubjectResponseToGet subjectResponseToGet;
+    private SubjectResponseSimple subjectResponseSimple;
     public SubjectDateResponse(SubjectDate s) {
         this.id = s.getId();
         this.dayOfWeek = s.getDayOfWeek().toString();
         this.numOfLesson = s.getNumOfLesson().toString();
-        this.subjectResponseToGet = new SubjectResponseToGet(s.getSubject());
+        this.subjectResponseSimple = new SubjectResponseSimple(s.getSubject());
     }
 }

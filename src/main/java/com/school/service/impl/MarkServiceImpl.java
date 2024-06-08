@@ -1,21 +1,22 @@
 package com.school.service.impl;
 
+import com.school.dto.mark.MarkRequest;
 import com.school.models.Mark;
 import com.school.models.Student;
 import com.school.models.Subject;
-import com.school.models.UserNews;
 import com.school.repositories.MarkRepository;
 import com.school.service.MarkService;
+import com.school.service.StudentService;
+import com.school.service.SubjectService;
 import com.school.service.UserNewsService;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

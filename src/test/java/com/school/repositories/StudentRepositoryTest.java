@@ -50,7 +50,7 @@ class StudentRepositoryTest {
         studentRepository.saveAll(List.of(student1, student2));
 
         // When
-        List<Student> res = studentRepository.findStudentBySubjectNameContaining("Math");
+        List<Student> res = studentRepository.findStudentBySubjectNameContainingIgnoreCase("Math");
         boolean result = res.equals(List.of(student1));
 
         // Then
@@ -71,7 +71,7 @@ class StudentRepositoryTest {
         studentRepository.save(student1);
 
         // When
-        List<Student> res = studentRepository.findStudentBySubjectNameContaining("Art");
+        List<Student> res = studentRepository.findStudentBySubjectNameContainingIgnoreCase("Art");
         boolean result = res.equals(List.of());
 
         // Then
@@ -81,17 +81,17 @@ class StudentRepositoryTest {
     @Test
     void findAllByOrderByUser() {
         // Given
-        Student student1 = new Student(new User("Id", "Od", "cemnc@idv.fi", "piehvhuoe08475780ldkjfIHFGEROSIg"));
+        Student student1 = new Student(new User("Id", "Dcba", "cemnc@idv.fi", "piehvhuoe08475780ldkjfIHFGEROSIg"));
 
-        Student student2 = new Student(new User("Id", "Ad", "cemsdnc@idv.fi", "piehvhuoesf08475780ldkjfIHFGEROSIg"));
+        Student student2 = new Student(new User("Id", "Abcd", "cemsdnc@idv.fi", "piehvhuoesf08475780ldkjfIHFGEROSIg"));
         studentRepository.save(student1);
         studentRepository.save(student2);
 
         // When
-        List<Student> res = studentRepository.findAllByOrderByUser();
+        List<Student> res = studentRepository.findAllByOrderByUser_LastNameAsc();
 
         // Then
-        assertEquals(res, Arrays.asList(student1, student2));
+        assertEquals(res, Arrays.asList(student2, student1));
     }
 
     @Test
