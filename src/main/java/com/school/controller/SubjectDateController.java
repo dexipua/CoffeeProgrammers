@@ -10,6 +10,7 @@ import com.school.service.SubjectService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.DayOfWeek;
@@ -28,6 +29,7 @@ public class SubjectDateController {
 
     @PostMapping("/create/subject/{subject_id}")
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER')")
     public SubjectDateResponse createSubjectDate(
             @Valid @RequestBody SubjectDateRequest subjectDateRequest,
             @PathVariable("subject_id") long subjectId) {
@@ -37,6 +39,7 @@ public class SubjectDateController {
 
     @PutMapping("/update/{subject_date_id}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER')")
     public SubjectDateResponse updateSubjectDate(@RequestBody SubjectDateRequest subjectDateRequest,
                                                  @PathVariable("subject_date_id") long subjectDateId) {
         long subjectId = subjectDateService.findById(subjectDateId).getId();
@@ -49,6 +52,7 @@ public class SubjectDateController {
 
     @DeleteMapping("/delete/{subject_date_id}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER')")
     public void deleteSubjectDate(@PathVariable("subject_date_id") long subjectDateId) {
         subjectDateService.delete(subjectDateService.findById(subjectDateId));
     }
