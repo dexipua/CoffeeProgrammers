@@ -44,8 +44,8 @@ public class SchoolNewsController {
         schoolNewsService.delete(school_news_id);
     }
 
-    @PostMapping("/getById/{school_news_id}")
-    @ResponseStatus(HttpStatus.CREATED)
+    @GetMapping("/getById/{school_news_id}")
+    @ResponseStatus(HttpStatus.OK)
     public SchoolNewsResponse getById(@PathVariable long school_news_id) {
         return new SchoolNewsResponse(schoolNewsService.findById(school_news_id));
     }

@@ -11,6 +11,7 @@ import java.time.format.DateTimeFormatter;
 @Getter
 @Setter
 public class SchoolNewsResponse {
+    private long id;
     private String title;
     private String time;
 
