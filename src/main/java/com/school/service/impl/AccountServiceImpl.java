@@ -8,7 +8,7 @@ import com.school.service.MarkService;
 import com.school.service.StudentService;
 import com.school.service.TeacherService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,8 +18,8 @@ public class AccountServiceImpl implements AccountService {
     private final StudentService studentService;
     private final TeacherService teacherService;
     @Override
-    public Object findAllInformationByRoleAndUserId(Authentication authentication) {
-        User user = (User) authentication.getPrincipal();
+    public Object findAllInformationByRoleAndUserId() {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if(user.getRole().getName().equals("STUDENT")){
             return new StudentResponseAll(studentService.findByUserId(user.getId()),
                     markService.findAverageByStudentId(studentService.findByUserId(user.getId()).getId()));

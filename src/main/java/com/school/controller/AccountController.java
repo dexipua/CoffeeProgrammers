@@ -4,7 +4,6 @@ import com.school.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -18,7 +17,7 @@ public class AccountController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<?> getAccounts(Authentication auth) {
-        return new ResponseEntity<>(accountService.findAllInformationByRoleAndUserId(auth), HttpStatus.OK);
+    public ResponseEntity<?> getAccounts() {
+        return new ResponseEntity<>(accountService.findAllInformationByRoleAndUserId(), HttpStatus.OK);
     }
 }

@@ -41,9 +41,7 @@ const CreateUser = () => {
     //         console.error('Error fetching  data:', error);
     //     }
     // };
-    const student = ({id, first_name, last_name}) => {
-
-    }
+    const student = ({id, first_name, last_name}) => {}
 
         let navigate = useNavigate();
 
