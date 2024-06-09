@@ -4,12 +4,11 @@ import com.school.dto.subject.SubjectRequest;
 import com.school.models.Student;
 import com.school.models.Subject;
 import com.school.models.Teacher;
-import com.school.models.UserNews;
 import com.school.repositories.SubjectRepository;
-import com.school.service.UserNewsService;
 import com.school.service.StudentService;
 import com.school.service.SubjectService;
 import com.school.service.TeacherService;
+import com.school.service.UserNewsService;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -121,10 +120,6 @@ public class SubjectServiceImpl implements SubjectService {
 
         subject.getStudents().add(student);
 
-        userNewsService.create(new UserNews(
-                "Вас додали до предмету " + subject.getName(),
-                student.getUser()
-        ));
         subjectRepository.save(subject);
     }
 
@@ -139,10 +134,6 @@ public class SubjectServiceImpl implements SubjectService {
             );
         }
 
-        userNewsService.create(new UserNews(
-                "Вас видалили з предмету " + subject.getName(),
-                student.getUser()
-        ));
         subject.getStudents().remove(student);
 
         subjectRepository.save(subject);

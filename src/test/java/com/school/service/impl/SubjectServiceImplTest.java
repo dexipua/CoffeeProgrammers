@@ -4,9 +4,11 @@ import com.school.dto.subject.SubjectRequest;
 import com.school.models.Student;
 import com.school.models.Subject;
 import com.school.models.Teacher;
+import com.school.models.User;
 import com.school.repositories.SubjectRepository;
 import com.school.service.StudentService;
 import com.school.service.TeacherService;
+import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,6 +18,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,6 +56,20 @@ class SubjectServiceImplTest {
         Subject capturedSubject = subjectArgumentCaptor.getValue();
 
         assertThat(capturedSubject).isEqualTo(subject);
+    }
+
+    @Test
+    void createWithExistsSubject() {
+        //given
+        Subject subject = new Subject();
+        subject.setName("Math");
+        SubjectRequest subjectRequest = new SubjectRequest();
+        subjectRequest.setName("Math");
+        // when
+        subjectService.create(subjectRequest);
+        when(subjectRepository.findByName("Math")).thenReturn(Optional.of(subject));
+
+        assertThrowsExactly(EntityExistsException.class, () -> subjectService.create(subjectRequest));
     }
 
     @Test
@@ -103,6 +120,139 @@ class SubjectServiceImplTest {
         verify(subjectRepository, times(1)).findById(subject.getId());
         verify(subjectRepository, times(1)).save(subject);
 
+    }
+
+    @Test
+    void updateWithExistsSubject() {
+        //given
+        Subject subject = new Subject();
+        subject.setName("Math");
+        subject.setId(0);
+        Subject subject2 = new Subject();
+        subject2.setName("Art");
+        subject2.setId(1);
+        SubjectRequest subjectRequest = new SubjectRequest();
+        subjectRequest.setName("Math");
+        // when
+        subjectRepository.save(subject);
+        subjectRepository.save(subject2);
+        when(subjectRepository.findByName("Math")).thenReturn(Optional.of(subject));
+        when(subjectRepository.findById((long)1)).thenReturn(Optional.of(subject2));
+
+        assertThrowsExactly(EntityExistsException.class, () -> subjectService.update(1, subjectRequest));
+
+    }
+
+    @Test
+    void setTeacher() {
+        // given
+        Subject subject = new Subject();
+        subject.setName("Math");
+        subject.setId(0);
+        Teacher teacher = new Teacher(new User("Vladobrod", "Vlad", "Bulakovskyi", "Vlad123"));
+        teacher.setId(0);
+
+        // when
+        when(subjectRepository.findById((long)0)).thenReturn(Optional.of(subject));
+        when(teacherService.findById(0)).thenReturn(teacher);
+        // then
+        subjectService.setTeacher(subject.getId(), teacher.getId());
+        verify(subjectRepository, times(1)).save(subject);
+        verify(teacherService, times(1)).findById(0);
+        verify(subjectRepository, times(1)).findById((long)0);
+    }
+
+    @Test
+    void deleteTeacher() {
+        // given
+        Subject subject = new Subject();
+        subject.setName("Math");
+        subject.setId(0);
+        subject.setTeacher(new Teacher(new User("Vladobrod", "Vlad", "Bulakovskyi", "Vlad123")));
+
+        // when
+        when(subjectRepository.findById((long)0)).thenReturn(Optional.of(subject));
+        // then
+        subjectService.deleteTeacher(subject.getId());
+        verify(subjectRepository, times(1)).save(subject);
+        verify(subjectRepository, times(1)).findById((long)0);
+    }
+
+    @Test
+    void addStudent() {
+        // given
+        Subject subject = new Subject();
+        subject.setName("Math");
+        subject.setId(0);
+        subject.setStudents(new ArrayList<>());
+        subject.setTeacher(new Teacher(new User("Vladobrod2", "Vlad", "Bulakovskyi", "Vlad123")));
+        Student student = new Student(new User("Vladobrod", "Vlad", "Bulakovskyi", "Vlad123"));
+        student.setId(0);
+        // when
+        when(subjectRepository.findById((long)0)).thenReturn(Optional.of(subject));
+        when(studentService.findById(0)).thenReturn(student);
+        // then
+        subjectService.addStudent(subject.getId(), student.getId());
+        verify(subjectRepository, times(1)).save(subject);
+        verify(subjectRepository, times(1)).findById((long)0);
+        verify(studentService, times(1)).findById(0);
+    }
+
+    @Test
+    void addStudentAlreadyHaveStudent() {
+        // given
+        Subject subject = new Subject();
+        subject.setName("Math");
+        subject.setId(0);
+        Student student = new Student(new User("Vladobrod", "Vlad", "Bulakovskyi", "Vlad123"));
+        student.setId(0);
+        subject.setStudents(new ArrayList<>(Arrays.asList(student)));
+        // when
+        when(subjectRepository.findById((long)0)).thenReturn(Optional.of(subject));
+        when(studentService.findById(0)).thenReturn(student);
+        // then
+        assertThrowsExactly(UnsupportedOperationException.class, () -> subjectService.addStudent(subject.getId(), student.getId()));
+        verify(subjectRepository, never()).save(subject);
+        verify(subjectRepository, times(1)).findById((long)0);
+        verify(studentService, times(1)).findById(0);
+    }
+
+    @Test
+    void deleteStudent() {
+        // given
+        Subject subject = new Subject();
+        subject.setName("Math");
+        subject.setId(0);
+        Student student = new Student(new User("Vladobrod", "Vlad", "Bulakovskyi", "Vlad123"));
+        student.setId(0);
+        subject.setStudents(new ArrayList<>(Arrays.asList(student)));
+        // when
+        when(subjectRepository.findById((long)0)).thenReturn(Optional.of(subject));
+        when(studentService.findById(0)).thenReturn(student);
+        // then
+        subjectService.deleteStudent(subject.getId(), student.getId());
+        verify(subjectRepository, times(1)).save(subject);
+        verify(subjectRepository, times(1)).findById((long)0);
+        verify(studentService, times(1)).findById(0);
+    }
+
+    @Test
+    void deleteStudentHaveNotStudent() {
+        // given
+        Subject subject = new Subject();
+        subject.setName("Math");
+        subject.setId(0);
+        Student student = new Student(new User("Vladobrod", "Vlad", "Bulakovskyi", "Vlad123"));
+        student.setId(0);
+        subject.setStudents(new ArrayList<>());
+        // when
+        when(subjectRepository.findById((long)0)).thenReturn(Optional.of(subject));
+        when(studentService.findById(0)).thenReturn(student);
+        // then
+        assertThrowsExactly(UnsupportedOperationException.class, () -> subjectService.deleteStudent(subject.getId(), student.getId()));
+        verify(subjectRepository, never()).save(subject);
+        verify(subjectRepository, times(1)).findById((long)0);
+        verify(studentService, times(1)).findById(0);
     }
 
     @Test
