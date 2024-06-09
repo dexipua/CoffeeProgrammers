@@ -10,6 +10,7 @@ const StudentsList = () => {
     const [lastName, setLastName] = useState('');
     const [studentsList, setStudentsList] = useState([]);
     const [filteredStudents, setFilteredStudents] = useState([]);
+    const [error, serError] = useState()
 
     useEffect(() => {
         const fetchAllStudents = async () => {
