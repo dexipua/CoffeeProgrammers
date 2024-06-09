@@ -32,9 +32,11 @@ const SubjectWithTeacherForProfile = ({ subject: { id, name, teacher } }) => {
             <Box width="100%" display="flex" alignItems="center" justifyContent="flex-start" gap={0.5}>
                 <Typography variant="body2" sx={{ margin: 0, color: '#555' }}>
                     Teacher: <br />
-                    <Link to={`/teacher/${teacher.id}`} style={{ color: 'inherit' }}>
+                    {teacher === null ? "none" :
+                    <Link to={`/teachers/${teacher.id}`} style={{ color: 'inherit' }}>
                         <TeacherData teacher={teacher} />
                     </Link>
+                    }
                 </Typography>
             </Box>
         </Box>
