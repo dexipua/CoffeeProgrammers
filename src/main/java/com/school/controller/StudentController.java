@@ -2,6 +2,7 @@ package com.school.controller;
 
 import com.school.dto.student.StudentResponseAll;
 import com.school.dto.student.StudentResponseSimple;
+import com.school.dto.student.StudentResponseWithEmail;
 import com.school.dto.user.UserRequestCreate;
 import com.school.dto.user.UserRequestUpdate;
 import com.school.models.Student;
@@ -65,10 +66,10 @@ public class StudentController {
 
     @GetMapping("/getAll")
     @ResponseStatus(HttpStatus.OK)
-    public List<StudentResponseSimple> getAll() {
+    public List<StudentResponseWithEmail> getAll() {
         List<Student> students = studentService.findAllOrderedByName();
         return students.stream()
-                .map(StudentResponseSimple::new)
+                .map(StudentResponseWithEmail::new)
                 .collect(Collectors.toList());
     }
 

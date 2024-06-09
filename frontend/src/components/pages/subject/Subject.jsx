@@ -1,28 +1,30 @@
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import ButtonAppBar from "../../layouts/ButtonAppBar";
 import SubjectService from "../../../services/SubjectService";
-import SubjectWithTeacher from "../../common/subject/SubjectWithTeacher";
-import UserMap from "../../common/user/UserMap";
 import MarkService from "../../../services/MarkService";
-import StudentWithMarkFromThisSubjectMap from "../../common/marks/StudentWithMarkFromThisSubjectMap";
 import {useParams} from "react-router-dom";
+import SubjectWithTeacherForProfile from "../../common/subject/SubjectWithTeacherForProfile";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import StudentListForProfile from "../../common/student/StudentListForProfile";
+import LabTabsForSubjectProfile from "../../layouts/LabTabsForSubjectProfile";
 
 const Subject = () => {
-    const [canMark, setIfCanMark] = useState(false)
-    const [subject, setSubject] = useState(null);
-    const [marks, setMarks] = useState(null);
-    const [loadingSubject, setLoadingSubject] = useState(true);
-    const [loadingMarks, setLoadingMarks] = useState(true);
     const {id} = useParams();
 
-    useEffect(() => {
+    const [canMark, setIfCanMark] = useState(false)
+    const [subject, setSubject] = useState(null);
+    const [studentsWithMarks, setStudentsWithMarks] = useState([]);
+    const [loadingSubject, setLoadingSubject] = useState(true);
+    const [loadingMarks, setLoadingMarks] = useState(true);
 
+    useEffect(() => {
         const token = localStorage.getItem("jwtToken");
 
         const fetchMarks = async () => {
             try {
-                const response = await MarkService.getBySubjectId(id, token)
-                setMarks(response);
+                const response = await MarkService.getBySubjectId(id, token);
+                setStudentsWithMarks(response);
                 setIfCanMark(true);
             } catch (error) {
                 setIfCanMark(false);
@@ -40,42 +42,47 @@ const Subject = () => {
             }
         };
 
-        fetchSubject().then(() => console.log("End work with subjects"));
-        fetchMarks().then(() => console.log("End work with marks"))
-    }, []);
+        const fetchData = async () => {
+            await fetchSubject().then(() => console.log("End work with subjects"));
+            await fetchMarks().then(() => console.log("End work with marks"))
+        };
 
-    if (loadingSubject || loadingMarks) {
-        return <div>Loading...</div>; // Loading indicator
+
+        fetchData().then(() => console.log("End work with data"))
+    }, [id]);
+
+
+    if (loadingSubject && loadingMarks) {
+        return <div>Loading...</div>;
     }
-
-    const role = localStorage.getItem('role');
-    console.log(role);
-    console.log(subject);
-    console.log(marks);
 
     return (
         <div>
             <ButtonAppBar/>
-                <div>
-                    <SubjectWithTeacher //TODO
-                        subjectResponse={{
-                            id: subject.id,
-                            name: subject.name,
-                            teacher: subject.teacher
-                        }}
+            <Box mt="80px" ml="60px">
+                <Typography variant="h5" component="h2" sx={{marginBottom: 2}}>Subject</Typography>
+                <SubjectWithTeacherForProfile
+                    subject={{
+                        id: subject.id,
+                        name: subject.name,
+                        teacher: subject.teacher
+                    }}
+                />
+            </Box>
+
+            <Box mt={4} ml="60px" mr="60px">
+                {!canMark ? (
+                    <>
+                        <Typography variant="h6" component="h2" sx={{marginBottom: 2}}>Students</Typography>
+                        <StudentListForProfile students={subject.students}/>
+                    </>
+                ) : (
+                    <LabTabsForSubjectProfile
+                        students={subject.students}
+                        studentsWithMarks={studentsWithMarks}
                     />
-                </div>
-            <div>
-                {canMark ?
-                    //TODO
-                    <StudentWithMarkFromThisSubjectMap
-                        marks={marks}/>
-                    :
-                    <UserMap
-                        users={subject.students}
-                    />
-                }
-            </div>
+                )}
+            </Box>
         </div>
     );
 };

@@ -2,10 +2,10 @@ import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import SubjectService from "../../../services/SubjectService";
 import TeacherService from "../../../services/TeacherService";
-import '../../../assets/styles/Home.css';
 import ButtonAppBar from "../../layouts/ButtonAppBar";
 import TeacherList from "../../common/teacher/TeacherList"
 import SubjectWithTeacherList from "../../common/subject/SubjectWithTeacherList";
+import Box from "@mui/material/Box";
 
 
 const Home = () => {
@@ -79,21 +79,20 @@ const Home = () => {
 
     return (
         <div>
-            <ButtonAppBar />
-            <div className="home-container" style={{ marginTop: '65px' }}>
+            <ButtonAppBar/>
+            <div className="home-container" style={{marginTop: '65px'}}>
                 <h1>Home Page</h1>
 
-                <div className="section">
+                <Box>
                     <h2>Teachers</h2>
                     <TeacherList
-                        teachers={teachers} />
-                </div>
-
-                <div className="section">
+                        teachers={teachers}/>
+                </Box>
+                <Box>
                     <h2>Subjects</h2>
                     <SubjectWithTeacherList
-                        subjects={subjects} />
-                </div>
+                        subjects={subjects}/>
+                </Box>
             </div>
         </div>
     )

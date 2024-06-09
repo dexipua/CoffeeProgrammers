@@ -5,7 +5,7 @@ import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 import Typography from '@mui/material/Typography';
 import {Link} from "react-router-dom";
 
-const SubjectWithTeacher = ({ subjectResponse: { id, name, teacher } }) => {
+const SubjectWithTeacherForList = ({ subjectResponse: { id, name, teacher } }) => {
     return (
         <Link to={`/subjects/getById/${id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
             <Box
@@ -22,7 +22,7 @@ const SubjectWithTeacher = ({ subjectResponse: { id, name, teacher } }) => {
                     border: '1px solid #ccc',
                     boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
                     borderRadius: '8px',
-                    backgroundColor: '#f9f9f9',
+                    backgroundColor: '#FFFFFFFF',
                     transition: 'transform 0.2s, box-shadow 0.2s',
                     '&:hover': {
                         transform: 'scale(1.02)',
@@ -47,4 +47,4 @@ const SubjectWithTeacher = ({ subjectResponse: { id, name, teacher } }) => {
     );
 };
 
-export default SubjectWithTeacher;
+export default SubjectWithTeacherForList;

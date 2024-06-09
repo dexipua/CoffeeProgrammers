@@ -1,14 +1,13 @@
-import SubjectWithTeacher from "./SubjectWithTeacher";
+import SubjectWithTeacherForList from "./SubjectWithTeacherForList";
 
-const SubjectWithTeacherList = ({ subjects }) => {
+const SubjectWithTeacherList = ({subjects}) => {
     return (
-
-            subjects.map((subject, index) => (
-                <SubjectWithTeacher
-                    key={index}
-                    subjectResponse={subject}
-                />
-            ))
+        subjects.map((subject, index) => (
+            <SubjectWithTeacherForList
+                key={index}
+                subjectResponse={subject}
+            />
+        ))
 
     );
 };

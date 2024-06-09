@@ -8,8 +8,7 @@ import StudentsList from "./components/pages/student/StudentsList";
 import CreateUser from "./components/pages/chief_teacher/CreateUser";
 import Account from "./components/pages/user/Account";
 import Subject from "./components/pages/subject/Subject";
-import SubjectWithTeacher from "./components/common/subject/SubjectWithTeacher";
-import SubjectWithTeacherList from "./components/common/subject/SubjectWithTeacherList";
+import MarkTableForSubject from "./components/common/mark/MarkTableForSubject";
 
 function App() {
     return (
@@ -24,55 +23,58 @@ function App() {
                 <Route path="/create_user" element={<CreateUser/>}/>
                 <Route path="/account" element={<Account/>}/>
                 <Route path="/subjects/getById/:id" element={<Subject/>}/>
-                <Route path={"/subjects"} element={<SubjectWithTeacherList
-                    subjects={
-                        [
-                            {
-                                "id": 1,
-                                "name": "Maths",
-                                "teacher": {
-                                    "id": 1,
-                                    "firstName": "Artem",
-                                    "lastName": "Moseichenko"
-                                }
-                            },
-                            {
-                                "id": 1,
-                                "name": "Maths",
-                                "teacher": {
-                                    "id": 1,
-                                    "firstName": "Artem",
-                                    "lastName": "Moseichenko"
-                                }
-                            },
-                            {
-                                "id": 1,
-                                "name": "Maths",
-                                "teacher": {
-                                    "id": 1,
-                                    "firstName": "Artem",
-                                    "lastName": "Moseichenko"
-                                }
-                            }
 
-                        ]
-                    }
-
-                />}/>
-
-                <Route path="/test" element={<SubjectWithTeacher
-                    subjectResponse={
+                <Route path="/subject/:id" element={<Subject/>}/>
+                <Route path="/test" element={<MarkTableForSubject students={
+                    [
                         {
-                            "id": 1,
-                            "name": "Maths",
-                            "teacher": {
+                            "studentResponseSimple": {
                                 "id": 1,
-                                "firstName": "Artem",
-                                "lastName": "Moseichenko"
-                            }
+                                "firstName": "Victoria",
+                                "lastName": "Kornienko"
+                            },
+                            "marks": [
+                                {
+                                    "id": 1,
+                                    "value": 1
+                                }
+                            ]
+                        },
+                        {
+                            "studentResponseSimple": {
+                                "id": 2,
+                                "firstName": "Gleb",
+                                "lastName": "Popov"
+                            },
+                            "marks": [
+                                {
+                                    "id": 2,
+                                    "value": 12
+                                },
+                                {
+                                    "id": 3,
+                                    "value": 12
+                                },
+                                {
+                                    "id": 4,
+                                    "value": 12
+                                },
+                                {
+                                    "id": 5,
+                                    "value": 12
+                                },
+                                {
+                                    "id": 6,
+                                    "value": 12
+                                },
+                                {
+                                    "id": 7,
+                                    "value": 12
+                                }
+                            ]
                         }
-                    }
-                />}/>
+                    ]
+                }/>}/>
             </Routes>
         </Router>
     );

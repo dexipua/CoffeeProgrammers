@@ -7,10 +7,10 @@ const StudentWithMarkFromThisSubject = ({studentWithMarks: {
     marks
 }}) => {
     return (
-        <div>
+        <div key={studentId}>
             <p>{firstName + " " + lastName}</p>
-            <p>{marks.map((mark) => (
-                mark.value + ", "
+            <p>{marks.map((mark, index) => (
+                <span key={index}>{mark.value}, </span>
             ))}</p>
         </div>
     )
