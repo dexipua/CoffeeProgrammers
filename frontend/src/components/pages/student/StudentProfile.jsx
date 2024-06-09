@@ -2,6 +2,7 @@ import React, {useEffect} from 'react';
 import {useParams} from 'react-router-dom';
 import StudentService from "../../../services/StudentService";
 import '../../../assets/styles/StudentProfile.css'
+import ButtonAppBar from "../../layouts/ButtonAppBar";
 
 const StudentProfile = () => {
     const {id} = useParams(); // Отримання значення id з параметрів маршруту
@@ -34,6 +35,7 @@ const StudentProfile = () => {
     // Рендер компонента
     return (
         <div className="student-profile">
+            <ButtonAppBar />
             <h2>Student Profile</h2>
             <p><strong>Name:</strong> {student.firstName} {student.lastName}</p>
             <p><strong>Email:</strong> {student.email}</p>

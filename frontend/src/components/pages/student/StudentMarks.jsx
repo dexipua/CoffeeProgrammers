@@ -2,6 +2,7 @@ import React, {useEffect} from 'react';
 import {useParams} from "react-router-dom";
 import MarkService from '../../../services/MarkService'
 import '../../../assets/styles/StudentMarks.css';
+import ButtonAppBar from "../../layouts/ButtonAppBar";
 
 const StudentMarks = () => {
     const {id} = useParams();
@@ -36,6 +37,7 @@ const StudentMarks = () => {
 
     return (
         <div>
+            <ButtonAppBar />
             <h2>Student Marks</h2>
             <table className="student-marks-table">
                 <thead>

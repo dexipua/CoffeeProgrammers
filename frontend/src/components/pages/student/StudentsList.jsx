@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import StudentService from '../../../services/StudentService';
 import {Link} from "react-router-dom";
 import '../../../assets/styles/StudentsList.css'
+import ButtonAppBar from "../../layouts/ButtonAppBar";
 
 const StudentsList = () => {
     const [studentsList, setStudentsList] = useState([{
@@ -29,6 +30,7 @@ const StudentsList = () => {
 
     return (
         <div className="students-list">
+            <ButtonAppBar />
             <h2>Students List</h2>
             <table>
                 <thead>
