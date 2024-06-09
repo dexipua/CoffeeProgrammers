@@ -10,12 +10,15 @@ import Account from "./components/pages/user/Account";
 import Subject from "./components/pages/subject/Subject";
 import SubjectWithTeacher from "./components/common/subject/SubjectWithTeacher";
 import SubjectWithTeacherList from "./components/common/subject/SubjectWithTeacherList";
+import TeacherListPage from "./components/pages/teacher/TeacherListPage";
+import TeacherPage from "./components/pages/teacher/TeacherPage";
 
 function App() {
     return (
-
         <Router>
             <Routes>
+                <Route path="/teachers/getById/:id" element={<TeacherPage/>}/>
+                <Route path="/teachers" element={<TeacherListPage/>}/>
                 <Route path="/" element={<Login/>}/>
                 <Route path="/home" element={<Home/>}/>
                 <Route path="/students/getById/:id" element={<StudentProfile/>}/>

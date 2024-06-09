@@ -2,10 +2,10 @@ import {useEffect, useState} from "react";
 import ButtonAppBar from "../../layouts/ButtonAppBar";
 import SubjectService from "../../../services/SubjectService";
 import SubjectWithTeacher from "../../common/subject/SubjectWithTeacher";
-import UserMap from "../../common/user/UserMap";
 import MarkService from "../../../services/MarkService";
 import StudentWithMarkFromThisSubjectMap from "../../common/marks/StudentWithMarkFromThisSubjectMap";
 import {useParams} from "react-router-dom";
+import StudentSimpleMap from "../../common/user/StudentSimpleMap";
 
 const Subject = () => {
     const [canMark, setIfCanMark] = useState(false)
@@ -71,7 +71,7 @@ const Subject = () => {
                     <StudentWithMarkFromThisSubjectMap
                         marks={marks}/>
                     :
-                    <UserMap
+                    <StudentSimpleMap
                         users={subject.students}
                     />
                 }

@@ -18,6 +18,7 @@ export default function ButtonAppBar() {
                     component={Link}
                     to="/home"
                     sx={{ mr: 2 }}
+                    style={{ textDecoration: 'none', color: 'inherit' }}
                 >
                     Home
                 </Button>

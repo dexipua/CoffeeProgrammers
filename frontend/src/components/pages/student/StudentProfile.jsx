@@ -1,12 +1,12 @@
-import React, {useEffect} from 'react';
-import {useParams} from 'react-router-dom';
+import React, {useEffect, useState} from 'react';
+import {Link, useParams} from 'react-router-dom';
 import StudentService from "../../../services/StudentService";
-import '../../../assets/styles/StudentProfile.css'
+import '../../../assets/styles/StudentProfile.css';
 import ButtonAppBar from "../../layouts/ButtonAppBar";
 
 const StudentProfile = () => {
-    const {id} = useParams(); // Отримання значення id з параметрів маршруту
-    const [student, setStudent] = React.useState({
+    const { id } = useParams(); // Retrieve the id from the route parameters
+    const [student, setStudent] = useState({
         id: -1,
         firstName: "",
         lastName: "",
@@ -26,13 +26,12 @@ const StudentProfile = () => {
             }
         };
 
-        fetchStudentById()
-            .then(() => {
-                console.log('Student data fetched successfully');
-            })
+        fetchStudentById().then(() => {
+            console.log('Student data fetched successfully');
+        });
     }, [id]);
 
-    // Рендер компонента
+    // Render component
     return (
         <div className="student-profile">
             <ButtonAppBar />
@@ -42,8 +41,10 @@ const StudentProfile = () => {
             <p><strong>Average Mark:</strong> {student.averageMark}</p>
             <p><strong>Subjects:</strong></p>
             <ul>
-                {student.subjects.map((subject, index) => (
-                    <li key={index}>{subject}</li>
+                {student.subjects.map((subject) => (
+                    <Link to={`/subjects/getById/${subject.id}`}>
+                        <li key={subject.id}>{subject.name}</li>
+                    </Link>
                 ))}
             </ul>
         </div>

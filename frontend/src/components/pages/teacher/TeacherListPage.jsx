@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import StudentService from '../../../services/StudentService';
 import '../../../assets/styles/StudentsList.css'
 import ButtonAppBar from "../../layouts/ButtonAppBar";
-import StudentSimpleMap from "../../common/user/StudentSimpleMap";
+import TeacherService from "../../../services/TeacherService";
+import TeacherList from "../../common/teacher/TeacherList";
 
-const StudentsList = () => {
-    const [studentsList, setStudentsList] = useState([{
+const TeacherListPage = () => {
+    const [teacherList, setTeacherList] = useState([{
         id: -1,
         firstName: "",
         lastName: ""
@@ -15,8 +15,8 @@ const StudentsList = () => {
         const fetchStudentsAll = async () => {
             try {
                 const token = localStorage.getItem('jwtToken');
-                const response = await StudentService.getAll(token);
-                setStudentsList(response);
+                const response = await TeacherService.getAll(token);
+                setTeacherList(response);
             } catch (error) {
                 console.error('Error fetching students data:', error);
             }
@@ -31,12 +31,11 @@ const StudentsList = () => {
     return (
         <div className="students-list">
             <ButtonAppBar/>
-            <h2>Students List</h2>
-            <StudentSimpleMap
-                users={studentsList}
-            />
+            <h2>Teacher List</h2>
+            <TeacherList
+                teachers={teacherList}/>
         </div>
     );
 };
 
-export default StudentsList;
+export default TeacherListPage;
