@@ -3,7 +3,7 @@ import {Link} from "react-router-dom";
 const StudentSimple = ({id, name}) => {
     return (
         <div className="userData">
-            <Link to={`/students/getById/${id}`}><p>Name: {name}</p></Link>
+            <p><Link to={`/students/getById/${id}`}>{name}</Link></p>
         </div>
     )
 }

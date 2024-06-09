@@ -4,13 +4,14 @@ import '../../../assets/styles/StudentsList.css';
 import ButtonAppBar from '../../layouts/ButtonAppBar';
 import StudentSimpleMap from '../../common/user/StudentSimpleMap';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 
 const StudentsList = () => {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [studentsList, setStudentsList] = useState([]);
     const [filteredStudents, setFilteredStudents] = useState([]);
-    const [error, serError] = useState()
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         const fetchAllStudents = async () => {
@@ -21,13 +22,14 @@ const StudentsList = () => {
                 setFilteredStudents(response);
             } catch (error) {
                 console.error('Error fetching students data:', error);
+                setError('Error fetching students data. Please try again.');
             }
         };
 
-        fetchAllStudents().then();
+        fetchAllStudents();
     }, []);
 
-    useEffect(() => {
+    const handleSearch = () => {
         if (firstName || lastName) {
             const filtered = studentsList.filter(student =>
                 student.firstName.toLowerCase().includes(firstName.toLowerCase()) &&
@@ -37,7 +39,7 @@ const StudentsList = () => {
         } else {
             setFilteredStudents(studentsList);
         }
-    }, [firstName, lastName, studentsList]);
+    };
 
     return (
         <div className="students-list">
@@ -55,6 +57,9 @@ const StudentsList = () => {
                     onChange={(e) => setLastName(e.target.value)}
                     placeholder="Last Name"
                 />
+                <Button onClick={handleSearch}>
+                    Search
+                </Button>
                 {error && <div style={{ color: 'red' }}>{error}</div>}
                 <StudentSimpleMap users={filteredStudents} />
             </Box>

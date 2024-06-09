@@ -60,6 +60,7 @@ public class StudentController {
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER') or hasRole('ROLE_TEACHER')")
     public void delete(@PathVariable long id) {
+        markService.deleteAllByStudentId(id);
         studentService.deleteById(id);
     }
 

@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import '../../../assets/styles/StudentsList.css'
-import ButtonAppBar from "../../layouts/ButtonAppBar";
-import TeacherService from "../../../services/TeacherService";
-import TeacherList from "../../common/teacher/TeacherList";
-import Box from "@mui/material/Box";
+import '../../../assets/styles/StudentsList.css';
+import ButtonAppBar from '../../layouts/ButtonAppBar';
+import TeacherService from '../../../services/TeacherService';
+import TeacherList from '../../common/teacher/TeacherList';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 
 const TeacherListPage = () => {
     const [firstName, setFirstName] = useState('');
@@ -21,31 +22,25 @@ const TeacherListPage = () => {
                 setFilteredTeachers(response);
             } catch (error) {
                 console.error('Error fetching teachers data:', error);
+                setError('Error fetching teachers data. Please try again.');
             }
         };
 
         fetchAllTeachers();
     }, []);
 
-    useEffect(() => {
-        if (firstName || lastName) {
-            const filtered = teacherList.filter(teacher =>
-                teacher.firstName.toLowerCase().includes(firstName.toLowerCase()) &&
-                teacher.lastName.toLowerCase().includes(lastName.toLowerCase())
-            );
-            setFilteredTeachers(filtered);
-        } else {
-            setFilteredTeachers(teacherList);
-        }
-    }, [firstName, lastName, teacherList]);
-
     const handleSearch = async () => {
         try {
             const token = localStorage.getItem('jwtToken');
-            const data = await TeacherService.getByName(firstName, lastName, token);
-            setFilteredTeachers(data);
+            if (firstName || lastName) {
+                const data = await TeacherService.getByName(firstName, lastName, token);
+                setFilteredTeachers(data);
+            } else {
+                setFilteredTeachers(teacherList);
+            }
             setError(null);
         } catch (error) {
+            console.error('Error fetching data:', error);
             setError('Error fetching data. Please try again.');
             setFilteredTeachers([]);
         }
@@ -53,7 +48,7 @@ const TeacherListPage = () => {
 
     return (
         <div>
-            <ButtonAppBar/>
+            <ButtonAppBar />
             <Box mt={9}>
                 <input
                     type="text"
@@ -67,9 +62,11 @@ const TeacherListPage = () => {
                     onChange={(e) => setLastName(e.target.value)}
                     placeholder="Last Name"
                 />
+                <Button onClick={handleSearch}>
+                    Search
+                </Button>
                 {error && <div style={{ color: 'red' }}>{error}</div>}
-                <TeacherList
-                    teachers={filteredTeachers}/>
+                <TeacherList teachers={filteredTeachers} />
             </Box>
         </div>
     );

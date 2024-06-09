@@ -2,13 +2,15 @@ import React, {useEffect, useState} from 'react';
 import ButtonAppBar from '../../layouts/ButtonAppBar';
 import SubjectService from '../../../services/SubjectService';
 import Box from '@mui/material/Box';
-import SubjectList from "../../common/subject/SubjectList";
+import SubjectList from '../../common/subject/SubjectList';
+import Button from '@mui/material/Button';
 
 const Subjects = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [subjectsList, setSubjectsList] = useState([]);
     const [filteredSubjects, setFilteredSubjects] = useState([]);
     const [error, setError] = useState(null);
+    const [searchTrigger, setSearchTrigger] = useState(false);
 
     useEffect(() => {
         const fetchAllSubjects = async () => {
@@ -23,11 +25,11 @@ const Subjects = () => {
             }
         };
 
-        fetchAllSubjects().then();
+        fetchAllSubjects();
     }, []);
 
     useEffect(() => {
-        if (searchTerm) {
+        if (searchTrigger) {
             const fetchSubjectsByName = async () => {
                 try {
                     const token = localStorage.getItem('jwtToken');
@@ -39,11 +41,16 @@ const Subjects = () => {
                 }
             };
 
-            fetchSubjectsByName().then();
+            fetchSubjectsByName();
+            setSearchTrigger(false); // Reset search trigger
         } else {
             setFilteredSubjects(subjectsList);
         }
-    }, [searchTerm, subjectsList]);
+    }, [searchTrigger, searchTerm, subjectsList]);
+
+    const handleSearchClick = () => {
+        setSearchTrigger(true);
+    };
 
     return (
         <div>
@@ -55,9 +62,11 @@ const Subjects = () => {
                     onChange={(e) => setSearchTerm(e.target.value)}
                     placeholder="Search Subject by Name"
                 />
+                <Button onClick={handleSearchClick}>
+                    Search
+                </Button>
                 {error && <div style={{ color: 'red' }}>{error}</div>}
-                <SubjectList
-                    subjects={filteredSubjects}/>
+                <SubjectList subjects={filteredSubjects} />
             </Box>
         </div>
     );

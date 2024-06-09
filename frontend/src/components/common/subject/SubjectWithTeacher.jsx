@@ -5,9 +5,9 @@ import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 import Typography from '@mui/material/Typography';
 import {Link} from "react-router-dom";
 
-const SubjectWithTeacher = ({ subjectResponse: { id, name, teacher } }) => {
+const SubjectWithTeacher = ({subjectResponse: {id, name, teacher}}) => {
     return (
-        <Link to={`/subjects/getById/${id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+        <Link to={`/subjects/getById/${id}`} style={{textDecoration: 'none', color: 'inherit'}}>
             <Box
                 width={350}
                 height={60}
@@ -32,16 +32,19 @@ const SubjectWithTeacher = ({ subjectResponse: { id, name, teacher } }) => {
             >
                 <Box height="30px" display="flex" justifyContent="center" alignItems="center" mt={1}>
                     <Typography variant="h6" align="center">
-                        <SubjectData subject={{ id, name }} />
+                        <SubjectData subject={{id, name}}/>
                     </Typography>
                 </Box>
-
-                <Box height="30px" display="flex" alignItems="center" justifyContent="center" gap={1} mt={-2}>
-                    <AssignmentIndIcon style={{ color: '#333' }} />
-                    <Typography variant="body1">
-                        <TeacherData teacher={teacher} />
-                    </Typography>
-                </Box>
+                {teacher === null ?
+                    <p>none</p>
+                    :
+                    <Box height="30px" display="flex" alignItems="center" justifyContent="center" gap={1} mt={-2}>
+                        <AssignmentIndIcon style={{color: '#333'}}/>
+                        <Typography variant="body1">
+                            <TeacherData teacher={teacher}/>
+                        </Typography>
+                    </Box>
+                }
             </Box>
         </Link>
     );

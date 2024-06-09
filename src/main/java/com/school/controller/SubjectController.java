@@ -5,6 +5,7 @@ import com.school.dto.subject.SubjectResponseAll;
 import com.school.dto.subject.SubjectResponseSimple;
 import com.school.dto.subject.SubjectResponseWithTeacher;
 import com.school.models.Subject;
+import com.school.service.MarkService;
 import com.school.service.SubjectService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 public class SubjectController {
 
     private final SubjectService subjectService;
+    private final MarkService markService;
 
     @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER')")
     @PostMapping("/create")
@@ -54,6 +56,7 @@ public class SubjectController {
     @DeleteMapping("/delete/{subject_id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("subject_id") long subjectId) {
+        markService.deleteAllBySubjectId(subjectId);
         subjectService.delete(subjectId);
     }
 
