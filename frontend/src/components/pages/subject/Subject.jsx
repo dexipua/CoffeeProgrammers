@@ -5,6 +5,7 @@ import SubjectWithTeacher from "../../common/subject/SubjectWithTeacher";
 import UserMap from "../../common/user/UserMap";
 import MarkService from "../../../services/MarkService";
 import StudentWithMarkFromThisSubjectMap from "../../common/marks/StudentWithMarkFromThisSubjectMap";
+import {useParams} from "react-router-dom";
 
 const Subject = () => {
     const [canMark, setIfCanMark] = useState(false)
@@ -12,7 +13,7 @@ const Subject = () => {
     const [marks, setMarks] = useState(null);
     const [loadingSubject, setLoadingSubject] = useState(true);
     const [loadingMarks, setLoadingMarks] = useState(true);
-    const subjectId = 1
+    const {id} = useParams();
 
     useEffect(() => {
 
@@ -20,7 +21,7 @@ const Subject = () => {
 
         const fetchMarks = async () => {
             try {
-                const response = await MarkService.getBySubjectId(subjectId, token)
+                const response = await MarkService.getBySubjectId(id, token)
                 setMarks(response);
                 setIfCanMark(true);
             } catch (error) {
@@ -32,7 +33,7 @@ const Subject = () => {
 
         const fetchSubject = async () => {
             try {
-                const response = await SubjectService.getById(subjectId, token);
+                const response = await SubjectService.getById(id, token);
                 setSubject(response);
             } finally {
                 setLoadingSubject(false);
@@ -66,6 +67,7 @@ const Subject = () => {
                 </div>
             <div>
                 {canMark ?
+                    //TODO
                     <StudentWithMarkFromThisSubjectMap
                         marks={marks}/>
                     :

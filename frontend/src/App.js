@@ -23,8 +23,7 @@ function App() {
                 <Route path="/students/getAll" element={<StudentsList/>}/>
                 <Route path="/create_user" element={<CreateUser/>}/>
                 <Route path="/account" element={<Account/>}/>
-                <Route path="/subject" element={<Subject/>}/>
-
+                <Route path="/subjects/getById/:id" element={<Subject/>}/>
                 <Route path={"/subjects"} element={<SubjectWithTeacherList
                     subjects={
                         [

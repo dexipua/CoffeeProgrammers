@@ -3,6 +3,7 @@ import IconButton from '@mui/material/IconButton';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import {Link} from "react-router-dom";
 
 export default function AccountMenu() {
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -34,13 +35,13 @@ export default function AccountMenu() {
                 onClose={handleMenuClose}
             >
                 <MenuItem onClick={handleMenuClose}>
-                    Account
+                    <Link to="/account" style={{ textDecoration: 'none', color: 'inherit' }}>Account</Link>
                 </MenuItem>
                 <MenuItem onClick={handleMenuClose}>
-                    Second
+                    <Link to="/news" style={{ textDecoration: 'none', color: 'inherit' }}>News</Link>
                 </MenuItem>
                 <MenuItem onClick={handleMenuClose}>
-                    Third
+                    <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>Logout</Link>
                 </MenuItem>
             </Menu>
         </div>

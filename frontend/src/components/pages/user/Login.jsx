@@ -3,8 +3,6 @@ import axios from 'axios';
 import {useNavigate} from "react-router-dom";
 import '../../../assets/styles/Login.css';
 
-const EMAIL_CHIEF_TEACHER = "am@gmail.com"; //TODO: better for testing
-const EMAIL_FIRST_STUDENT = "vk@gmail.com"; //TODO: better for testing
 
 const PASSWORD = "passWord1"; //TODO: better for testing
 
@@ -42,8 +40,7 @@ const Login = () => {
                     placeholder="Email"
                     value={username}
                     onChange={(e) =>
-                        //setUsername(e.target.value)}
-                        setUsername(EMAIL_FIRST_STUDENT)}
+                        setUsername(e.target.value)}
                 />
                 <input
                     type="password"
