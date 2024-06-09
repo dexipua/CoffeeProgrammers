@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 
 public interface MarkService {
+    void deleteAllByStudentId(Long id);
+    void deleteAllBySubjectId(Long id);
     Mark create(MarkRequest markRequest, long subjectId, long studentId);
     Mark findById(long id);
     Mark update(long markToUpdateId, MarkRequest markRequest);

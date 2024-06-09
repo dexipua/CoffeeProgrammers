@@ -9,6 +9,7 @@ import com.school.service.MarkService;
 import com.school.service.StudentService;
 import com.school.service.SubjectService;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,18 @@ public class MarkServiceImpl implements MarkService {
     private final MarkRepository markRepository;
     private final SubjectService subjectService;
     private final StudentService studentService;
+
+    @Transactional
+    @Override
+    public void deleteAllByStudentId(Long id) {
+        markRepository.deleteAllByStudentId(id);
+    }
+
+    @Transactional
+    @Override
+    public void deleteAllBySubjectId(Long id) {
+        markRepository.deleteAllBySubjectId(id);
+    }
 
     @Override //TODO
     public Mark create(

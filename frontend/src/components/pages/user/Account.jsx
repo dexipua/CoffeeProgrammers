@@ -3,6 +3,7 @@ import {useEffect, useState} from "react";
 import ButtonAppBar from "../../layouts/ButtonAppBar";
 import AccountContainer from "../../common/user/AccountContainer";
 import SubjectWithTeacherList from "../../common/subject/SubjectWithTeacherList";
+import {Link} from "react-router-dom";
 
 const Account = () => {
     const [account, setAccount] = useState(null); // Початкове значення має бути null або пустий об'єкт для правильного завантаження
@@ -40,13 +41,13 @@ const Account = () => {
             </div>
             <div className="card">
                 {role === "STUDENT" ? (
-                    <div>Додатковий вміст для студента</div>
+                    <Link to={`/marks/getAllByStudentId/${account.id}`}><div>My marks</div></Link>
                 ) : role === "TEACHER" ? (
-                    <div>Додатковий вміст для вчителя</div>
+                    <div></div>
                 ) : role === "CHIEF_TEACHER" ? (
-                    <div>Додатковий вміст для шеф-вчителя</div>
+                    <Link to={"/admin"}><div>Admin panel</div></Link>
                 ) : (
-                    <div>Додатковий вміст за іншої ролі</div>
+                    <div></div>
                 )}
             </div>
             <h3>Subjects</h3>

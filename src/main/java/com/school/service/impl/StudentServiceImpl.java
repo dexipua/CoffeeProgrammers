@@ -52,6 +52,7 @@ public class StudentServiceImpl implements StudentService {
         studentRepository.delete(student);
     }
 
+
     @Override
     public List<Student> findAllOrderedByName() {
         return studentRepository.findAllByOrderByUser_LastNameAsc();

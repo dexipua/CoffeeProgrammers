@@ -1,57 +1,68 @@
 import React, {useEffect, useState} from 'react';
 import StudentService from '../../../services/StudentService';
-import {Link} from "react-router-dom";
-import '../../../assets/styles/StudentsList.css'
-import ButtonAppBar from "../../layouts/ButtonAppBar";
+import '../../../assets/styles/StudentsList.css';
+import ButtonAppBar from '../../layouts/ButtonAppBar';
+import StudentSimpleMap from '../../common/user/StudentSimpleMap';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 
 const StudentsList = () => {
-    const [studentsList, setStudentsList] = useState([{
-        id: -1,
-        firstName: "",
-        lastName: ""
-    }]);
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [studentsList, setStudentsList] = useState([]);
+    const [filteredStudents, setFilteredStudents] = useState([]);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
-        const fetchStudentsAll = async () => {
+        const fetchAllStudents = async () => {
             try {
                 const token = localStorage.getItem('jwtToken');
                 const response = await StudentService.getAll(token);
                 setStudentsList(response);
+                setFilteredStudents(response);
             } catch (error) {
                 console.error('Error fetching students data:', error);
+                setError('Error fetching students data. Please try again.');
             }
         };
 
-        fetchStudentsAll()
-            .then(() => {
-                console.log('Data fetched successfully');
-            })
+        fetchAllStudents();
     }, []);
+
+    const handleSearch = () => {
+        if (firstName || lastName) {
+            const filtered = studentsList.filter(student =>
+                student.firstName.toLowerCase().includes(firstName.toLowerCase()) &&
+                student.lastName.toLowerCase().includes(lastName.toLowerCase())
+            );
+            setFilteredStudents(filtered);
+        } else {
+            setFilteredStudents(studentsList);
+        }
+    };
 
     return (
         <div className="students-list">
             <ButtonAppBar />
-            <h2>Students List</h2>
-            <table>
-                <thead>
-                <tr>
-                    <th>Number</th>
-                    <th>Name</th>
-                </tr>
-                </thead>
-                <tbody>
-                {studentsList.map((student, index) => (
-                    <tr key={student.id}>
-                        <td>{index + 1}</td>
-                        <td>
-                            <Link to={`/students/getById/${student.id}`}>
-                                 {student.lastName} {student.firstName}
-                            </Link>
-                        </td>
-                    </tr>
-                ))}
-                </tbody>
-            </table>
+            <Box mt={9}>
+                <input
+                    type="text"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    placeholder="First Name"
+                />
+                <input
+                    type="text"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    placeholder="Last Name"
+                />
+                <Button onClick={handleSearch}>
+                    Search
+                </Button>
+                {error && <div style={{ color: 'red' }}>{error}</div>}
+                <StudentSimpleMap users={filteredStudents} />
+            </Box>
         </div>
     );
 };
