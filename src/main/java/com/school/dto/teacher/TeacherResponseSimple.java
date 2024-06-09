@@ -2,11 +2,6 @@ package com.school.dto.teacher;
 
 import com.school.models.Teacher;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-
-@Getter
-@Setter
 @Data
 public class TeacherResponseSimple {
     private long id;

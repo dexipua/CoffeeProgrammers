@@ -4,14 +4,10 @@ import com.school.dto.subject.SubjectResponseSimple;
 import com.school.models.Mark;
 import com.school.models.Subject;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.util.List;
 
 @Data
-@Setter
-@Getter
 public class MarkResponseForStudent {
     private SubjectResponseSimple subjectResponseSimple;
     private MarkResponseSimple[] marks;

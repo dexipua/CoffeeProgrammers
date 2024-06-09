@@ -5,13 +5,9 @@ import com.school.service.SubjectService;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.time.DayOfWeek;
 
-@Getter
-@Setter
 @Data
 public class SubjectDateRequest {
     @Min(value = 1, message = "Day of week must be greater than 0")
