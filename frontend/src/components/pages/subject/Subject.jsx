@@ -63,6 +63,7 @@ const Subject = () => {
                             teacher: subject.teacher
                         }}
                     />
+                </div>
             <div>
                 {canMark ?
                     <StudentWithMarkFromThisSubjectMap
