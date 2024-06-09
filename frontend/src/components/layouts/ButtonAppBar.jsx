@@ -2,9 +2,6 @@ import * as React from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
-import InputBase from "@mui/material/InputBase";
-import SearchIcon from "@mui/icons-material/Search";
 import AccountMenu from "./AccountMenu";
 import Button from "@mui/material/Button";
 import {Link} from "react-router-dom";
@@ -19,10 +16,10 @@ export default function ButtonAppBar() {
                 <Button
                     color="inherit"
                     component={Link}
-                    to="/news"
+                    to="/home"
                     sx={{ mr: 2 }}
                 >
-                    News
+                    Home
                 </Button>
                 <Box
                     sx={{
@@ -31,21 +28,6 @@ export default function ButtonAppBar() {
                         justifyContent: "center",
                     }}
                 >
-                    <InputBase
-                        placeholder="Search..."
-                        inputProps={{ "aria-label": "search" }}
-                        sx={{
-                            color: "inherit",
-                        }}
-                    />
-                    <IconButton
-                        size="large"
-                        edge="end"
-                        color="inherit"
-                        aria-label="search"
-                    >
-                        <SearchIcon />
-                    </IconButton>
                 </Box>
                 <AccountMenu />
             </Toolbar>
