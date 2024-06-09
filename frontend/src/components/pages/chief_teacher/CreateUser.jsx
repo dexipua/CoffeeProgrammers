@@ -11,39 +11,38 @@ const CreateUser = () => {
     const [password, setPassword] = useState('');
     const [role, setRole] = useState('student'); // Початкова роль - студент
     const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState('');
+    const [error, setError] = useState([]);
     const navigate = useNavigate();
 
     const handleCreateUser = async (e) => {
         e.preventDefault();
         setIsLoading(true);
-        setError('');
-
+        let response;
         try {
             const token = localStorage.getItem('jwtToken');
-            let response;
+
 
             if (role === 'student') {
-                response = await StudentService.create({ firstName, lastName, email, password }, token);
+                response = await StudentService.create({firstName, lastName, email, password}, token);
                 navigate(`/students`);
             } else {
-                response = await TeacherService.create({ firstName, lastName, email, password }, token);
+                response = await TeacherService.create({firstName, lastName, email, password}, token);
                 navigate(`/teachers`);
             }
 
-            // Якщо успішно створено, очищуємо поля
             setFirstName('');
             setLastName('');
             setEmail('');
             setPassword('');
         } catch (error) {
-            console.error('Error creating user:', error);
-            setError('Failed to create user. Please try again.');
+            console.error('Error creating user:', error.response.data);
+            setError(error.response.data);
         } finally {
             setIsLoading(false);
         }
     };
 
+    console.log(error)
     return (
         <div>
             <h2>New User</h2>
@@ -100,8 +99,12 @@ const CreateUser = () => {
                     <button type="button" disabled>Loading...</button>
                 ) : (
                     <button type="submit">Create</button>
-                )}
-                {error && <div className="error-message">{error}</div>}
+                )}\
+                {
+                    error.map((err, index) => (
+                        <p key={index}>{err.message}</p>
+                    ))
+                }
             </form>
         </div>
     );
