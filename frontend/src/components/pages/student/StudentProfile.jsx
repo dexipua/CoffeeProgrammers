@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {Link, useParams} from 'react-router-dom';
+import {useParams} from 'react-router-dom';
 import StudentService from "../../../services/StudentService";
 import '../../../assets/styles/StudentProfile.css'
 
@@ -44,11 +44,6 @@ const StudentProfile = () => {
                     <li key={index}>{subject}</li>
                 ))}
             </ul>
-            <div className="marks-link">
-                <Link to={`/marks/getAllByStudentId/${id}`}>
-                    View Marks
-                </Link>
-            </div>
         </div>
     );
 };
