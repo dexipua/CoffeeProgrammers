@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 import ButtonAppBar from "../../layouts/ButtonAppBar";
 import SubjectService from "../../../services/SubjectService";
 import SubjectWithTeacher from "../../common/subject/SubjectWithTeacher";
@@ -52,9 +52,12 @@ const Subject = () => {
         <div>
             <ButtonAppBar/>
                 <div>
-                    <SubjectWithTeacher
-                        subject={subject}
-                        teacher={subject.teacher}
+                    <SubjectWithTeacher //TODO
+                        subjectResponse={{
+                            id: subject.id,
+                            name: subject.name,
+                            teacher: subject.teacher
+                        }}
                     />
                     <UserMap
                         users={subject.students}

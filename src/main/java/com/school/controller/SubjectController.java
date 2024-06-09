@@ -59,10 +59,10 @@ public class SubjectController {
 
     @GetMapping("/getAll")
     @ResponseStatus(HttpStatus.OK)
-    public List<SubjectResponseSimple> getAllByOrderByName() {
+    public List<SubjectResponseWithTeacher> getAllByOrderByName() {
         List<Subject> subjects = subjectService.getAllByOrderByName();
         return subjects.stream()
-                .map(SubjectResponseSimple::new)
+                .map(SubjectResponseWithTeacher::new)
                 .collect(Collectors.toList());
     }
 

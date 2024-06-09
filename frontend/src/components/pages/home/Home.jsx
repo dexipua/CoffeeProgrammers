@@ -5,7 +5,7 @@ import TeacherService from "../../../services/TeacherService";
 import '../../../assets/styles/Home.css';
 import ButtonAppBar from "../../layouts/ButtonAppBar";
 import TeacherList from "../../common/teacher/TeacherList"
-import SubjectList from "../../common/subject/SubjectList";
+import SubjectWithTeacherList from "../../common/subject/SubjectWithTeacherList";
 
 
 const Home = () => {
@@ -79,27 +79,20 @@ const Home = () => {
 
     return (
         <div>
-            <div>
-                <ButtonAppBar/>
-            </div>
-            <div className="home-container">
-
-                <header className="header">
-                    <p>Total number of students: {studentCount}</p>
-                </header>
-
+            <ButtonAppBar />
+            <div className="home-container" style={{ marginTop: '65px' }}>
                 <h1>Home Page</h1>
 
                 <div className="section">
                     <h2>Teachers</h2>
                     <TeacherList
-                        teachers={teachers}/>
+                        teachers={teachers} />
                 </div>
 
                 <div className="section">
                     <h2>Subjects</h2>
-                    <SubjectList
-                        subjects={subjects}/>
+                    <SubjectWithTeacherList
+                        subjects={subjects} />
                 </div>
             </div>
         </div>

@@ -7,7 +7,7 @@ const TeacherList = ({teachers}) => {
                 <div key={teacher.id} className="card">
                     <div className="card-content">
                         <TeacherData
-                            name={teacher.lastName + " " + teacher.firstName}
+                            teacher={teacher}
                         />
                     </div>
                 </div>

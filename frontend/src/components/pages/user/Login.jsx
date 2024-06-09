@@ -23,6 +23,7 @@ const Login = () => {
             });
 
             const jwtToken = response.data.accessToken;
+
             localStorage.setItem('jwtToken', jwtToken);
             localStorage.setItem('role', response.data.role)
             navigate("/home");
@@ -42,7 +43,7 @@ const Login = () => {
                     value={username}
                     onChange={(e) =>
                         //setUsername(e.target.value)}
-                        setUsername(EMAIL_CHIEF_TEACHER)}
+                        setUsername(EMAIL_FIRST_STUDENT)}
                 />
                 <input
                     type="password"

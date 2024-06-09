@@ -1,19 +1,16 @@
 import SubjectWithTeacher from "./SubjectWithTeacher";
 
-const SubjectWithTeacherList = ({subjects}) => {
-    console.log(subjects);
+const SubjectWithTeacherList = ({ subjects }) => {
     return (
-            <div className="cards">
-                {subjects.map((subject) => (
-                    <div key={subject.id} className="card">
-                        <div className="card-content">
-                            <SubjectWithTeacher
-                                subject={subject}
-                                teacher={subject.teacher}/>
-                        </div>
-                    </div>
-                ))}
-            </div>
-    )
-}
-export default SubjectWithTeacherList
+
+            subjects.map((subject, index) => (
+                <SubjectWithTeacher
+                    key={index}
+                    subjectResponse={subject}
+                />
+            ))
+
+    );
+};
+
+export default SubjectWithTeacherList;

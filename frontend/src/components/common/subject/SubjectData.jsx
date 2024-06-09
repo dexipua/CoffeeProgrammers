@@ -1,9 +1,12 @@
-const SubjectData = (name) => {
-    return (
-        <div className="userData">
-            <p>{name.name}</p>
-        </div>
-    )
-}
+import {Link} from "react-router-dom";
 
-export default SubjectData
+const SubjectData = ({ subject: { id, name } }) => {
+    return (
+        <Link to={`/subjects/getById/${id}`}
+              style={{ textDecoration: 'none', color: 'inherit' }}>
+            <p>{name}</p>
+        </Link>
+    );
+};
+
+export default SubjectData;

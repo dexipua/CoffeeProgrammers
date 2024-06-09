@@ -7,7 +7,7 @@ const SubjectList = ({subjects}) => {
                     <div key={subject.id} className="card">
                         <div className="card-content">
                             <SubjectData
-                                name={subject.name}/>
+                                subject={subject}/>
                         </div>
                     </div>
                 ))}

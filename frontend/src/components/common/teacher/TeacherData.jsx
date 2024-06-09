@@ -1,9 +1,11 @@
-const TeacherData = (name) => {
-    return (
-        <div className="userData">
-            <p>{name.name}</p>
-        </div>
-    )
-}
+import {Link} from "react-router-dom";
 
-export default TeacherData
+const TeacherData = ({ teacher: { id, lastName, firstName } }) => {
+    return (
+        <Link to={`/teachers/getById/${id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                {lastName + " " + firstName}
+        </Link>
+    );
+};
+
+export default TeacherData;
