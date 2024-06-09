@@ -9,9 +9,9 @@ import CreateUser from "./components/pages/chief_teacher/CreateUser";
 import Account from "./components/pages/user/Account";
 import Subject from "./components/pages/subject/Subject";
 import SubjectWithTeacher from "./components/common/subject/SubjectWithTeacher";
-import SubjectWithTeacherList from "./components/common/subject/SubjectWithTeacherList";
 import TeacherListPage from "./components/pages/teacher/TeacherListPage";
 import TeacherPage from "./components/pages/teacher/TeacherPage";
+import Subjects from "./components/pages/subject/Subjects";
 
 function App() {
     return (
@@ -27,41 +27,7 @@ function App() {
                 <Route path="/create_user" element={<CreateUser/>}/>
                 <Route path="/account" element={<Account/>}/>
                 <Route path="/subjects/getById/:id" element={<Subject/>}/>
-                <Route path={"/subjects"} element={<SubjectWithTeacherList
-                    subjects={
-                        [
-                            {
-                                "id": 1,
-                                "name": "Maths",
-                                "teacher": {
-                                    "id": 1,
-                                    "firstName": "Artem",
-                                    "lastName": "Moseichenko"
-                                }
-                            },
-                            {
-                                "id": 1,
-                                "name": "Maths",
-                                "teacher": {
-                                    "id": 1,
-                                    "firstName": "Artem",
-                                    "lastName": "Moseichenko"
-                                }
-                            },
-                            {
-                                "id": 1,
-                                "name": "Maths",
-                                "teacher": {
-                                    "id": 1,
-                                    "firstName": "Artem",
-                                    "lastName": "Moseichenko"
-                                }
-                            }
-
-                        ]
-                    }
-
-                />}/>
+                <Route path={"/subjects"} element={<Subjects/>}/>
 
                 <Route path="/test" element={<SubjectWithTeacher
                     subjectResponse={
