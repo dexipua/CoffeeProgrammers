@@ -41,6 +41,15 @@ export default function AccountMenu() {
                     <Link to="/news" style={{ textDecoration: 'none', color: 'inherit' }}>News</Link>
                 </MenuItem>
                 <MenuItem onClick={handleMenuClose}>
+                    <Link to="/teachers" style={{ textDecoration: 'none', color: 'inherit' }}>Teachers</Link>
+                </MenuItem>
+                <MenuItem onClick={handleMenuClose}>
+                    <Link to="/subjects" style={{ textDecoration: 'none', color: 'inherit' }}>Subjects</Link>
+                </MenuItem>
+                <MenuItem onClick={handleMenuClose}>
+                    <Link to="/students" style={{ textDecoration: 'none', color: 'inherit' }}>Students</Link>
+                </MenuItem>
+                <MenuItem onClick={handleMenuClose}>
                     <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>Logout</Link>
                 </MenuItem>
             </Menu>
