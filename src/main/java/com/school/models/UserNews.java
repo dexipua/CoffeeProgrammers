@@ -19,18 +19,12 @@ public class UserNews {
     @Column(name = "time")
     private LocalDateTime time;
     @ManyToOne()
-    @JoinColumn(name = "subject_id")
+    @JoinColumn(name = "user_id")
     private User user;
     public UserNews(String title, User user) {
         this.title = title;
         this.user = user;
         this.time = LocalDateTime.now();
-    }
-
-    public UserNews(String title, User user, LocalDateTime time) {
-        this.title = title;
-        this.user = user;
-        this.time = time;
     }
 
     public UserNews() {}

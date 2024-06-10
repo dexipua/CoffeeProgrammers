@@ -4,6 +4,7 @@ import com.school.dto.subject.SubjectRequest;
 import com.school.models.Student;
 import com.school.models.Subject;
 import com.school.models.Teacher;
+import com.school.models.UserNews;
 import com.school.repositories.SubjectRepository;
 import com.school.service.StudentService;
 import com.school.service.SubjectService;
@@ -120,7 +121,7 @@ public class SubjectServiceImpl implements SubjectService {
         }
 
         subject.getStudents().add(student);
-
+        userNewsService.create(new UserNews("You have been added to subject " + subject.getName(), student.getUser()));
         subjectRepository.save(subject);
     }
 
@@ -136,7 +137,7 @@ public class SubjectServiceImpl implements SubjectService {
         }
 
         subject.getStudents().remove(student);
-
+        userNewsService.create(new UserNews("You have been deleted from subject " + subject.getName(), student.getUser()));
         subjectRepository.save(subject);
     }
 }

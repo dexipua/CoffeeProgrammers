@@ -8,7 +8,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,7 +25,7 @@ public class UserNewsController {
 
     @GetMapping("/myNews")
     @ResponseStatus(HttpStatus.OK)
-    public List<UserNewsResponse> getAllNewsByStudentId(Authentication authentication) {
+    public List<UserNewsResponse> getAllNewsByUserId(Authentication authentication) {
         List<UserNews> news = newsService.getAllNewsByUserId(
                 userService.findByEmail(
                 ((UserDetails)authentication.getPrincipal()).getUsername()).getId()

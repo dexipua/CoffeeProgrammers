@@ -4,10 +4,12 @@ import com.school.dto.mark.MarkRequest;
 import com.school.models.Mark;
 import com.school.models.Student;
 import com.school.models.Subject;
+import com.school.models.UserNews;
 import com.school.repositories.MarkRepository;
 import com.school.service.MarkService;
 import com.school.service.StudentService;
 import com.school.service.SubjectService;
+import com.school.service.UserNewsService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,7 @@ public class MarkServiceImpl implements MarkService {
     private final MarkRepository markRepository;
     private final SubjectService subjectService;
     private final StudentService studentService;
+    private final UserNewsService userNewsService;
 
     @Override //TODO
     public Mark create(
@@ -39,6 +42,7 @@ public class MarkServiceImpl implements MarkService {
         Mark mark = MarkRequest.toMark(markRequest);
         mark.setSubject(subjectService.findById(subjectId));
         mark.setStudent(studentService.findById(studentId));
+        userNewsService.create(new UserNews("You have earn mark " + mark.getValue() + "in subject " + subject.getName() , student.getUser()));
         return markRepository.save(mark);
     }
 
@@ -53,6 +57,9 @@ public class MarkServiceImpl implements MarkService {
         Mark markToUpdate = findById(markToUpdateId);
         markToUpdate.setValue(markRequest.getValue());
         markToUpdate.setTime(LocalDateTime.now());
+        userNewsService.create(new UserNews("You mark " + markToUpdate.getValue() + "in subject " +
+                markToUpdate.getSubject().getName() + "have been updated",
+                markToUpdate.getStudent().getUser()));
         return markRepository.save(markToUpdate);
     }
 
