@@ -2,9 +2,17 @@ import React, {useEffect, useState} from 'react';
 import '../../../assets/styles/StudentsList.css';
 import ButtonAppBar from '../../layouts/ButtonAppBar';
 import TeacherService from '../../../services/TeacherService';
-import TeacherList from '../../common/teacher/TeacherList';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import TableRow from "@mui/material/TableRow";
+import TableCell from "@mui/material/TableCell";
+import {Link} from "react-router-dom";
+import TableContainer from "@mui/material/TableContainer";
+import Table from "@mui/material/Table";
+import TableHead from "@mui/material/TableHead";
+import TableBody from "@mui/material/TableBody";
+import TablePagination from "@mui/material/TablePagination";
+import {TablePaginationActions} from "@mui/base";
 
 const TeacherListPage = () => {
     const [firstName, setFirstName] = useState('');
@@ -46,9 +54,66 @@ const TeacherListPage = () => {
         }
     };
 
+    const [page, setPage] = React.useState(0);
+    const [rowsPerPage, setRowsPerPage] = React.useState(10);
+
+    const handleChangePage = (event, newPage) => {
+        setPage(newPage);
+    };
+
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0);
+    };
+
+    const getRowColor = (index) => {
+        return index % 2 === 0 ? '#f0f0f0' : 'white';
+    };
+
+    const renderHead = () => {
+        return (
+            <TableRow>
+                <TableCell align="center" style={{border: "1px solid #e0e0e0", width: "20px"}}>
+                    <strong>№</strong>
+                </TableCell>
+                <TableCell align="center" style={{border: "1px solid #e0e0e0", width: "250px"}}>
+                    <strong>Teacher</strong>
+                </TableCell>
+                <TableCell align="center" style={{border: "1px solid #e0e0e0", width: "250px"}}>
+                    <strong>Teacher`s email</strong>
+                </TableCell>
+            </TableRow>
+        );
+    };
+
+    const renderBody = () => {
+        return filteredTeachers
+            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            .map((teacher, index) => {
+                const teacherNumber = page * rowsPerPage + index + 1;
+                return (
+                    <TableRow key={teacher.id} style={{ backgroundColor: getRowColor(index) }}>
+                        <TableCell
+                            align="center"
+                            style={{ border: "1px solid #e0e0e0", width: "20px" }}
+                        >
+                            {teacherNumber}
+                        </TableCell>
+                        <TableCell align="center" style={{ border: "1px solid #e0e0e0" }}>
+                            <Link to={`/teachers/${teacher.id}`}>{teacher.firstName} {teacher.lastName}</Link>
+                        </TableCell>
+                        <TableCell align="center" style={{ border: "1px solid #e0e0e0" }}>
+                            {teacher.email}
+                        </TableCell>
+                    </TableRow>
+                );
+            });
+    };
+
+
     return (
-        <div>
-            <ButtonAppBar />
+        <div className="students-list">
+            <ButtonAppBar/>
             <Box mt={9}>
                 <input
                     type="text"
@@ -65,8 +130,27 @@ const TeacherListPage = () => {
                 <Button onClick={handleSearch}>
                     Search
                 </Button>
-                {error && <div style={{ color: 'red' }}>{error}</div>}
-                <TeacherList teachers={filteredTeachers} />
+                {error && <div style={{color: 'red'}}>{error}</div>}
+                <TableContainer>
+                    <Table>
+                        <TableHead>
+                            {renderHead()}
+                        </TableHead>
+                        <TableBody>
+                            {renderBody()}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+                <TablePagination
+                    rowsPerPageOptions={[10]}
+                    colSpan={2}
+                    count={filteredTeachers.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                    ActionsComponent={TablePaginationActions}
+                />
             </Box>
         </div>
     );
