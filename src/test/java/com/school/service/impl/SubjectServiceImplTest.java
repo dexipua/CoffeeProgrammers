@@ -66,7 +66,7 @@ class SubjectServiceImplTest {
         subjectRequest1.setName("Math");
 
         subjectRequest2 = new SubjectRequest();
-        subjectRequest2.setName("Math");
+        subjectRequest2.setName("Philosophy");
 
         teacher = new Teacher(new User("Vlad", "Bulakovskyi", "vlad1@gmail.com", "Vlad123"));
         teacher.setId(1);
@@ -120,12 +120,12 @@ class SubjectServiceImplTest {
     void update() {
         //when
         when(subjectRepository.findById(subject1.getId())).thenReturn(Optional.of(subject1));
-        when(subjectRepository.save(subject1)).thenReturn(subject1);
+        when(subjectRepository.save(any(Subject.class))).thenReturn(subject2);
 
-        Subject updatedSubject = subjectService.update(subject1.getId(), subjectRequest1);
+        Subject updatedSubject = subjectService.update(subject1.getId(), subjectRequest2);
 
         //then
-        assertEquals(subject1, updatedSubject);
+        assertEquals(subject2, updatedSubject);
         verify(subjectRepository, times(1)).findById(subject1.getId());
         verify(subjectRepository, times(1)).save(subject1);
 
