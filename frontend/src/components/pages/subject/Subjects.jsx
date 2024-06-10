@@ -121,7 +121,7 @@ const Subjects = () => {
                     onChange={(e) => setSearchTerm(e.target.value)}
                     placeholder="Search Subject by Name"
                 />
-                <Button onClick={handleSearchClick}>
+                <Button onClick={handleSearchClick} style={{ backgroundColor: '#007bff', color: '#ffffff', padding: '4px 6px', borderRadius: '4px', border: 'none', cursor: 'pointer' }}>
                     Search
                 </Button>
                 {error && <div style={{color: 'red'}}>{error}</div>}

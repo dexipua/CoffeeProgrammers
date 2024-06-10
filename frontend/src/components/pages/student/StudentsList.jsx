@@ -113,7 +113,7 @@ const StudentsList = () => {
                     onChange={(e) => setLastName(e.target.value)}
                     placeholder="Last Name"
                 />
-                <Button onClick={handleSearch}>
+                <Button onClick={handleSearch} style={{ backgroundColor: '#007bff', color: '#ffffff', padding: '4px 6px', borderRadius: '4px', border: 'none', cursor: 'pointer' }}>
                     Search
                 </Button>
                 {error && <div style={{color: 'red'}}>{error}</div>}
