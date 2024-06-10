@@ -82,11 +82,11 @@ const Account = () => {
                     }}
                 >
                     {role === "STUDENT" ? (
-                        <Link to={`/marks/getAllByStudentId/${account.id}`}>
+                        <Link to={`/marks/getAllByStudentId/${account.id}`} style={{textDecoration: 'none', color: 'inherit'}}>
                             <div>My marks</div>
                         </Link>
                     ) : role === "CHIEF_TEACHER" ? (
-                        <Link to={"/admin"}>
+                        <Link to={"/admin"} style={{textDecoration: 'none', color: 'inherit'}}>
                             <div>Admin panel</div>
                         </Link>
                     ) : null}
