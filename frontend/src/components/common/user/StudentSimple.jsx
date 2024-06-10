@@ -1,10 +1,38 @@
 import {Link} from "react-router-dom";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 
 const StudentSimple = ({id, name}) => {
     return (
-        <div className="userData">
-            <p><Link to={`/students/getById/${id}`}>{name}</Link></p>
-        </div>
+        <Link to={`/students/${id}`} style={{textDecoration: 'none', color: 'inherit'}}>
+            <Box
+                width={290}
+                height={30}
+                display="flex"
+                flexDirection="column"
+                justifyContent="center"
+                alignItems="center"
+                gap={2}
+                p={2}
+                sx={{
+                    border: '1px solid #ccc',
+                    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                    borderRadius: '8px',
+                    backgroundColor: '#FFFFFFFF',
+                    transition: 'transform 0.2s, box-shadow 0.2s',
+                    '&:hover': {
+                        transform: 'scale(1.02)',
+                        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+                    },
+                }}
+            >
+                <Box height="30px" display="flex" justifyContent="center" alignItems="center" mt={1}>
+                    <Typography variant="h6" align="center">
+                        {name}
+                    </Typography>
+                </Box>
+            </Box>
+        </Link>
     )
 }
 

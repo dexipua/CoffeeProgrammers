@@ -7,7 +7,7 @@ import {Link} from "react-router-dom";
 
 const SubjectWithTeacherForList = ({ subjectResponse: { id, name, teacher } }) => {
     return (
-        <Link to={`/subjects/getById/${id}`} style={{textDecoration: 'none', color: 'inherit'}}>
+        <Link to={`/subjects/${id}`} style={{textDecoration: 'none', color: 'inherit'}}>
             <Box
                 width={350}
                 height={60}

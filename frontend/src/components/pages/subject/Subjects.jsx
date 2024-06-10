@@ -103,7 +103,7 @@ const Subjects = () => {
                             {subjectNumber}
                         </TableCell>
                         <TableCell align="center" style={{ border: "1px solid #e0e0e0" }}>
-                            <Link to={`/subjects/getById/${subject.id}`}>{subject.name}</Link>
+                            <Link to={`/subjects/${subject.id}`}>{subject.name}</Link>
                         </TableCell>
                     </TableRow>
                 );

@@ -17,7 +17,6 @@ import {TablePaginationActions} from "../../layouts/TablePaginationActions";
 const StudentsList = () => {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
-    const [studentsList, setStudentsList] = useState([]);
     const [filteredStudents, setFilteredStudents] = useState([]);
     const [error, setError] = useState(null);
 
@@ -26,7 +25,6 @@ const StudentsList = () => {
             try {
                 const token = localStorage.getItem('jwtToken');
                 const response = await StudentService.getAll(token);
-                setStudentsList(response);
                 setFilteredStudents(response);
             } catch (error) {
                 console.error('Error fetching students data:', error);
@@ -37,16 +35,9 @@ const StudentsList = () => {
         fetchAllStudents().then();
     }, []);
 
-    const handleSearch = () => {
-        if (firstName || lastName) {
-            const filtered = studentsList.filter(student =>
-                student.firstName.toLowerCase().includes(firstName.toLowerCase()) &&
-                student.lastName.toLowerCase().includes(lastName.toLowerCase())
-            );
-            setFilteredStudents(filtered);
-        } else {
-            setFilteredStudents(studentsList);
-        }
+    const handleSearch = async () => {
+        const token = localStorage.getItem('jwtToken');
+        setFilteredStudents(await StudentService.getByName(firstName, lastName, token))
     };
 
     const [page, setPage] = React.useState(0);
@@ -95,7 +86,7 @@ const StudentsList = () => {
                             {studentNumber}
                         </TableCell>
                         <TableCell align="center" style={{ border: "1px solid #e0e0e0" }}>
-                            <Link to={`/students/getById/${student.id}`}>{student.firstName} {student.lastName}</Link>
+                            <Link to={`/students/${student.id}`}>{student.firstName} {student.lastName}</Link>
                         </TableCell>
                         <TableCell align="center" style={{ border: "1px solid #e0e0e0" }}>
                             {student.email}

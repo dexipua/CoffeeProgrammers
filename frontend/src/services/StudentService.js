@@ -106,7 +106,7 @@ class StudentService {
 
     async getByName(firstName, lastName, token) {
         try {
-            const response = await axios.get(`${API_URL}/getAllByName`, {
+            const response = await axios.get(`${API_URL}/getAllByName/`, {
                 params: {
                     first_name: firstName,
                     last_name: lastName

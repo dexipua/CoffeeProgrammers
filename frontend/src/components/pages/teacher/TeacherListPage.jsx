@@ -17,7 +17,6 @@ import {TablePaginationActions} from "../../layouts/TablePaginationActions";
 const TeacherListPage = () => {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
-    const [teacherList, setTeacherList] = useState([]);
     const [filteredTeachers, setFilteredTeachers] = useState([]);
     const [error, setError] = useState(null);
 
@@ -26,7 +25,6 @@ const TeacherListPage = () => {
             try {
                 const token = localStorage.getItem('jwtToken');
                 const response = await TeacherService.getAll(token);
-                setTeacherList(response);
                 setFilteredTeachers(response);
             } catch (error) {
                 console.error('Error fetching teachers data:', error);
@@ -38,20 +36,8 @@ const TeacherListPage = () => {
     }, []);
 
     const handleSearch = async () => {
-        try {
-            const token = localStorage.getItem('jwtToken');
-            if (firstName || lastName) {
-                const data = await TeacherService.getByName(firstName, lastName, token);
-                setFilteredTeachers(data);
-            } else {
-                setFilteredTeachers(teacherList);
-            }
-            setError(null);
-        } catch (error) {
-            console.error('Error fetching data:', error);
-            setError('Error fetching data. Please try again.');
-            setFilteredTeachers([]);
-        }
+        const token = localStorage.getItem('jwtToken');
+        setFilteredTeachers(await TeacherService.getByName(firstName, lastName, token))
     };
 
     const [page, setPage] = React.useState(0);

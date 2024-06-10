@@ -42,7 +42,7 @@ const StudentProfile = () => {
             <p><strong>Subjects:</strong></p>
             <ul>
                 {student.subjects.map((subject) => (
-                    <Link to={`/subjects/getById/${subject.id}`}>
+                    <Link to={`/subjects/${subject.id}`}>
                         <li key={subject.id}>{subject.name}</li>
                     </Link>
                 ))}
