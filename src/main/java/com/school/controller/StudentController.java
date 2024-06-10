@@ -98,7 +98,7 @@ public class StudentController {
             @RequestParam("first_name") String firstName,
             @RequestParam("last_name") String lastName
     ) {
-        List<Student> students = studentService.findAllByUser_FirstNameAndAndUser_LastName(firstName, lastName);
+        List<Student> students = studentService.findAllByUser_FirstNameAndUser_LastName(firstName, lastName);
         return students.stream()
                 .map(StudentResponseSimple::new)
                 .collect(Collectors.toList());

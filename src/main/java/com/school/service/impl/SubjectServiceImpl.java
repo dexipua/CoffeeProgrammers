@@ -49,7 +49,8 @@ public class SubjectServiceImpl implements SubjectService {
         String actualName = subjectToUpdate.getName();
 
         if (!updatedName.equals(actualName) &&
-                subjectRepository.findByName(updatedName).isPresent()) {
+                subjectRepository.findByName(updatedName)
+                                 .isPresent()) {
             throw new EntityExistsException(
                     "Subject with name " + updatedName + " already exists"
             );

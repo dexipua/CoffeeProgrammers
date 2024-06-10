@@ -8,7 +8,6 @@ import com.school.repositories.MarkRepository;
 import com.school.service.MarkService;
 import com.school.service.StudentService;
 import com.school.service.SubjectService;
-import com.school.service.UserNewsService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,7 +22,6 @@ import java.util.stream.Collectors;
 public class MarkServiceImpl implements MarkService {
 
     private final MarkRepository markRepository;
-    private final UserNewsService userNewsService;
     private final SubjectService subjectService;
     private final StudentService studentService;
 
