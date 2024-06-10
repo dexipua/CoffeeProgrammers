@@ -8,6 +8,7 @@ import com.school.models.User;
 import com.school.repositories.MarkRepository;
 import com.school.service.StudentService;
 import com.school.service.SubjectService;
+import com.school.service.UserNewsService;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,6 +32,8 @@ public class MarkServiceImplTest {
     private SubjectService subjectService;
     @Mock
     private StudentService studentService;
+    @Mock
+    private UserNewsService userNewsService;
     @InjectMocks
     private MarkServiceImpl markService;
 
@@ -134,6 +137,8 @@ public class MarkServiceImplTest {
 
     @Test
     void update() {
+        mark1.setSubject(subject1);
+        mark1.setStudent(student1);
         // when
         when(markRepository.findById(mark1.getId())).thenReturn(Optional.of(mark1));
         when(markRepository.save(any(Mark.class))).thenReturn(expected);

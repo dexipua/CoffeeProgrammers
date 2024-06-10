@@ -8,6 +8,7 @@ import com.school.models.User;
 import com.school.repositories.SubjectRepository;
 import com.school.service.StudentService;
 import com.school.service.TeacherService;
+import com.school.service.UserNewsService;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,6 +37,8 @@ class SubjectServiceImplTest {
     private TeacherService teacherService;
     @Mock
     private StudentService studentService;
+    @Mock
+    private UserNewsService userNewsService;
 
     @InjectMocks
     private SubjectServiceImpl subjectService;
@@ -125,6 +128,17 @@ class SubjectServiceImplTest {
         assertEquals(subject1, updatedSubject);
         verify(subjectRepository, times(1)).findById(subject1.getId());
         verify(subjectRepository, times(1)).save(subject1);
+
+    }
+
+    @Test
+    void updateNotPresent() {
+        // when
+        when(subjectRepository.findByName(subject1.getName())).thenReturn(Optional.empty());
+        when(subjectRepository.findById(subject2.getId())).thenReturn(Optional.of(subject2));
+        when(subjectRepository.save(any(Subject.class))).thenReturn(subject1);
+
+        assertEquals(subject1, subjectService.update(subject2.getId(), subjectRequest1));
 
     }
 
@@ -257,7 +271,7 @@ class SubjectServiceImplTest {
     }
 
     @Test
-    void GetNoneByOrderByName() {
+    void getNoneByOrderByName() {
         //given
         List<Subject> empty = new ArrayList<>();
 

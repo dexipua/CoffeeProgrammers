@@ -57,7 +57,7 @@ public class MarkServiceImpl implements MarkService {
         Mark markToUpdate = findById(markToUpdateId);
         markToUpdate.setValue(markRequest.getValue());
         markToUpdate.setTime(LocalDateTime.now());
-        userNewsService.create(new UserNews("You mark " + markToUpdate.getValue() + "in subject " +
+        userNewsService.create(new UserNews("Your mark " + markToUpdate.getValue() + "in subject " +
                 markToUpdate.getSubject().getName() + "have been updated",
                 markToUpdate.getStudent().getUser()));
         return markRepository.save(markToUpdate);
