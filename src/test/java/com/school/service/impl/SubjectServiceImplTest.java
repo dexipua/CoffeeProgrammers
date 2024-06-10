@@ -132,6 +132,21 @@ class SubjectServiceImplTest {
     }
 
     @Test
+    void updateEqualsName() {
+        //when
+        when(subjectRepository.findById(subject1.getId())).thenReturn(Optional.of(subject1));
+        when(subjectRepository.save(any(Subject.class))).thenReturn(subject2);
+
+        Subject updatedSubject = subjectService.update(subject1.getId(), subjectRequest1);
+
+        //then
+        assertEquals(subject2, updatedSubject);
+        verify(subjectRepository, times(1)).findById(subject1.getId());
+        verify(subjectRepository, times(1)).save(subject1);
+
+    }
+
+    @Test
     void updateNotPresent() {
         // when
         when(subjectRepository.findByName(subject1.getName())).thenReturn(Optional.empty());
