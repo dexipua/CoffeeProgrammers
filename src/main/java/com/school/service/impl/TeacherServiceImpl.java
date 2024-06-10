@@ -27,7 +27,7 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public Teacher create(UserRequestCreate userRequest) {
         User userToCreate = UserRequestCreate.toUser(userRequest);
-        userToCreate.setRole(roleService.findByName("STUDENT"));
+        userToCreate.setRole(roleService.findByName("TEACHER"));
         userService.create(userToCreate);
         return teacherRepository.save(new Teacher(userToCreate));
     }

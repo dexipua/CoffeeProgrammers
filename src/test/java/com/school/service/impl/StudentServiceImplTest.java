@@ -72,7 +72,6 @@ class StudentServiceImplTest {
 
     @Test
     void create_WhenStudentDoesNotExist() {
-        student.setId(0);
         when(roleService.findByName("STUDENT")).thenReturn(studentRole);
         when(studentRepository.save(any(Student.class))).thenReturn(student);
 
