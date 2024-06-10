@@ -24,4 +24,9 @@ public class SchoolNews {
         this.title = title;
         this.time = time;
     }
+
+    public SchoolNews(String title) {
+        this.title = title;
+        this.time = LocalDateTime.now();
+    }
 }
