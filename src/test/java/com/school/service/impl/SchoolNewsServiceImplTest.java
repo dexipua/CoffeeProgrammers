@@ -28,7 +28,7 @@ class SchoolNewsServiceImplTest {
     private SchoolNews schoolNews;
     @BeforeEach
     void setUp() {
-        schoolNews = new SchoolNews("You don't have to go to school tomorrow");
+        schoolNews = new SchoolNews("You needn`t go to school tomorrow");
         schoolNews.setId(1);
     }
     @Test
