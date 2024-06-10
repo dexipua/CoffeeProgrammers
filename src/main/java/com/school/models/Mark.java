@@ -31,4 +31,11 @@ public class Mark {
     @ManyToOne
     @JoinColumn(name = "subject_id")
     private Subject subject;
+
+    public Mark(int value, Student student, Subject subject) {
+        this.value = value;
+        this.student = student;
+        this.subject = subject;
+        this.time = LocalDateTime.now();
+    }
 }

@@ -2,17 +2,16 @@ package com.school.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.school.config.JWT.JwtUtils;
-import com.school.dto.teacher.TeacherRequest;
 import com.school.dto.teacher.TeacherResponseAll;
 import com.school.dto.teacher.TeacherResponseSimple;
+import com.school.dto.user.UserRequestCreate;
+import com.school.dto.user.UserRequestUpdate;
 import com.school.models.Subject;
 import com.school.models.Teacher;
 import com.school.models.User;
 import com.school.service.TeacherService;
 import com.school.service.impl.UserServiceImpl;
-
 import org.junit.jupiter.api.Test;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -28,7 +27,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -50,10 +49,14 @@ class TeacherControllerTest {
     @Test
     @WithMockUser(roles = "CHIEF_TEACHER")
     void createTeacher() throws Exception{
-        TeacherRequest request = new TeacherRequest("Vlad", "Bulakovskyi", "vlad@gmail.com", "passWord1");
+        UserRequestCreate request = new UserRequestCreate();
+        request.setFirstName("Vlad");
+        request.setLastName("Bulakovskyi");
+        request.setEmail("vlad@gmail.com");
+        request.setPassword("passWord1");
         Teacher teacher = new Teacher(new User("Vlad", "Bulakovskyi", "vlad@gmail.com", "passWord1"));
 
-        when(teacherService.create(TeacherRequest.toTeacher(request))).thenReturn(teacher);
+        when(teacherService.create(request)).thenReturn(teacher);
 
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders
                 .post("/teachers/create")
@@ -65,6 +68,35 @@ class TeacherControllerTest {
                 .andReturn();
 
         TeacherResponseSimple expectedResponseBody = new TeacherResponseSimple(teacher);
+        String actualResponseBody = mvcResult.getResponse().getContentAsString();
+
+        assertThat(actualResponseBody).isEqualToIgnoringWhitespace(
+                new ObjectMapper().writeValueAsString(expectedResponseBody));
+    }
+
+    @Test
+    @WithMockUser(roles = "CHIEF_TEACHER")
+    void getByName() throws Exception{
+        UserRequestCreate request = new UserRequestCreate();
+        request.setFirstName("Vlad");
+        request.setLastName("Bulakovskyi");
+        request.setEmail("vlad@gmail.com");
+        request.setPassword("passWord1");
+        Teacher teacher = new Teacher(new User("Vlad", "Bulakovskyi", "vlad@gmail.com", "passWord1"));
+
+        when(teacherService.findAllByUser_FirstNameAndAndUser_LastName("Vlad", "Bulakovskyi")).thenReturn(List.of(teacher));
+
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders
+                        .get("/teachers/getAllByName/")
+                        .with(csrf())
+                        .param("first_name", "Vlad")
+                        .param("last_name", "Bulakovskyi")
+                        .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn();
+
+        List<TeacherResponseSimple> expectedResponseBody = List.of(new TeacherResponseSimple(teacher));
         String actualResponseBody = mvcResult.getResponse().getContentAsString();
 
         assertThat(actualResponseBody).isEqualToIgnoringWhitespace(
@@ -117,19 +149,27 @@ class TeacherControllerTest {
     void updateTeacher() throws Exception{
         //given
         Teacher t1 = new Teacher(new User("Vlad", "Bulakovskyi", "vlad@gmail.com", "passWord1"));
+        UserRequestCreate request = new UserRequestCreate();
+        request.setFirstName("Vlad");
+        request.setLastName("Bulakovskyi");
+        request.setEmail("vlad@gmail.com");
+        request.setPassword("passWord1");
         t1.setId(1L);
-        teacherService.create(t1);
+        teacherService.create(request);
 
-        TeacherRequest request = new TeacherRequest("Rename", "Surname", "newEmail@gmail.com", "NewPassword111");
-        Teacher updated = new Teacher(new User("Rename", "Surname", "newEmail@gmail.com", "NewPassword111"));
+        UserRequestUpdate requestUpdate = new UserRequestUpdate();
+        requestUpdate.setFirstName("Rename");
+        requestUpdate.setLastName("Surname");
+        requestUpdate.setPassword("NewPassword111");
+        Teacher updated = new Teacher(new User("Rename", "Surname", "vlad@gmail.com", "NewPassword111"));
         updated.setId(1L);
         when(teacherService.findById(1L)).thenReturn(updated);
-        when(teacherService.update(updated)).thenReturn(updated);
+        when(teacherService.update(t1.getId(), requestUpdate)).thenReturn(updated);
         //then
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders
                         .put("/teachers/update/1")
                         .with(csrf())
-                        .content(asJsonString(request))
+                        .content(asJsonString(requestUpdate))
                         .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -148,7 +188,12 @@ class TeacherControllerTest {
     void deleteTeacher() throws Exception{
         Teacher t1 = new Teacher(new User("Rename", "Surname", "newEmail@gmail.com", "NewPassword111"));
         t1.setId(1L);
-        teacherService.create(t1);
+        UserRequestCreate request = new UserRequestCreate();
+        request.setFirstName("Vlad");
+        request.setLastName("Bulakovskyi");
+        request.setEmail("vlad@gmail.com");
+        request.setPassword("passWord1");
+        teacherService.create(request);
 
         when(teacherService.findById(1L)).thenReturn(t1);
 
@@ -163,8 +208,13 @@ class TeacherControllerTest {
     @WithMockUser(roles = "CHIEF_TEACHER")
     void getTeacherBySubjectName() throws Exception{
         Teacher t1 = new Teacher(new User("Vlad", "Bulakovskyi", "vlad@gmail.com", "passWord1"));
-        t1.addSubject(new Subject("Maths"));
-        teacherService.create(t1);
+        t1.setSubjects(List.of(new Subject("Maths")));
+        UserRequestCreate request = new UserRequestCreate();
+        request.setFirstName("Vlad");
+        request.setLastName("Bulakovskyi");
+        request.setEmail("vlad@gmail.com");
+        request.setPassword("passWord1");
+        teacherService.create(request);
 
         when(teacherService.findBySubjectName("Maths")).thenReturn(List.of(t1));
 

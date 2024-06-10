@@ -14,5 +14,5 @@ public interface StudentService {
     List<Student> findAllOrderedByName();
     List<Student> findBySubjectName(String subName);
     List<Student> findStudentsByTeacherId(long teacherId);
-    List<Student> findAllByUser_FirstNameAndAndUser_LastName(String firstName, String lastName);
+    List<Student> findAllByUser_FirstNameAndUser_LastName(String firstName, String lastName);
 }

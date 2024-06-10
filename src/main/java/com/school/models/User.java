@@ -29,7 +29,7 @@ public class User implements UserDetails, Comparable<User> {
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    @Column(name = "password", nullable = false, unique = true)
+    @Column(name = "password", nullable = false)
     private String password;
 
     @Column(name = "email", nullable = false, unique = true)

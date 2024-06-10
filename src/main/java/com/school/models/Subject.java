@@ -28,9 +28,6 @@ public class Subject {
     @JoinColumn(name = "teacher_id")
     private Teacher teacher;
 
-    @OneToMany
-    private List<Mark> marks = new ArrayList<>();
-
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "subject_students",
             joinColumns = @JoinColumn(name = "subject_id", referencedColumnName = "id"),
@@ -43,5 +40,16 @@ public class Subject {
                 "name='" + name + '\'' +
                 ", students=" + students +
                 '}';
+    }
+
+    public Subject(String name) {
+        this.name = name;
+        this.students = new ArrayList<>();
+    }
+
+    public Subject(String name, Teacher teacher) {
+        this.name = name;
+        this.teacher = teacher;
+        this.students = new ArrayList<>();
     }
 }

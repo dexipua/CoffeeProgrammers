@@ -54,7 +54,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public List<Student> findAllOrderedByName() {
-        return studentRepository.findAllByOrderByUser();
+        return studentRepository.findAllByOrderByUser_LastNameAsc();
     }
 
 
@@ -71,7 +71,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public List<Student> findAllByUser_FirstNameAndAndUser_LastName(
+    public List<Student> findAllByUser_FirstNameAndUser_LastName(
             String firstName,
             String lastName) {
         return studentRepository.findAllByUser_FirstNameContainingIgnoreCaseAndUser_LastNameContainingIgnoreCase(firstName, lastName);

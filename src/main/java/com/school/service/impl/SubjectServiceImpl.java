@@ -4,10 +4,12 @@ import com.school.dto.subject.SubjectRequest;
 import com.school.models.Student;
 import com.school.models.Subject;
 import com.school.models.Teacher;
+import com.school.models.UserNews;
 import com.school.repositories.SubjectRepository;
 import com.school.service.StudentService;
 import com.school.service.SubjectService;
 import com.school.service.TeacherService;
+import com.school.service.UserNewsService;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,7 @@ public class SubjectServiceImpl implements SubjectService {
     private final SubjectRepository subjectRepository;
     private final TeacherService teacherService;
     private final StudentService studentService;
+    private final UserNewsService userNewsService;
 
     @Override
     public Subject create(SubjectRequest subjectRequest) {
@@ -47,7 +50,8 @@ public class SubjectServiceImpl implements SubjectService {
         String actualName = subjectToUpdate.getName();
 
         if (!updatedName.equals(actualName) &&
-                subjectRepository.findByName(updatedName).isPresent()) {
+                subjectRepository.findByName(updatedName)
+                                 .isPresent()) {
             throw new EntityExistsException(
                     "Subject with name " + updatedName + " already exists"
             );
@@ -117,7 +121,7 @@ public class SubjectServiceImpl implements SubjectService {
         }
 
         subject.getStudents().add(student);
-
+        userNewsService.create(new UserNews("You have been added to subject " + subject.getName(), student.getUser()));
         subjectRepository.save(subject);
     }
 
@@ -133,7 +137,7 @@ public class SubjectServiceImpl implements SubjectService {
         }
 
         subject.getStudents().remove(student);
-
+        userNewsService.create(new UserNews("You have been deleted from subject " + subject.getName(), student.getUser()));
         subjectRepository.save(subject);
     }
 }

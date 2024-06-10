@@ -4,14 +4,10 @@ import com.school.dto.student.StudentResponseSimple;
 import com.school.dto.subject.SubjectResponseWithTeacher;
 import com.school.models.Mark;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.time.format.DateTimeFormatter;
 
 @Data
-@Setter
-@Getter
 public class MarkResponseAll {
     long id;
     private int value;
