@@ -34,6 +34,7 @@ class UserNewsServiceImplTest {
         user = new User("Vlad", "Bulakovskyi", "email@gmail.com", "Vlad123");
         user.setId(1);
         userNews = new UserNews("New mark", user);
+        userNews.setId(1);
     }
 
     @Test
