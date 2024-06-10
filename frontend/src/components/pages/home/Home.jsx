@@ -77,25 +77,34 @@ const Home = () => {
         return <div>Error: {error}</div>;
     }
 
+    const contentStyle = {
+        width: '100%',
+        margin: '0 auto',  // Centers the content within its container
+        padding: '20px',
+        textAlign: 'center',
+        marginTop: '65px',// Centers the text
+    };
+
     return (
         <div>
-            <ButtonAppBar/>
-            <div className="home-container" style={{marginTop: '65px'}}>
+            <ButtonAppBar />
+            <div style={contentStyle}>
                 <h1>Home Page</h1>
-
                 <Box>
                     <h2>Teachers</h2>
-                    <TeacherList
-                        teachers={teachers}/>
+                    <div>
+                        <TeacherList teachers={teachers}/>
+                    </div>
                 </Box>
                 <Box>
                     <h2>Subjects</h2>
-                    <SubjectWithTeacherList
-                        subjects={subjects}/>
+                    <div>
+                        <SubjectWithTeacherList subjects={subjects}/>
+                    </div>
                 </Box>
             </div>
         </div>
-    )
+    );
 };
 
 export default Home;

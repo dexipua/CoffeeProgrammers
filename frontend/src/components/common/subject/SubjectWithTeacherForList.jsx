@@ -11,7 +11,6 @@ const SubjectWithTeacherForList = ({ subjectResponse: { id, name, teacher } }) =
             <Box
                 width={350}
                 height={60}
-                my={4}
                 display="flex"
                 flexDirection="column"
                 justifyContent="center"

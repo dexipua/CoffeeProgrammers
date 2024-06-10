@@ -11,8 +11,8 @@ import TableHead from "@mui/material/TableHead";
 import TableBody from "@mui/material/TableBody";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
-import {TablePaginationActions} from "@mui/base";
 import {Link} from "react-router-dom";
+import {TablePaginationActions} from "../../layouts/TablePaginationActions";
 
 const StudentsList = () => {
     const [firstName, setFirstName] = useState('');

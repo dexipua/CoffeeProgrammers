@@ -12,7 +12,7 @@ import Table from "@mui/material/Table";
 import TableHead from "@mui/material/TableHead";
 import TableBody from "@mui/material/TableBody";
 import TablePagination from "@mui/material/TablePagination";
-import {TablePaginationActions} from "@mui/base";
+import {TablePaginationActions} from "../../layouts/TablePaginationActions";
 
 const TeacherListPage = () => {
     const [firstName, setFirstName] = useState('');
