@@ -10,7 +10,8 @@ teachers to subjects.
 ## User Roles and Permissions
 - **Students**: Can view accessible information.
 - **Teachers**: Can add grades and manage students in their subjects.
-- **Teacher-Admins**: Have all the functionalities of teachers, plus the ability to create and delete users, subjects, and assign teachers to subjects.
+- **Teacher-Admins**: Have all the functionalities of teachers, plus the 
+ability to create and delete users, subjects, and assign teachers to subjects.
 
 ## Features
 - User-friendly interface
