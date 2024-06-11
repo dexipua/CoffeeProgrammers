@@ -135,6 +135,7 @@ public class SubjectController {
             @PathVariable("subject_id") long subjectId,
             @PathVariable("student_id") long studentId,
             Authentication auth) {
+        markService.deleteAllByStudentId(studentId);
         subjectService.deleteStudent(subjectId, studentId);
     }
 }
