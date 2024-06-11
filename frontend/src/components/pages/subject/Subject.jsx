@@ -57,9 +57,7 @@ const Subject = () => {
 
     const handleStudentDelete = (studentId) => {
         const updatedStudents = subject.students.filter(student => student.id !== studentId);
-        const updatedStudentsWithMarks = studentsWithMarks.filter(student => student.id !== studentId);
         setSubject({ ...subject, students: updatedStudents });
-        setStudentsWithMarks(updatedStudentsWithMarks)
     };
 
 
