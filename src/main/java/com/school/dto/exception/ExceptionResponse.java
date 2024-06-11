@@ -2,18 +2,20 @@ package com.school.dto.exception;
 
 import lombok.Data;
 import lombok.Getter;
-import org.springframework.http.HttpStatus;
 
-import java.time.ZonedDateTime;
+import java.util.List;
 
 @Getter
 @Data
 public class ExceptionResponse {
-    private String message;
+    private List<String> messages;
 
     public ExceptionResponse(String message) {
-        this.message = message;
+       this.messages = List.of(message);
+    }
 
+    public ExceptionResponse(List<String> messages) {
+        this.messages = messages;
     }
 
 }

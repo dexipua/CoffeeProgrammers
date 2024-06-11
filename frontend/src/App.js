@@ -30,6 +30,7 @@ function App() {
                 <Route path="/subjects/getById/:id" element={<Subject/>}/>
                 <Route path="/subject/:id" element={<Subject/>}/>
                 <Route path={"/subjects"} element={<Subjects/>}/>
+
             </Routes>
         </Router>
     );
