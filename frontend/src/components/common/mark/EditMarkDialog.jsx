@@ -6,14 +6,15 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import MarkService from "../../../services/MarkService";
 
-function EditMarkDialog({markId, open, onClose }) {
+function EditMarkDialog({markId, open, onClose, onMarkUpdate}) {
     const [newMark, setNewMark] = useState('');
 
     const handleAccept = async () => {
-        await MarkService.update(
+        const updatedMark = await MarkService.update(
             markId,
             {value: newMark},
             localStorage.getItem('jwtToken'))
+        onMarkUpdate(updatedMark)
         onClose();
     };
 

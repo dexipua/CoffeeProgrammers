@@ -116,7 +116,7 @@ public class SubjectServiceImpl implements SubjectService {
             );
         }
 
-        subject.getStudents().add(student);
+        student.getSubjects().add(subject); //TODO
 
         subjectRepository.save(subject);
     }
@@ -132,7 +132,7 @@ public class SubjectServiceImpl implements SubjectService {
             );
         }
 
-        subject.getStudents().remove(student);
+        student.getSubjects().remove(subject);//TODO
 
         subjectRepository.save(subject);
     }

@@ -20,7 +20,7 @@ const Subject = () => {
     const [loadingSubject, setLoadingSubject] = useState(true);
     const [loadingMarks, setLoadingMarks] = useState(true);
 
-    useEffect( () => {
+    useEffect(() => {
         const token = localStorage.getItem("jwtToken");
 
         const fetchMarks = async () => {
@@ -49,17 +49,79 @@ const Subject = () => {
             await fetchMarks();
         };
 
-         fetchData().then(() => console.log("End work with data"));
+        fetchData().then(() => console.log("End work with data"));
     }, [id]);
+
     const handleNameChange = (newName) => {
-        setSubject({ ...subject, name: newName });
+        setSubject({...subject, name: newName});
     };
 
     const handleStudentDelete = (studentId) => {
         const updatedStudents = subject.students.filter(student => student.id !== studentId);
-        setSubject({ ...subject, students: updatedStudents });
+        setSubject({...subject, students: updatedStudents});
     };
 
+    const handleMarkCreate = (studentId, newMark) => {
+        console.log("HANDLE", studentId, newMark);
+        setStudentsWithMarks(prevState => {
+            const studentExists = prevState.find(studentMarkData => studentMarkData.studentResponseSimple.id === studentId);
+
+            if (studentExists) { //TODO
+                return prevState.map(studentMarkData => {
+                    if (studentMarkData.studentResponseSimple.id === studentId) {
+                        const updatedMarks = studentMarkData.marks ? [...studentMarkData.marks, newMark] : [newMark];
+                        return {
+                            ...studentMarkData,
+                            marks: updatedMarks
+                        };
+                    }
+                    return studentMarkData;
+                });
+            } else {
+                const newStudentMarkData = {
+                    studentResponseSimple: { id: studentId },
+                    marks: [newMark]
+                };
+                return [...prevState, newStudentMarkData];
+            }
+        });
+    };
+
+
+    const handleMarkUpdate = (studentId, updatedMark) => {
+        setStudentsWithMarks(prevState => {
+            return prevState.map(studentMarkData => {
+                if (studentMarkData.studentResponseSimple.id === studentId) {
+                    const updatedMarks = studentMarkData.marks.map(mark => {
+                        if (mark.id === updatedMark.id) {
+                            return updatedMark;
+                        }
+                        return mark;
+                    });
+                    return {
+                        ...studentMarkData,
+                        marks: updatedMarks
+                    };
+                }
+                return studentMarkData;
+            });
+        });
+    };
+
+    const handleMarkDelete = (studentId, markIdToDelete) => {
+        setStudentsWithMarks(prevState => {
+            return prevState.map(studentMarkData => {
+                if (studentMarkData.studentResponseSimple.id === studentId) {
+                    const updatedMarks = studentMarkData.marks.filter(mark => mark.id !== markIdToDelete);
+                    return {
+                        ...studentMarkData,
+                        marks: updatedMarks
+                    };
+                }
+                return studentMarkData;
+            });
+        });
+    };
 
     const marksByStudentId = {};
     studentsWithMarks.forEach(({studentResponseSimple, marks}) => {
@@ -132,6 +194,9 @@ const Subject = () => {
                         subjectId={subject.id}
                         students={studentsWithGradesOrEmpty}
                         onStudentDelete={handleStudentDelete}
+                        onMarkCreate={handleMarkCreate}
+                        onMarkUpdate={handleMarkUpdate}
+                        onMarkDelete={handleMarkDelete}
                     />
                 )}
             </Box>

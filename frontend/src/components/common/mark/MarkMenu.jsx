@@ -4,7 +4,7 @@ import ConfirmDialog from "../../layouts/ConfirmDialog";
 import MarkService from "../../../services/MarkService";
 import EditMarkDialog from "./EditMarkDialog";
 
-function MarkMenu({mark}) {
+function MarkMenu({mark,  onMarkUpdate, onMarkDelete}) {
     const [anchorEl, setAnchorEl] = useState(null);
     const [isHovered, setIsHovered] = useState(false);
     const [openConfirmDialog, setOpenConfirmDialog] = React.useState(false)
@@ -33,6 +33,7 @@ function MarkMenu({mark}) {
 
     const functionDelete = async () => {
         await MarkService.delete(mark.id, localStorage.getItem('jwtToken'));
+        onMarkDelete()
         handleMenuClose();
     };
 
@@ -64,6 +65,7 @@ function MarkMenu({mark}) {
                     markId={mark.id}
                     open={openEditDialog}
                     onClose={handleCloseEditDialog}
+                    onMarkUpdate={onMarkUpdate}
                 />
 
 
@@ -75,7 +77,7 @@ function MarkMenu({mark}) {
                     open={openConfirmDialog}
                     text={"Do you really want to delete this mark?"}
                     someFunction={() => {
-                         functionDelete()
+                          functionDelete()
                     }}
                 />
 

@@ -18,13 +18,15 @@ function CreateMarkDialog({subjectId, studentId, open, onClose }) {
 
     const handleCreateMark = async () => {
         try {
-            await MarkService.create(
+            const createdMark = await MarkService.create(
                 { value: newMark },
                 subjectId,
                 studentId,
                 localStorage.getItem('jwtToken')
             );
-            onClose();
+            setNewMark('')
+            console.log("CreatedMark", studentId,  createdMark)
+            onClose(studentId, createdMark);
         } catch (error) {
             if (error.response && error.response.data && Array.isArray(error.response.data)) {
                 const errorMessages = error.response.data.map(errorObj => errorObj.message);

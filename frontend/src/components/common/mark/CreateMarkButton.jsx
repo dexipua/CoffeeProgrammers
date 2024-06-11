@@ -3,15 +3,16 @@ import AddIcon from '@mui/icons-material/Add';
 import CreateMarkDialog from './CreateMarkDialog';
 import IconButton from "@mui/material/IconButton"; // Шлях до вашого компонента діалогу створення оцінки
 
-function CreateMarkButton({studentId, subjectId}) {
+function CreateMarkButton({studentId, subjectId, onMarkCreate}) {
     const [dialogOpen, setDialogOpen] = useState(false);
 
     const handleOpenDialog = () => {
         setDialogOpen(true);
     };
 
-    const handleCloseDialog = () => {
+    const handleCloseDialog = (studentId, createdMark) => {
         setDialogOpen(false);
+        onMarkCreate(studentId, createdMark)
     };
 
     return (
