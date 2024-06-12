@@ -4,6 +4,7 @@ import com.school.dto.subject.SubjectRequest;
 import com.school.models.Student;
 import com.school.models.Subject;
 import com.school.models.Teacher;
+import com.school.repositories.StudentRepository;
 import com.school.repositories.SubjectRepository;
 import com.school.service.StudentService;
 import com.school.service.SubjectService;
@@ -22,6 +23,7 @@ public class SubjectServiceImpl implements SubjectService {
     private final SubjectRepository subjectRepository;
     private final TeacherService teacherService;
     private final StudentService studentService;
+    private final StudentRepository studentRepository;
 
     @Override
     public Subject create(SubjectRequest subjectRequest) {
@@ -117,8 +119,10 @@ public class SubjectServiceImpl implements SubjectService {
         }
 
         student.getSubjects().add(subject); //TODO
+        //subject.getStudents().add(student);
 
-        subjectRepository.save(subject);
+        studentRepository.save(student);
+       // subjectRepository.save(subject);
     }
 
     @Override

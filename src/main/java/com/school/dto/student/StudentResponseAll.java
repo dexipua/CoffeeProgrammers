@@ -6,6 +6,9 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Setter
 @Getter
 @Data
@@ -15,7 +18,7 @@ public class StudentResponseAll {
     private String lastName;
     private String email;
     private double averageMark;
-    private SubjectResponseWithTeacher[] subjects;
+    private List<SubjectResponseWithTeacher> subjects;
 
     public StudentResponseAll(Student student, double averageMark){
         this.id = student.getId();
@@ -23,9 +26,12 @@ public class StudentResponseAll {
         this.lastName = student.getUser().getLastName();
         this.email = student.getUser().getEmail();
         this.averageMark = Math.round(averageMark * 10.0) / 10.0;
-        this.subjects = new SubjectResponseWithTeacher[student.getSubjects().size()];
-        for(int i = 0; i < subjects.length; i++){
-            subjects[i] = new SubjectResponseWithTeacher(student.getSubjects().get(i));
-        }
+//        this.subjects = new SubjectResponseWithTeacher[student.getSubjects().size()];
+//        for(int i = 0; i < subjects.length; i++){
+//            subjects[i] = new SubjectResponseWithTeacher(student.getSubjects().get(i));
+//        }
+        this.subjects = student.getSubjects().stream()
+                .map(SubjectResponseWithTeacher::new)
+                .collect(Collectors.toList());
     }
 }

@@ -6,7 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -27,11 +28,11 @@ public class Subject {
     @JoinColumn(name = "teacher_id")
     private Teacher teacher;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "subject_students",
-            joinColumns = @JoinColumn(name = "subject_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "student_id", referencedColumnName = "id"))
-    private List<Student> students;
+    @ManyToMany(mappedBy = "subjects")
+//    @JoinTable(name = "subject_students",
+//            joinColumns = @JoinColumn(name = "subject_id", referencedColumnName = "id"),
+//            inverseJoinColumns = @JoinColumn(name = "student_id", referencedColumnName = "id"))
+    private Set<Student> students = new HashSet<>();
 
     @Override
     public String toString() {
