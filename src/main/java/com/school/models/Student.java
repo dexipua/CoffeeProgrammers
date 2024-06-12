@@ -25,6 +25,7 @@ public class Student implements Comparable<Student> {
     @JoinTable(name = "subject_students",
             joinColumns = @JoinColumn(name = "student_id"),
             inverseJoinColumns = @JoinColumn(name = "subject_id"))
+
     private Set<Subject> subjects = new HashSet<>();
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -34,13 +35,12 @@ public class Student implements Comparable<Student> {
     public Student(User user){
         this.user = user;
         this.subjects = new HashSet<>();
-
     }
+
     @Override
     public String toString(){
         return "Student{" +
                 "id=" + id +
-                //", subjects=" + subjects +
                 ", user=" + user +
                 '}';
     }

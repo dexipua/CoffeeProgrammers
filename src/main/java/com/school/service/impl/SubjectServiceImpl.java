@@ -112,17 +112,11 @@ public class SubjectServiceImpl implements SubjectService {
         Subject subject = findById(subjectId);
         Student student = studentService.findById(studentId);
 
-        if (subject.getStudents().contains(student)) {
-            throw new UnsupportedOperationException(
-                    "Subject already have this student"
-            );
-        }
-
-        student.getSubjects().add(subject); //TODO
-        //subject.getStudents().add(student);
+        student.getSubjects().add(subject);
 
         studentRepository.save(student);
-       // subjectRepository.save(subject);
+
+
     }
 
     @Override
@@ -136,7 +130,7 @@ public class SubjectServiceImpl implements SubjectService {
             );
         }
 
-        student.getSubjects().remove(subject);//TODO
+        student.getSubjects().remove(subject);
 
         subjectRepository.save(subject);
     }

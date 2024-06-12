@@ -14,7 +14,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @Table(name = "subjects")
-@EqualsAndHashCode
+@EqualsAndHashCode(exclude = {"students", "teacher"})
 public class Subject {
 
     @Id
@@ -29,9 +29,6 @@ public class Subject {
     private Teacher teacher;
 
     @ManyToMany(mappedBy = "subjects")
-//    @JoinTable(name = "subject_students",
-//            joinColumns = @JoinColumn(name = "subject_id", referencedColumnName = "id"),
-//            inverseJoinColumns = @JoinColumn(name = "student_id", referencedColumnName = "id"))
     private Set<Student> students = new HashSet<>();
 
     @Override
