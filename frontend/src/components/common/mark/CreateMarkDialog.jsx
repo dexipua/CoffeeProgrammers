@@ -8,7 +8,7 @@ import MarkService from "../../../services/MarkService";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 
-function CreateMarkDialog({subjectId, studentId, open, onClose }) {
+function CreateMarkDialog({ subjectId, studentId, open, onClose }) {
     const [newMark, setNewMark] = useState('');
     const [errorMessages, setErrorMessages] = useState([]);
 
@@ -24,13 +24,11 @@ function CreateMarkDialog({subjectId, studentId, open, onClose }) {
                 studentId,
                 localStorage.getItem('jwtToken')
             );
-            setNewMark('')
-            console.log("CreatedMark", studentId,  createdMark)
+            setNewMark('');
             onClose(studentId, createdMark);
         } catch (error) {
-            if (error.response && error.response.data && Array.isArray(error.response.data)) {
-                const errorMessages = error.response.data.map(errorObj => errorObj.message);
-                setErrorMessages(errorMessages);
+            if (error.response && error.response.data.messages && Array.isArray(error.response.data.messages)) {
+                setErrorMessages(error.response.data.messages);
             } else {
                 console.error("Error updating subject:", error);
             }
@@ -61,14 +59,14 @@ function CreateMarkDialog({subjectId, studentId, open, onClose }) {
                         ))}
                     </Box>
                 )}
-                <div style={{ display: 'flex', justifyContent: 'center', marginTop: '16px' }}>
-                    <Button variant="contained" onClick={onClose} style={{ marginRight: '8px' }} color="error">
+                <Box mt={2} display="flex" justifyContent="center">
+                    <Button variant="contained" onClick={onClose} sx={{ mr: 1 }} color="error">
                         Cancel
                     </Button>
                     <Button variant="contained" onClick={handleCreateMark} color="success">
                         Create
                     </Button>
-                </div>
+                </Box>
             </DialogContent>
         </Dialog>
     );
