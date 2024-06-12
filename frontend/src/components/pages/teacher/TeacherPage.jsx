@@ -12,7 +12,7 @@ import TableCell from "@mui/material/TableCell";
 import TableBody from "@mui/material/TableBody";
 import Table from "@mui/material/Table";
 import TablePagination from "@mui/material/TablePagination";
-import {TablePaginationActions} from "../../layouts/TablePaginationActions";
+import TablePaginationActions from "../../layouts/TablePaginationActions";
 import TableRow from "@mui/material/TableRow";
 import StudentSimple from "../../common/user/StudentSimple";
 import TableContainer from "@mui/material/TableContainer";
