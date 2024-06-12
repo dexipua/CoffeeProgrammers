@@ -1,9 +1,12 @@
+import Typography from "@mui/material/Typography";
+
 const UserData = ({name, email}) => {
     return (
-        <div className="userData">
-            <p>Name: {name}</p>
-            <p>Email: {email}</p>
-        </div>
+        <Typography variant="body1" align="center">
+            {name}
+            <br/>
+            {email}
+        </Typography>
     )
 }
 

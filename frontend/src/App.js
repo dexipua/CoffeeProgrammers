@@ -22,12 +22,12 @@ function App() {
                 <Route path="/teachers" element={<TeacherListPage/>}/>
                 <Route path="/" element={<Login/>}/>
                 <Route path="/home" element={<Home/>}/>
-                <Route path="/students/getById/:id" element={<StudentProfile/>}/>
+                <Route path="/students/:id" element={<StudentProfile/>}/>
                 <Route path="/marks/getAllByStudentId/:id" element={<StudentMarks/>}/>
                 <Route path="/students" element={<StudentsList/>}/>
                 <Route path="/create_user" element={<CreateUser/>}/>
                 <Route path="/account" element={<Account/>}/>
-                <Route path="/subjects/getById/:id" element={<Subject/>}/>
+                <Route path="/subjects/:id" element={<Subject/>}/>
                 <Route path="/subject/:id" element={<Subject/>}/>
                 <Route path={"/subjects"} element={<Subjects/>}/>
 

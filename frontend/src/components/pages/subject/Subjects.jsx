@@ -11,7 +11,7 @@ import Table from "@mui/material/Table";
 import TableHead from "@mui/material/TableHead";
 import TableBody from "@mui/material/TableBody";
 import TablePagination from "@mui/material/TablePagination";
-import {TablePaginationActions} from "@mui/base";
+import {TablePaginationActions} from "../../layouts/TablePaginationActions";
 
 const Subjects = () => {
     const [searchTerm, setSearchTerm] = useState('');
@@ -103,7 +103,7 @@ const Subjects = () => {
                             {subjectNumber}
                         </TableCell>
                         <TableCell align="center" style={{ border: "1px solid #e0e0e0" }}>
-                            <Link to={`/subjects/getById/${subject.id}`}>{subject.name}</Link>
+                            <Link to={`/subjects/${subject.id}`}>{subject.name}</Link>
                         </TableCell>
                     </TableRow>
                 );
@@ -121,7 +121,7 @@ const Subjects = () => {
                     onChange={(e) => setSearchTerm(e.target.value)}
                     placeholder="Search Subject by Name"
                 />
-                <Button onClick={handleSearchClick}>
+                <Button onClick={handleSearchClick} style={{ backgroundColor: '#007bff', color: '#ffffff', padding: '4px 6px', borderRadius: '4px', border: 'none', cursor: 'pointer' }}>
                     Search
                 </Button>
                 {error && <div style={{color: 'red'}}>{error}</div>}

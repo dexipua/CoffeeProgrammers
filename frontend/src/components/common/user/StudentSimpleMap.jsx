@@ -1,16 +1,22 @@
 import StudentSimple from "./StudentSimple";
 
-const StudentSimpleMap= ({users}) => {
+const StudentSimpleMap = ({users}) => {
+    const containerStyle = {
+        display: 'flex',
+        flexWrap: 'wrap', // Allows items to wrap to the next line if necessary
+        justifyContent: 'center', // Centers items horizontally
+    };
+
+    const itemStyle = {
+        margin: '10px', // Adds spacing between items
+    };
     return (
-        <div>
+        <div style={containerStyle}>
             {users.map((user) => (
-                <div key={user.id} className="card">
-                    <div className="card-content">
-                        <StudentSimple
-                            id={user.id}
-                            name={user.lastName + " " + user.firstName}
-                        />
-                    </div>
+                <div key={user.id} style={itemStyle}>
+                    <StudentSimple
+                        id={user.id}
+                        name={user.lastName + " " + user.firstName}/>
                 </div>
             ))}
         </div>

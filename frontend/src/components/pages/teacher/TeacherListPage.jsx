@@ -12,12 +12,11 @@ import Table from "@mui/material/Table";
 import TableHead from "@mui/material/TableHead";
 import TableBody from "@mui/material/TableBody";
 import TablePagination from "@mui/material/TablePagination";
-import {TablePaginationActions} from "@mui/base";
+import {TablePaginationActions} from "../../layouts/TablePaginationActions";
 
 const TeacherListPage = () => {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
-    const [teacherList, setTeacherList] = useState([]);
     const [filteredTeachers, setFilteredTeachers] = useState([]);
     const [error, setError] = useState(null);
 
@@ -26,7 +25,6 @@ const TeacherListPage = () => {
             try {
                 const token = localStorage.getItem('jwtToken');
                 const response = await TeacherService.getAll(token);
-                setTeacherList(response);
                 setFilteredTeachers(response);
             } catch (error) {
                 console.error('Error fetching teachers data:', error);
@@ -38,20 +36,8 @@ const TeacherListPage = () => {
     }, []);
 
     const handleSearch = async () => {
-        try {
-            const token = localStorage.getItem('jwtToken');
-            if (firstName || lastName) {
-                const data = await TeacherService.getByName(firstName, lastName, token);
-                setFilteredTeachers(data);
-            } else {
-                setFilteredTeachers(teacherList);
-            }
-            setError(null);
-        } catch (error) {
-            console.error('Error fetching data:', error);
-            setError('Error fetching data. Please try again.');
-            setFilteredTeachers([]);
-        }
+        const token = localStorage.getItem('jwtToken');
+        setFilteredTeachers(await TeacherService.getByName(firstName, lastName, token))
     };
 
     const [page, setPage] = React.useState(0);
@@ -127,7 +113,7 @@ const TeacherListPage = () => {
                     onChange={(e) => setLastName(e.target.value)}
                     placeholder="Last Name"
                 />
-                <Button onClick={handleSearch}>
+                <Button onClick={handleSearch} style={{ backgroundColor: '#007bff', color: '#ffffff', padding: '4px 6px', borderRadius: '4px', border: 'none', cursor: 'pointer' }}>
                     Search
                 </Button>
                 {error && <div style={{color: 'red'}}>{error}</div>}
