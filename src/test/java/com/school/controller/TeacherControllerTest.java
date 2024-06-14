@@ -6,6 +6,7 @@ import com.school.dto.teacher.TeacherResponseAll;
 import com.school.dto.teacher.TeacherResponseSimple;
 import com.school.dto.user.UserRequestCreate;
 import com.school.dto.user.UserRequestUpdate;
+import com.school.models.Student;
 import com.school.models.Subject;
 import com.school.models.Teacher;
 import com.school.models.User;
@@ -23,10 +24,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -58,10 +56,24 @@ class TeacherControllerTest {
 
     private Teacher updated;
 
+    private Student student;
+    private Student student2;
+
+    private Subject subject;
+    private Subject subject2;
+
     private UserRequestUpdate requestUpdate;
 
     @BeforeEach
     void setUp() {
+        subject = new Subject();
+        subject.setName("Math");
+        subject.setId(1);
+
+        subject2 = new Subject();
+        subject2.setName("Philosophy");
+        subject2.setId(2);
+
         request = new UserRequestCreate();
         request.setFirstName("Vlad");
         request.setLastName("Bulakovskyi");
@@ -78,6 +90,12 @@ class TeacherControllerTest {
 
         teacher2 = new Teacher(new User("Vlad2", "Bulakovskyi2", "vlad2@gmail.com", "passWord1"));
         teacher2.setId(2);
+
+        student = new Student(new User("Peter", "Kornienko", "vlad2@gmail.com", "passWord1"));
+        student.setId(1);
+
+        student2 = new Student(new User("Peter2", "Kornienko2", "vlad2@gmail.com", "passWord1"));
+        student2.setId(2);
 
         updated = new Teacher(new User("Rename", "Surname", "vlad@gmail.com", "NewPassword111"));
         updated.setId(1);
@@ -217,6 +235,30 @@ class TeacherControllerTest {
                 .andReturn();
 
         List<TeacherResponseSimple> expectedResponseBody = new ArrayList<>(List.of(new TeacherResponseSimple(teacher)));
+        String actualResponseBody = mvcResult.getResponse().getContentAsString();
+
+        assertThat(actualResponseBody).isEqualToIgnoringWhitespace(
+                new ObjectMapper().writeValueAsString(expectedResponseBody));
+    }
+    @Test
+    @WithMockUser(roles = "CHIEF_TEACHER")
+    void getAllByStudentId() throws Exception{
+        student.setSubjects(new HashSet<>(Set.of(subject)));
+        student2.setSubjects(new HashSet<>(Set.of(subject2)));
+        teacher.setSubjects(new HashSet<>(Set.of(subject, subject2)));
+        List<Student> students = List.of(student, student2);
+
+
+        when(teacherService.findAllByStudentId(1)).thenReturn(List.of(teacher, teacher2));
+
+
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders
+                        .get("/teachers/getByStudentId/1"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn();
+
+        List<TeacherResponseSimple> expectedResponseBody = new ArrayList<>(Arrays.asList(new TeacherResponseSimple(teacher), new TeacherResponseSimple(teacher2)));
         String actualResponseBody = mvcResult.getResponse().getContentAsString();
 
         assertThat(actualResponseBody).isEqualToIgnoringWhitespace(
