@@ -8,11 +8,11 @@ import java.time.format.DateTimeFormatter;
 @Data
 public class SchoolNewsResponse {
     private long id;
-    private String title;
+    private String text;
     private String time;
 
     public SchoolNewsResponse(SchoolNews schoolNews) {
-        this.title = schoolNews.getTitle();
+        this.text = schoolNews.getText();
         this.time = schoolNews.getTime().withNano(0).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         this.id = schoolNews.getId();
     }

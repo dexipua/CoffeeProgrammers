@@ -33,7 +33,7 @@ public class SchoolNewsController {
     public SchoolNewsResponse updateSchoolNews(@PathVariable long id, @RequestBody SchoolNewsRequest schoolNewsRequest) { //TODO
         SchoolNews newsToUpdate = new SchoolNews();
         newsToUpdate.setId(id);
-        newsToUpdate.setTitle(schoolNewsRequest.getText());
+        newsToUpdate.setText(schoolNewsRequest.getText());
         newsToUpdate.setTime(LocalDateTime.now());
 
         SchoolNews updatedNews = schoolNewsService.update(newsToUpdate);

@@ -5,6 +5,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import PropTypes from "prop-types";
 import * as React from "react";
+import Typography from "@mui/material/Typography";
 
 ConfirmDialog.propTypes = {
     onClose: PropTypes.func.isRequired,
@@ -25,8 +26,8 @@ function ConfirmDialog({onClose, open, text, someFunction}) {
 
     return (
         <Dialog onClose={handleClose} open={open} maxWidth="xs" fullWidth>
-            <DialogTitle style={{ backgroundColor: '#fff', color: '#000' }} />
-            <DialogContent style={{ backgroundColor: '#fff', textAlign: 'center' }}>
+            <DialogTitle style={{backgroundColor: '#fff', color: '#000'}}/>
+            <DialogContent style={{backgroundColor: '#fff', textAlign: 'center'}}>
                 <Box
                     display="flex"
                     flexDirection="column"
@@ -35,7 +36,9 @@ function ConfirmDialog({onClose, open, text, someFunction}) {
                     height="100%"
                     color="#000"
                 >
-                    <Box mb={2}>{text}</Box>
+                    <Typography variant="body1" component="h3" gutterBottom>
+                        {text}
+                    </Typography>
                     <Box display="flex" justifyContent="center" alignItems="center">
                         <Button
                             onClick={handleClose}

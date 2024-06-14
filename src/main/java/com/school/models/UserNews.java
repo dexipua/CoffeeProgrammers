@@ -17,14 +17,14 @@ public class UserNews {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @Column(name = "title")
-    private String title;
+    private String text;
     @Column(name = "time")
     private LocalDateTime time;
     @ManyToOne()
     @JoinColumn(name = "user_id")
     private User user;
-    public UserNews(String title, User user) {
-        this.title = title;
+    public UserNews(String text, User user) {
+        this.text = text;
         this.user = user;
         this.time = LocalDateTime.now();
     }
