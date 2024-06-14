@@ -15,6 +15,7 @@ public class SubjectDateResponseByStudentId {
     public SubjectDateResponseByStudentId(DayOfWeek dayOfWeek, SubjectDate.NumOfLesson numOfLesson, Subject subject) {
         this.dayOfWeek = dayOfWeek.toString();
         this.numOfLesson = numOfLesson.toString();
+        if(subject == null) return;
         this.subjectResponseSimple = new SubjectResponseSimple(subject);
     }
 }

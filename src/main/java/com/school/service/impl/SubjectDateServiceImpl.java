@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
-import java.util.HashMap;
+import java.util.TreeMap;
 
 @Service
 @RequiredArgsConstructor
@@ -85,12 +85,37 @@ public class SubjectDateServiceImpl implements SubjectDateService {
     }
 
     @Override
-    public HashMap<DayOfWeek, HashMap<SubjectDate.NumOfLesson, Subject>> findAllBySubject_Students_Id(long studentId) {
-        HashMap<DayOfWeek, HashMap<SubjectDate.NumOfLesson, Subject>> result = new HashMap<>();
-        HashMap<SubjectDate.NumOfLesson, Subject> tempMap;
+    public TreeMap<DayOfWeek, TreeMap<SubjectDate.NumOfLesson, Subject>> findAllBySubject_Students_Id(long studentId) {
+        TreeMap<DayOfWeek, TreeMap<SubjectDate.NumOfLesson, Subject>> result = new TreeMap<>();
+        TreeMap<SubjectDate.NumOfLesson, Subject> tempMap;
+        for(DayOfWeek dayOfWeek : DayOfWeek.values()) {
+            TreeMap<SubjectDate.NumOfLesson, Subject> temp = result.getOrDefault(dayOfWeek, new TreeMap<>());
+            for(SubjectDate.NumOfLesson numOfLesson : SubjectDate.NumOfLesson.values()) {
+                temp.put(numOfLesson, null);
+            }
+            result.put(dayOfWeek, temp);
+        }
         for(SubjectDate subjectDate : subjectDateRepository.findAllBySubject_Students_Id(studentId)) {
-            tempMap = result.getOrDefault(subjectDate.getDayOfWeek(), new HashMap<>());
+            tempMap = result.getOrDefault(subjectDate.getDayOfWeek(), new TreeMap<>());
             tempMap.put(subjectDate.getNumOfLesson(), subjectDate.getSubject());
+            result.put(subjectDate.getDayOfWeek(), tempMap);
+        }
+        return result;
+    }
+    @Override
+    public TreeMap<DayOfWeek, TreeMap<SubjectDate.NumOfLesson, Boolean>> findAllBySubject_Id(long subjectId) {
+        TreeMap<DayOfWeek, TreeMap<SubjectDate.NumOfLesson, Boolean>> result = new TreeMap<>();
+        TreeMap<SubjectDate.NumOfLesson, Boolean> tempMap;
+        for(DayOfWeek dayOfWeek : DayOfWeek.values()) {
+            TreeMap<SubjectDate.NumOfLesson, Boolean> temp = result.getOrDefault(dayOfWeek, new TreeMap<>());
+            for(SubjectDate.NumOfLesson numOfLesson : SubjectDate.NumOfLesson.values()) {
+                temp.put(numOfLesson, false);
+            }
+            result.put(dayOfWeek, temp);
+        }
+        for(SubjectDate subjectDate : subjectDateRepository.findAllBySubject_Id(subjectId)) {
+            tempMap = result.getOrDefault(subjectDate.getDayOfWeek(), new TreeMap<>());
+            tempMap.put(subjectDate.getNumOfLesson(), true);
             result.put(subjectDate.getDayOfWeek(), tempMap);
         }
         return result;
