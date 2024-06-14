@@ -26,6 +26,6 @@ public class UserNewsServiceImpl implements UserNewsService {
 
     @Override
     public List<UserNews> getAllNewsByUserId(long userId) {
-        return newsRepository.findAllByUser_Id(userId);
+        return newsRepository.findAllByUser_IdOrderByTimeDesc(userId);
     }
 }

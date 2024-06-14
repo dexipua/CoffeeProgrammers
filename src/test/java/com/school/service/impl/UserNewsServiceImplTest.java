@@ -59,8 +59,8 @@ class UserNewsServiceImplTest {
 
     @Test
     void getAllNewsByUserId() {
-        when(userNewsRepository.findAllByUser_Id(user.getId())).thenReturn(List.of(userNews));
+        when(userNewsRepository.findAllByUser_IdOrderByTimeDesc(user.getId())).thenReturn(List.of(userNews));
         assertEquals(List.of(userNews), userNewsService.getAllNewsByUserId(user.getId()));
-        verify(userNewsRepository, times(1)).findAllByUser_Id(user.getId());
+        verify(userNewsRepository, times(1)).findAllByUser_IdOrderByTimeDesc(user.getId());
     }
 }

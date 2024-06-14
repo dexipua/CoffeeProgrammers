@@ -28,6 +28,6 @@ public class UserNewsRepositoryTest {
         UserNews userNews2 = new UserNews("New mark 3", student.getUser());
         userNewsRepository.saveAll(List.of(userNews1, userNews2));
 
-        assertEquals(List.of(userNews1, userNews2), userNewsRepository.findAllByUser_Id(student.getUser().getId()));
+        assertEquals(List.of(userNews1, userNews2), userNewsRepository.findAllByUser_IdOrderByTimeDesc(student.getUser().getId()));
     }
 }
