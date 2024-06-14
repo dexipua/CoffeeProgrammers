@@ -2,6 +2,7 @@ package com.school.models;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.DayOfWeek;
@@ -11,6 +12,7 @@ import java.time.LocalTime;
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
 @Table(name = "subject_dates")
 public class SubjectDate {
 
@@ -29,9 +31,6 @@ public class SubjectDate {
         this.subject = subject;
         this.dayOfWeek = dayOfWeek;
         this.numOfLesson = NumOfLesson.values()[numOfLesson - 1];
-    }
-
-    public SubjectDate() {
     }
 
     public enum NumOfLesson {

@@ -2,6 +2,7 @@ package com.school.models;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
@@ -9,6 +10,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
 @Table(name = "news")
 public class UserNews {
     @Id
@@ -26,6 +28,4 @@ public class UserNews {
         this.user = user;
         this.time = LocalDateTime.now();
     }
-
-    public UserNews() {}
 }
