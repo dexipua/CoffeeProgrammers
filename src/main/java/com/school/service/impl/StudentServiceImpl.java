@@ -65,6 +65,7 @@ public class StudentServiceImpl implements StudentService {
         return studentRepository.findStudentBySubjectNameContainingIgnoreCase(subjectName);
     }
 
+
     @Override
     public List<Student> findStudentsByTeacherId(long teacherId) {
         teacherService.findById(teacherId);
