@@ -106,7 +106,7 @@ class StudentService {
 
     async getByName(firstName, lastName, token) {
         try {
-            const response = await axios.get(`${API_URL}/getAllByName`, {
+            const response = await axios.get(`${API_URL}/getAllByName/`, {
                 params: {
                     first_name: firstName,
                     last_name: lastName
@@ -118,6 +118,34 @@ class StudentService {
             return response.data;
         } catch (error) {
             console.error('Error getByName:', error);
+            throw error;
+        }
+    }
+
+    async getStudentsCount(token) {
+        try {
+            const response = await axios.get(`${API_URL}/count`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            return response.data;
+        } catch (error) {
+            console.error('Error getting students count:', error);
+            throw error;
+        }
+    }
+
+    async findAllBySubjectsIdIsNot(subjectId, token) {
+        try {
+            const response = await axios.get(`${API_URL}/subjectIdIsNot/${subjectId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            return response.data;
+        } catch (error) {
+            console.error('Error finding students by subject id:', error);
             throw error;
         }
     }

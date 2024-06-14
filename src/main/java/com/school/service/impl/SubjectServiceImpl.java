@@ -5,6 +5,7 @@ import com.school.models.Student;
 import com.school.models.Subject;
 import com.school.models.Teacher;
 import com.school.models.UserNews;
+import com.school.repositories.StudentRepository;
 import com.school.repositories.SubjectRepository;
 import com.school.service.StudentService;
 import com.school.service.SubjectService;
@@ -24,6 +25,7 @@ public class SubjectServiceImpl implements SubjectService {
     private final SubjectRepository subjectRepository;
     private final TeacherService teacherService;
     private final StudentService studentService;
+    private final StudentRepository studentRepository;
     private final UserNewsService userNewsService;
 
     @Override
@@ -50,8 +52,7 @@ public class SubjectServiceImpl implements SubjectService {
         String actualName = subjectToUpdate.getName();
 
         if (!updatedName.equals(actualName) &&
-                subjectRepository.findByName(updatedName)
-                                 .isPresent()) {
+                subjectRepository.findByName(updatedName).isPresent()) {
             throw new EntityExistsException(
                     "Subject with name " + updatedName + " already exists"
             );
@@ -114,15 +115,10 @@ public class SubjectServiceImpl implements SubjectService {
         Subject subject = findById(subjectId);
         Student student = studentService.findById(studentId);
 
-        if (subject.getStudents().contains(student)) {
-            throw new UnsupportedOperationException(
-                    "Subject already have this student"
-            );
-        }
+        student.getSubjects().add(subject);
 
-        subject.getStudents().add(student);
         userNewsService.create(new UserNews("You have been added to subject " + subject.getName(), student.getUser()));
-        subjectRepository.save(subject);
+        studentRepository.save(student);
     }
 
     @Override
@@ -136,7 +132,8 @@ public class SubjectServiceImpl implements SubjectService {
             );
         }
 
-        subject.getStudents().remove(student);
+        student.getSubjects().remove(subject);
+
         userNewsService.create(new UserNews("You have been deleted from subject " + subject.getName(), student.getUser()));
         subjectRepository.save(subject);
     }

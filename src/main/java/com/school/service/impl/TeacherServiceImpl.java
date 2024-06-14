@@ -35,7 +35,7 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public Teacher findById(long id) {
         return teacherRepository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException("Teacher with id " + id + " not found"));
+                () -> new EntityNotFoundException("TeacherProfile with id " + id + " not found"));
     }
 
     @Override
@@ -72,5 +72,16 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public List<Teacher> findAllByUser_FirstNameAndAndUser_LastName(String firstName, String lastName) {
         return teacherRepository.findAllByUser_FirstNameContainingIgnoreCaseAndUser_LastNameContainingIgnoreCase(firstName, lastName);
+    }
+
+    @Override
+    public Teacher findByUserId(long userId) {
+        return teacherRepository.findByUserId(userId).orElseThrow(() -> new EntityNotFoundException("TeacherProfile with id " + userId + " not found"));
+    }
+
+    @Override
+    public List<Teacher> findAllByStudentId(long studentId) {
+        findById(studentId);
+        return teacherRepository.findAllBySubjectsByStudents_Id(studentId);
     }
 }

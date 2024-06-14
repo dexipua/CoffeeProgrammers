@@ -3,7 +3,9 @@ package com.school.controller;
 import com.school.dto.subject.SubjectRequest;
 import com.school.dto.subject.SubjectResponseAll;
 import com.school.dto.subject.SubjectResponseSimple;
+import com.school.dto.subject.SubjectResponseWithTeacher;
 import com.school.models.Subject;
+import com.school.service.MarkService;
 import com.school.service.SubjectService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +23,7 @@ import java.util.stream.Collectors;
 public class SubjectController {
 
     private final SubjectService subjectService;
+    private final MarkService markService;
 
     @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER')")
     @PostMapping("/create")
@@ -53,35 +56,36 @@ public class SubjectController {
     @DeleteMapping("/delete/{subject_id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("subject_id") long subjectId) {
+        markService.deleteAllBySubjectId(subjectId);
         subjectService.delete(subjectId);
     }
 
     @GetMapping("/getAll")
     @ResponseStatus(HttpStatus.OK)
-    public List<SubjectResponseSimple> getAllByOrderByName() {
+    public List<SubjectResponseWithTeacher> getAllByOrderByName() {
         List<Subject> subjects = subjectService.getAllByOrderByName();
         return subjects.stream()
-                .map(SubjectResponseSimple::new)
+                .map(SubjectResponseWithTeacher::new)
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/getAllByName/")
     @ResponseStatus(HttpStatus.OK)
-    public List<SubjectResponseSimple> getByNameContaining(
+    public List<SubjectResponseWithTeacher> getByNameContaining(
             @RequestParam("subject_name") String name) {
         List<Subject> subjects = subjectService.findByNameContaining(name);
         return subjects.stream()
-                .map(SubjectResponseSimple::new)
+                .map(SubjectResponseWithTeacher::new)
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/getAllByTeacherId/{teacher_id}")
     @ResponseStatus(HttpStatus.OK)
-    public List<SubjectResponseSimple> getByTeacherId(@PathVariable("teacher_id") long teacherId) {
+    public List<SubjectResponseWithTeacher> getByTeacherId(@PathVariable("teacher_id") long teacherId) {
         List<Subject> subjects = subjectService.findByTeacher_Id(teacherId);
 
         return subjects.stream()
-                .map(SubjectResponseSimple::new)
+                .map(SubjectResponseWithTeacher::new)
                 .collect(Collectors.toList());
     }
 
@@ -105,11 +109,11 @@ public class SubjectController {
 
     @GetMapping("/getAllByStudentId/{student_id}")
     @ResponseStatus(HttpStatus.OK)
-    public List<SubjectResponseSimple> getByStudentId(@PathVariable("student_id") long studentId) {
+    public List<SubjectResponseWithTeacher> getByStudentId(@PathVariable("student_id") long studentId) {
         List<Subject> subjects = subjectService.findByStudent_Id(studentId);
 
         return subjects.stream()
-                .map(SubjectResponseSimple::new)
+                .map(SubjectResponseWithTeacher::new)
                 .collect(Collectors.toList());
     }
 
@@ -131,6 +135,7 @@ public class SubjectController {
             @PathVariable("subject_id") long subjectId,
             @PathVariable("student_id") long studentId,
             Authentication auth) {
+        markService.deleteAllByStudentId(studentId);
         subjectService.deleteStudent(subjectId, studentId);
     }
 }

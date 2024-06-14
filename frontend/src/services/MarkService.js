@@ -4,7 +4,7 @@ const API_URL = 'http://localhost:9091/marks';
 
 class MarkService {
 
-    async createMark(markRequest, subjectId, studentId, token) {
+    async create(markRequest, subjectId, studentId, token) {
         try {
             const response = await axios.post(`${API_URL}/subject/${subjectId}/student/${studentId}/createMark`, markRequest, {
                 headers: {

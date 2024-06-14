@@ -6,15 +6,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @NoArgsConstructor
 @Setter
 @Getter
 @Table(name = "students")
-@EqualsAndHashCode
+@EqualsAndHashCode(exclude = {"subjects", "user"})
 public class Student implements Comparable<Student> {
 
     @Id
@@ -25,7 +25,8 @@ public class Student implements Comparable<Student> {
     @JoinTable(name = "subject_students",
             joinColumns = @JoinColumn(name = "student_id"),
             inverseJoinColumns = @JoinColumn(name = "subject_id"))
-    private List<Subject> subjects ;
+
+    private Set<Subject> subjects = new HashSet<>();
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
@@ -33,14 +34,13 @@ public class Student implements Comparable<Student> {
 
     public Student(User user){
         this.user = user;
-        this.subjects = new ArrayList<>();
-
+        this.subjects = new HashSet<>();
     }
+
     @Override
     public String toString(){
         return "Student{" +
                 "id=" + id +
-                ", subjects=" + subjects +
                 ", user=" + user +
                 '}';
     }

@@ -6,19 +6,18 @@ import com.school.models.Student;
 import lombok.Data;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 public class MarkResponseForSubject {
     private StudentResponseSimple studentResponseSimple;
-    private MarkResponseSimple[] marks;
+    private List<MarkResponseSimple> marks;
 
     public MarkResponseForSubject(Student student, List<Mark> marks) {
         this.studentResponseSimple = new StudentResponseSimple(student);
 
-        int size = marks.size();
-        this.marks = new MarkResponseSimple[size];
-        for(int i = 0; i < size; i++) {
-            this.marks[i] = new MarkResponseSimple(marks.get(i));
-        }
+        this.marks = marks.stream()
+                .map(MarkResponseSimple::new)
+                .collect(Collectors.toList());
     }
 }

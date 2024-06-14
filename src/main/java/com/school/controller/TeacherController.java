@@ -5,6 +5,7 @@ import com.school.dto.teacher.TeacherResponseSimple;
 import com.school.dto.user.UserRequestCreate;
 import com.school.dto.user.UserRequestUpdate;
 import com.school.models.Teacher;
+import com.school.service.StudentService;
 import com.school.service.TeacherService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/teachers")
 public class TeacherController {
     private final TeacherService teacherService;
+    private final StudentService studentService;
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
@@ -37,7 +39,9 @@ public class TeacherController {
             @PathVariable long id,
             @Valid @RequestBody UserRequestUpdate userRequest,
             Authentication auth) {
-        return new TeacherResponseAll(teacherService.update(id, userRequest));
+        return new TeacherResponseAll(
+                teacherService.update(id, userRequest),
+                studentService.findStudentsByTeacherId(id));
     }
 
     @GetMapping("/getAll")
@@ -51,8 +55,10 @@ public class TeacherController {
 
     @GetMapping("/getById/{teacher_id}")
     @ResponseStatus(HttpStatus.OK)
-    public TeacherResponseAll getById(@PathVariable("teacher_id") long teacher_id) {
-        return new TeacherResponseAll(teacherService.findById(teacher_id));
+    public TeacherResponseAll getById(@PathVariable("teacher_id") long teacherId) {
+        return new TeacherResponseAll(
+                teacherService.findById(teacherId),
+                studentService.findStudentsByTeacherId(teacherId));
     }
 
     @GetMapping("/getAllBySubjectName/")
@@ -80,6 +86,15 @@ public class TeacherController {
     ) {
         List<Teacher> teachers = teacherService.findAllByUser_FirstNameAndAndUser_LastName(firstName, lastName);
         return teachers.stream()
+                .map(TeacherResponseSimple::new)
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/getByStudentId/{student_id}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<TeacherResponseSimple> getAllByStudentId(@PathVariable("student_id") long studentId) {
+        List<Teacher> students = teacherService.findAllByStudentId(studentId);
+        return students.stream()
                 .map(TeacherResponseSimple::new)
                 .collect(Collectors.toList());
     }

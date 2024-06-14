@@ -14,4 +14,6 @@ public interface TeacherService {
     List<Teacher> findAll();
     List<Teacher> findBySubjectName(String subjectName);
     List<Teacher> findAllByUser_FirstNameAndAndUser_LastName(String firstName, String lastName);
+    Teacher findByUserId(long userId);
+    List<Teacher> findAllByStudentId(long studentId);
 }

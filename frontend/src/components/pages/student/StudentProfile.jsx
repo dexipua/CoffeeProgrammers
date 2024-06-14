@@ -1,56 +1,105 @@
-import React, {useEffect} from 'react';
-import {Link, useParams} from 'react-router-dom';
+import React, {useEffect, useState} from "react";
+import ApplicationBar from "../../layouts/app_bar/ApplicationBar";
+import SubjectWithTeacherList from "../../common/subject/SubjectWithTeacherList";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import AccountContainer from "../../common/user/AccountContainer";
+import {Grid} from "@mui/material";
+import AverageMarkView from "../../common/student/AverageMarkView";
 import StudentService from "../../../services/StudentService";
-import '../../../assets/styles/StudentProfile.css'
+import {useParams} from "react-router-dom";
+import Loading from "../../layouts/Loading"; // Імпортуємо компонент Loading
 
 const StudentProfile = () => {
-    const {id} = useParams(); // Отримання значення id з параметрів маршруту
-    const [student, setStudent] = React.useState({
-        id: -1,
-        firstName: "",
-        lastName: "",
-        email: "",
-        averageMark: 0.0,
-        subjects: []
-    });
+    const { id } = useParams();
+
+    const [student, setStudent] = useState(null);
+    const [isThisStudent, setIsThisStudent] = useState(false);
+    const [loading, setLoading] = useState(true);
+
+    const role = localStorage.getItem('role');
+    const token = localStorage.getItem('jwtToken');
+    const roleId = localStorage.getItem('roleId');
 
     useEffect(() => {
-        const token = localStorage.getItem('jwtToken');
         const fetchStudentById = async () => {
             try {
                 const response = await StudentService.getById(id, token);
                 setStudent(response);
+                setIsThisStudent(id === roleId && role === "STUDENT");
             } catch (error) {
                 console.error('Error fetching student data:', error);
+            } finally {
+                setLoading(false);
             }
         };
 
-        fetchStudentById()
-            .then(() => {
-                console.log('Student data fetched successfully');
-            })
-    }, [id]);
+        fetchStudentById();
+    }, [id, role, roleId, token]);
 
-    // Рендер компонента
+    const handleNameUpdate = (newFirstName, newLastName) => {
+        setStudent(prevStudent => ({
+            ...prevStudent,
+            firstName: newFirstName,
+            lastName: newLastName
+        }));
+    };
+
+    if (loading) {
+        return <Loading />;
+    }
+
     return (
-        <div className="student-profile">
-            <h2>Student Profile</h2>
-            <p><strong>Name:</strong> {student.firstName} {student.lastName}</p>
-            <p><strong>Email:</strong> {student.email}</p>
-            <p><strong>Average Mark:</strong> {student.averageMark}</p>
-            <p><strong>Subjects:</strong></p>
-            <ul>
-                {student.subjects.map((subject, index) => (
-                    <li key={index}>{subject}</li>
-                ))}
-            </ul>
-            <div className="marks-link">
-                <Link to={`/marks/getAllByStudentId/${id}`}>
-                    View Marks
-                </Link>
-            </div>
-        </div>
+        <>
+            <ApplicationBar />
+            <Box mt="80px" ml="60px" mr="60px">
+                <Grid container spacing={2} alignItems="flex-start">
+                    <Grid item xs={12} sm={6} md={4}>
+                        <AccountContainer
+                            edit={isThisStudent}
+                            topic={"Student"}
+                            user={student}
+                            onNameUpdate={handleNameUpdate}
+                        />
+                        {isThisStudent && (
+                            <AverageMarkView
+                                averageMark={student.averageMark}
+                            />
+                        )}
+                    </Grid>
+
+                    <Grid item xs={12} sm={6} md={8}>
+                        <Box
+                            sx={{
+                                width: '700px',
+                                border: '1px solid #ddd',
+                                borderRadius: '8px',
+                                backgroundColor: '#ffffff',
+                                textAlign: 'center',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                mt: 2
+                            }}
+                        >
+                            <>
+                            <Typography mt="10px" variant="h6" component="h3">Subjects</Typography>
+                            <Box
+                                sx={{
+                                    width: '100%',
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                }}
+                            >
+                                <SubjectWithTeacherList subjects={student.subjects} />
+                            </Box>
+                            </>
+                        </Box>
+                    </Grid>
+                </Grid>
+            </Box>
+        </>
     );
-};
+}
 
 export default StudentProfile;

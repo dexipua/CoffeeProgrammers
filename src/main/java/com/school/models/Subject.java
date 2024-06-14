@@ -6,15 +6,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
 @Table(name = "subjects")
-@EqualsAndHashCode
+@EqualsAndHashCode(exclude = {"students", "teacher"})
 public class Subject {
 
     @Id
@@ -28,11 +28,11 @@ public class Subject {
     @JoinColumn(name = "teacher_id")
     private Teacher teacher;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(name = "subject_students",
             joinColumns = @JoinColumn(name = "subject_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "student_id", referencedColumnName = "id"))
-    private List<Student> students;
+    private Set<Student> students = new HashSet<>();
 
     @Override
     public String toString() {
@@ -40,16 +40,5 @@ public class Subject {
                 "name='" + name + '\'' +
                 ", students=" + students +
                 '}';
-    }
-
-    public Subject(String name) {
-        this.name = name;
-        this.students = new ArrayList<>();
-    }
-
-    public Subject(String name, Teacher teacher) {
-        this.name = name;
-        this.teacher = teacher;
-        this.students = new ArrayList<>();
     }
 }
