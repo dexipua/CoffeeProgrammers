@@ -34,8 +34,10 @@ public class TeacherRepositoryTest {
     @Test
     void findBySubjectName() {
         //given
-        Subject mathSubject = new Subject("Mathematics");
-        Subject artSubject = new Subject("Art");
+        Subject mathSubject = new Subject();
+        mathSubject.setName("Math");
+        Subject artSubject = new Subject();
+        artSubject.setName("Art");
 
         Teacher teacher = new Teacher(new User("Artem", "Moseichenko",  "am@gmil.com","Abekpr257"));
         mathSubject.setTeacher(teacher);
@@ -47,7 +49,7 @@ public class TeacherRepositoryTest {
         teacherRepository.save(teacher);
 
         //when
-        List<Teacher> res = teacherRepository.findBySubjectNameIgnoreCase("Mathematics");
+        List<Teacher> res = teacherRepository.findBySubjectNameIgnoreCase(mathSubject.getName());
 
         //then
         assertEquals(res, List.of(teacher));
@@ -56,8 +58,10 @@ public class TeacherRepositoryTest {
     @Test
     void notFindBySubjectName() {
         //given
-        Subject mathSubject = new Subject("Mathematics");
-        Subject artSubject = new Subject("Art");
+        Subject mathSubject = new Subject();
+        mathSubject.setName("Math");
+        Subject artSubject = new Subject();
+        artSubject.setName("Art");
 
         Teacher teacher = new Teacher(new User("Artem", "Moseichenko",  "am@gmil.com","Abekpr257"));
         mathSubject.setTeacher(teacher);

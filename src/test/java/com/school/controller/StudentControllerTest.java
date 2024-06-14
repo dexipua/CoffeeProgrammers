@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.school.config.JWT.JwtUtils;
 import com.school.dto.student.StudentResponseAll;
 import com.school.dto.student.StudentResponseSimple;
+import com.school.dto.student.StudentResponseWithEmail;
 import com.school.dto.user.UserRequestCreate;
 import com.school.dto.user.UserRequestUpdate;
 import com.school.models.Student;
@@ -27,6 +28,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import static com.school.controller.TeacherControllerTest.asJsonString;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -173,7 +175,7 @@ class StudentControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        List<StudentResponseSimple> expectedResponseBody = new ArrayList<>(Arrays.asList(new StudentResponseSimple(student), new StudentResponseSimple(student2)));
+        List<StudentResponseWithEmail> expectedResponseBody = new ArrayList<>(Arrays.asList(new StudentResponseWithEmail(student), new StudentResponseWithEmail(student2)));
         String actualResponseBody = mvcResult.getResponse().getContentAsString();
 
         assertThat(actualResponseBody).isEqualToIgnoringWhitespace(
@@ -184,7 +186,9 @@ class StudentControllerTest {
     @Test
     @WithMockUser(roles = "CHIEF_TEACHER")
     void getStudentsBySubjectName() throws Exception {
-        student.setSubjects(List.of(new Subject("Maths")));
+        Subject subject = new Subject();
+        subject.setName("Math");
+        student.setSubjects(Set.of(subject));
         studentService.create(request);
 
         when(studentService.findBySubjectName("Maths")).thenReturn(List.of(student));
@@ -205,7 +209,10 @@ class StudentControllerTest {
     @Test
     @WithMockUser(roles = "CHIEF_TEACHER")
     void getStudentsByTeacherId() throws Exception {
-        student.setSubjects(List.of(new Subject("Maths", new Teacher())));
+        Subject subject = new Subject();
+        subject.setName("Math");
+        subject.setTeacher(new Teacher());
+        student.setSubjects(Set.of(subject));
         studentService.create(request);
 
         when(studentService.findStudentsByTeacherId(1)).thenReturn(List.of(student));
@@ -216,7 +223,7 @@ class StudentControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        List<StudentResponseSimple> expectedResponseBody = new ArrayList<>(List.of(new StudentResponseSimple(student)));
+        List<StudentResponseWithEmail> expectedResponseBody = new ArrayList<>(List.of(new StudentResponseWithEmail(student)));
         String actualResponseBody = mvcResult.getResponse().getContentAsString();
 
         assertThat(actualResponseBody).isEqualToIgnoringWhitespace(

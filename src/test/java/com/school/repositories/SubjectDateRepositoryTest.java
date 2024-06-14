@@ -12,6 +12,7 @@ import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -26,9 +27,10 @@ class SubjectDateRepositoryTest {
 
     @Test
     void findAllByDayOfWeekOrderByNumOfLesson() {
-        Subject subject = new Subject("Maths");
+        Subject subject = new Subject();
+        subject.setName("Math");
         Student student = new Student(new User("Hefef", "Ufeihfeinfe", "gewudgqw@deu.fj", "ljffehfoiehfohekfjjeifipjpkfipjeHFHOhfehfhoehofohe87237483749387434324"));
-        student.setSubjects(List.of(subject));
+        student.setSubjects(Set.of(subject));
         subjectRepository.save(subject);
         studentRepository.save(student);
         SubjectDate subjectDate = new SubjectDate(subject, DayOfWeek.MONDAY, 1);
