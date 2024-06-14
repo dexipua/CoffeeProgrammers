@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import ApplicationBar from "../../layouts/ApplicationBar";
+import ApplicationBar from "../../layouts/app_bar/ApplicationBar";
 import SubjectService from "../../../services/SubjectService";
 import MarkService from "../../../services/MarkService";
 import {useParams} from "react-router-dom";

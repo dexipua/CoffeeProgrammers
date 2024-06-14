@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import ApplicationBar from "../../layouts/ApplicationBar";
+import ApplicationBar from "../../layouts/app_bar/ApplicationBar";
 import SubjectWithTeacherList from "../../common/subject/SubjectWithTeacherList";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";

@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography} from '@mui/material';
 import UserService from '../../../services/UserService';
-import ApplicationBar from "../../layouts/ApplicationBar";
+import ApplicationBar from "../../layouts/app_bar/ApplicationBar";
 import Box from "@mui/material/Box";
 
 const Bookmark = () => {

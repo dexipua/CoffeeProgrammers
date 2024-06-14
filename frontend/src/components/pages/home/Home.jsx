@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import SubjectService from "../../../services/SubjectService";
 import TeacherService from "../../../services/TeacherService";
-import ApplicationBar from "../../layouts/ApplicationBar";
+import ApplicationBar from "../../layouts/app_bar/ApplicationBar";
 import UserList from "../../common/user/UserList"
 import SubjectWithTeacherList from "../../common/subject/SubjectWithTeacherList";
 import Box from "@mui/material/Box";

@@ -15,7 +15,7 @@ import TablePaginationActions from "../../layouts/TablePaginationActions";
 import UserSearchBar from "../../layouts/UserSearchBar";
 import Typography from "@mui/material/Typography";
 import {Paper} from "@mui/material";
-import ApplicationBar from "../../layouts/ApplicationBar";
+import ApplicationBar from "../../layouts/app_bar/ApplicationBar";
 
 const Users = () => {
     const [role, setRole] = useState('STUDENT');

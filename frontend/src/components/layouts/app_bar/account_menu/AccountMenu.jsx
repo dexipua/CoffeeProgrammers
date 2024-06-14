@@ -3,7 +3,7 @@ import IconButton from '@mui/material/IconButton';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import {Link} from "react-router-dom";
+import AccountItemButton from "./AccountItemButton";
 
 export default function AccountMenu() {
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -37,24 +37,16 @@ export default function AccountMenu() {
                 onClose={handleMenuClose}
             >
                 <MenuItem onClick={handleMenuClose}>
-                    <Link to= {role === "STUDENT" ? `/students/${roleId}` : `/teachers/${roleId}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                        Account
-                    </Link>
+                    <AccountItemButton
+                        link={role === "STUDENT" ? `/students/${roleId}` : `/teachers/${roleId}`}
+                        text={"Account"}
+                    />
                 </MenuItem>
                 <MenuItem onClick={handleMenuClose}>
-                    <Link to="/subjects" style={{ textDecoration: 'none', color: 'inherit' }}>
-                        Subjects
-                    </Link>
-                </MenuItem>
-                <MenuItem onClick={handleMenuClose}>
-                    <Link to="/users" style={{ textDecoration: 'none', color: 'inherit' }}>
-                        Users
-                    </Link>
-                </MenuItem>
-                <MenuItem onClick={handleMenuClose}>
-                    <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
-                        Logout
-                    </Link>
+                    <AccountItemButton
+                        link={"/"}
+                        text={"Logout"}
+                    />
                 </MenuItem>
             </Menu>
         </div>

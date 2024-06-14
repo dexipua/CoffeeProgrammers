@@ -2,7 +2,7 @@
 import * as React from 'react';
 import {useState} from 'react';
 import VerticalTabs from './admin_panel/VerticalTabs'; // Імпорт компонента VerticalTabs
-import ApplicationBar from "../../layouts/ApplicationBar";
+import ApplicationBar from "../../layouts/app_bar/ApplicationBar";
 import CreateUser from "./admin_panel/CreateUser";
 import DeleteUser from "./admin_panel/DeleteUser";
 import CreateSubject from "./admin_panel/CreateSubject";
