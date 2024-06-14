@@ -165,6 +165,22 @@ public class MarkServiceImplTest {
     }
 
     @Test
+    void deleteAllByStudentId() {
+        // then
+        markService.deleteAllByStudentId(student1.getId());
+
+        verify(markRepository, times(1)).deleteAllByStudentId(subject1.getId());
+    }
+
+    @Test
+    void deleteAllBySubjectId() {
+        // then
+        markService.deleteAllBySubjectId(subject1.getId());
+
+        verify(markRepository, times(1)).deleteAllBySubjectId(subject1.getId());
+    }
+
+    @Test
     void findAllByStudentId() {
         // given
         subject1.setStudents(Set.of(student1));

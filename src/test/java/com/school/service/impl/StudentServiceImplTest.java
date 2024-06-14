@@ -16,11 +16,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -46,6 +44,8 @@ class StudentServiceImplTest {
     private Student expected;
     private User user;
 
+    private Subject subject;
+
     private Role studentRole = new Role("STUDENT");
 
     private UserRequestCreate userRequestCreate = new UserRequestCreate();
@@ -55,6 +55,11 @@ class StudentServiceImplTest {
     void setUp() {
         user = new User("FirstName", "LastName", "email@gm.com", "Password123");
         user.setId(1);
+
+        subject = new Subject();
+        subject.setName("Math");
+        subject.setId(1);
+
         student = new Student(user);
         userRequestCreate.setFirstName("FirstName");
         userRequestCreate.setLastName("LastName");
@@ -68,6 +73,42 @@ class StudentServiceImplTest {
         expected = new Student(new User("NewFirstName", "NewLastName", "email@gm.com","NewPassword123"));
         expected.setId(1);
         expected.getUser().setRole(studentRole);
+    }
+
+    @Test
+    void findByUserId() {
+        when(studentRepository.findByUserId(student.getUser().getId())).thenReturn(Optional.of(student));
+
+        Student res = studentService.findByUserId(student.getUser().getId());
+        verify(studentRepository, times(1)).findByUserId(student.getUser().getId());
+        assertThat(res).isEqualTo(student);
+    }
+
+    @Test
+    void notFindByUserId() {
+        assertThrowsExactly(EntityNotFoundException.class, () -> studentService.findByUserId(-1));
+    }
+
+    @Test
+    void getStudentsCount() {
+        when(studentRepository.findAll()).thenReturn(List.of(student, new Student()));
+
+        Long res = studentService.getStudentsCount();
+        verify(studentRepository, times(1)).findAll();
+        assertThat(res).isEqualTo(2);
+    }
+
+    @Test
+    void findAllBySubjectIdIsNot() {
+        // Mock the repository response
+        student.setSubjects(Set.of(subject));
+        when(studentRepository.findAll()).thenReturn(Arrays.asList(student, expected));
+
+        // Call the service method
+        List<Student> result = studentService.findAllBySubjectsIdIsNot(subject.getId());
+
+        // Verify the results
+        assertTrue(result.contains(expected));
     }
 
     @Test
@@ -102,7 +143,7 @@ class StudentServiceImplTest {
     }
 
     @Test
-    void findById__WhenStudentNotExists() {
+    void findById_WhenStudentNotExists() {
         when(studentRepository.findById(1L)).thenReturn(Optional.empty());
 
         EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> studentService.findById(1L));

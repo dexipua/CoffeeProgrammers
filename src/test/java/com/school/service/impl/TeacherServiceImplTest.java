@@ -2,10 +2,7 @@ package com.school.service.impl;
 
 import com.school.dto.user.UserRequestCreate;
 import com.school.dto.user.UserRequestUpdate;
-import com.school.models.Role;
-import com.school.models.Subject;
-import com.school.models.Teacher;
-import com.school.models.User;
+import com.school.models.*;
 import com.school.repositories.TeacherRepository;
 import com.school.service.RoleService;
 import com.school.service.SubjectService;
@@ -98,6 +95,31 @@ public class TeacherServiceImplTest {
         assertThat(res).isEqualTo(teacher);
     }
 
+    @Test
+    void findByUserId() {
+        when(teacherRepository.findByUserId(teacher.getUser().getId())).thenReturn(Optional.of(teacher));
+
+        Teacher res = teacherService.findByUserId(teacher.getUser().getId());
+        verify(teacherRepository, times(1)).findByUserId(teacher.getUser().getId());
+        assertThat(res).isEqualTo(teacher);
+    }
+
+    @Test
+    void notFindByUserId() {
+        assertThrowsExactly(EntityNotFoundException.class, () -> teacherService.findByUserId(-1));
+    }
+
+    @Test
+    void findAllByStudentId() {
+        Student student = new Student(new User("Vlad", "Bulakovskyi", "ema2il@gmail.com", "Vlad123"));
+        student.setId(1);
+        when(teacherRepository.findById(teacher.getId())).thenReturn(Optional.of(teacher));
+        when(teacherRepository.findAllBySubjectsByStudents_Id(student.getId())).thenReturn(List.of(teacher));
+
+        List<Teacher> result = teacherService.findAllByStudentId(student.getId());
+
+        assertEquals(List.of(teacher), result);
+    }
     @Test
     void findAllByFirstNameAndLastName() {
         when(teacherRepository.findAllByUser_FirstNameContainingIgnoreCaseAndUser_LastNameContainingIgnoreCase("Vlad", "Bulakovskyi")).thenReturn(List.of(teacher));
