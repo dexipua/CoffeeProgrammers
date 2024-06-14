@@ -41,6 +41,6 @@ public class SchoolNewsServiceImpl implements SchoolNewsService {
 
     @Override
     public List<SchoolNews> getAllSchoolNews() {
-        return schoolNewsRepository.findAll();
+        return schoolNewsRepository.findAllByOrderByTimeDesc();
     }
 }

@@ -3,7 +3,7 @@ package com.school.controller;
 import com.school.dto.schoolNews.SchoolNewsRequest;
 import com.school.dto.schoolNews.SchoolNewsResponse;
 import com.school.models.SchoolNews;
-import com.school.service.impl.SchoolNewsServiceImpl;
+import com.school.service.SchoolNewsService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,7 +19,7 @@ import java.util.List;
 @RequestMapping("/schoolNews")
 public class SchoolNewsController {
 
-    private final SchoolNewsServiceImpl schoolNewsService;
+    private final SchoolNewsService schoolNewsService;
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
