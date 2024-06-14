@@ -4,8 +4,6 @@ import Home from './components/pages/home/Home';
 import Login from './components/pages/user/Login';
 import StudentProfile from "./components/pages/student/StudentProfile";
 import UserListAll from "./components/pages/user/Users";
-import CreateUser from "./components/pages/chief_teacher/adminPanel/CreateUser";
-import Account from "./components/pages/user/Account";
 import Subject from "./components/pages/subject/Subject";
 import TeacherProfile from "./components/pages/teacher/TeacherProfile";
 import SubjectList from "./components/pages/subject/Subjects";
@@ -19,15 +17,13 @@ function App() {
 
                 <Routes>
                     <Route path="" element={<Login/>}/>
+                    <Route path="/home" element={<Home/>}/>
                     <Route path="/admin_panel" element={<Admin/>}/>
                     <Route path="/teachers/:id" element={<TeacherProfile/>}/>
-                    <Route path="/home" element={<Home/>}/>
                     <Route path="/students/:id" element={<StudentProfile/>}/>
-                    <Route path="/community" element={<UserListAll/>}/>
-                    <Route path="/create_user" element={<CreateUser/>}/>
-                    <Route path="/account" element={<Account/>}/>
                     <Route path="/subjects/:id" element={<Subject/>}/>
                     <Route path={"/subjects"} element={<SubjectList/>}/>
+                    <Route path="/community" element={<UserListAll/>}/>
                     <Route path={"/bookmark"} element={<Bookmark/>}/>>
                     <Route path="*" element={<NotFound/>}/>
 

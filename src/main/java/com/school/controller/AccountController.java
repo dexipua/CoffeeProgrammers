@@ -22,12 +22,6 @@ import java.util.stream.Collectors;
 public class AccountController {
     private final AccountService accountService;
 
-    @GetMapping("/account")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<?> getAccounts() {
-        return ResponseEntity.ok(accountService.findAllInformationByRoleAndUserId());
-    }
-
     @GetMapping("/roleId")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Long> getRoleIdByRoleAndUserId() {

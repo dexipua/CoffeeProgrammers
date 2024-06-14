@@ -1,7 +1,5 @@
 package com.school.service.impl;
 
-import com.school.dto.student.StudentResponseAll;
-import com.school.dto.teacher.TeacherResponseAll;
 import com.school.models.Mark;
 import com.school.models.Subject;
 import com.school.models.User;
@@ -22,20 +20,6 @@ public class AccountServiceImpl implements AccountService {
     private final MarkService markService;
     private final StudentService studentService;
     private final TeacherService teacherService;
-
-    @Override
-    public Object findAllInformationByRoleAndUserId() {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        long userId = user.getId();
-        if (user.getRole().getName().equals("STUDENT")) {
-            return new StudentResponseAll(studentService.findByUserId(userId),
-                    markService.findAverageByStudentId(studentService.findByUserId(userId).getId()));
-        } else {
-            return new TeacherResponseAll(
-                    teacherService.findByUserId(userId),
-                    studentService.findStudentsByTeacherId(userId));
-        }
-    }
 
     @Override
     public long findRoleIdByRoleAndUserId() {

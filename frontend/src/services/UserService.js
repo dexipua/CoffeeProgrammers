@@ -4,20 +4,6 @@ const API_URL = 'http://localhost:9091';
 
 class UserService {
 
-    async getAccount(token) {
-        try {
-            const response = await axios.get(`${API_URL}/account`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
-            return response.data;
-        } catch (error) {
-            console.error('Error getAllBySubjectId:', error);
-            throw error;
-        }
-    }
-
     async getBookmark(token) {
         try {
             const response = await axios.get(`${API_URL}/bookmark`, {
@@ -40,11 +26,13 @@ class UserService {
                     password,
                 });
 
-            const roleId = await this.getRoleIdByRoleAndUserId(response.data.accessToken)
+            const accessToken = response.data.accessToken;
+            const role = response.data.role;
+            const roleId = await this.getRoleIdByRoleAndUserId(accessToken)
 
+            localStorage.setItem('jwtToken', accessToken);
+            localStorage.setItem('role',role)
             localStorage.setItem('roleId', roleId)
-            localStorage.setItem('jwtToken', response.data.accessToken);
-            localStorage.setItem('role', response.data.role)
         } catch
             (error) {
             throw new Error('Login failed. Check your credentials.');

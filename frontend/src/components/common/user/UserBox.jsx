@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 import {Link} from "react-router-dom";
 import React from "react";
 
-const TeacherBox = ({role, teacher}) => {
+const UserBox = ({role, teacher}) => {
     return (
         <Link to={`/${ role === "STUDENT" ? "teachers" : "students"}/${teacher.id}`}
               style={{textDecoration: 'none', color: 'inherit'}}>
@@ -55,4 +55,4 @@ const TeacherBox = ({role, teacher}) => {
     );
 }
 
-export default TeacherBox;
+export default UserBox;

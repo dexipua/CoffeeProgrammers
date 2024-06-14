@@ -7,6 +7,8 @@ import {Link} from "react-router-dom";
 
 export default function AccountMenu() {
     const [anchorEl, setAnchorEl] = React.useState(null);
+    const role = localStorage.getItem('role');
+    const roleId = localStorage.getItem('roleId')
 
     const handleMenuOpen = (event) => {
         setAnchorEl(event.currentTarget);
@@ -35,7 +37,7 @@ export default function AccountMenu() {
                 onClose={handleMenuClose}
             >
                 <MenuItem onClick={handleMenuClose}>
-                    <Link to="/account" style={{ textDecoration: 'none', color: 'inherit' }}>Account</Link>
+                    <Link to= {role === "STUDENT" ? `/students/${roleId}` : `/teachers/${roleId}`} style={{ textDecoration: 'none', color: 'inherit' }}>Account</Link>
                 </MenuItem>
                 <MenuItem onClick={handleMenuClose}>
                     <Link to="/news" style={{ textDecoration: 'none', color: 'inherit' }}>News</Link>
