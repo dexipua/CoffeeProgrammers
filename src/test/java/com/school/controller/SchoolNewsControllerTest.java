@@ -109,13 +109,41 @@ class SchoolNewsControllerTest {
 
     @Test
     @WithMockUser(roles = "CHIEF_TEACHER")
+    void update() throws Exception{
+        schoolNewsService.create(schoolNews);
+        schoolNews2.setId(1);
+
+        SchoolNewsRequest schoolNewsRequest = new SchoolNewsRequest();
+        schoolNewsRequest.setText("Some text");
+
+        when(schoolNewsService.findById(schoolNews.getId())).thenReturn(schoolNews);
+        when(schoolNewsService.update(any(SchoolNews.class))).thenReturn(schoolNews2);
+        //then
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders
+                        .put("/schoolNews/update/1")
+                        .with(csrf())
+                        .content(asJsonString(schoolNewsRequest))
+                        .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn();
+
+        SchoolNewsResponse expectedResponseBody = new SchoolNewsResponse(schoolNews2);
+        String actualResponseBody = mvcResult.getResponse().getContentAsString();
+
+        assertThat(actualResponseBody).isEqualToIgnoringWhitespace(
+                new ObjectMapper().writeValueAsString(expectedResponseBody));
+    }
+
+    @Test
+    @WithMockUser(roles = "CHIEF_TEACHER")
     void create() throws Exception{
         when(schoolNewsService.create(any(SchoolNews.class))).thenReturn(schoolNews);
         SchoolNewsRequest request = new SchoolNewsRequest();
         request.setText("You needn`t go to school tomorrow");
 
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders
-                        .post("/schoolNews/createSchoolNews")
+                        .post("/schoolNews/create")
                         .with(csrf())
                         .content(asJsonString(request))
                         .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))

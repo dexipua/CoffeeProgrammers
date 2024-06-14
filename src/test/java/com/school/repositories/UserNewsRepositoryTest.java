@@ -21,13 +21,14 @@ public class UserNewsRepositoryTest {
     private StudentRepository studentRepository;
 
     @Test
-    void findAllByUserId() {
+    void findAllByUserId() throws InterruptedException {
         Student student = new Student(new User("Id", "Od", "dhjgfjdhj@gmail.com", "Sopgjdhjdgfhjgf2"));
         studentRepository.save(student);
         UserNews userNews1 = new UserNews("New mark 10", student.getUser());
+        Thread.sleep(10);
         UserNews userNews2 = new UserNews("New mark 3", student.getUser());
-        userNewsRepository.saveAll(List.of(userNews1, userNews2));
+        userNewsRepository.saveAll(List.of(userNews2, userNews1));
 
-        assertEquals(List.of(userNews1, userNews2), userNewsRepository.findAllByUser_IdOrderByTimeDesc(student.getUser().getId()));
+        assertEquals(List.of(userNews2, userNews1), userNewsRepository.findAllByUser_IdOrderByTimeDesc(student.getUser().getId()));
     }
 }
