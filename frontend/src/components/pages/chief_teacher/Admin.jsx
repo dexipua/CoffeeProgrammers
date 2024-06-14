@@ -1,14 +1,16 @@
 // Admin.jsx
 import * as React from 'react';
 import {useState} from 'react';
-import VerticalTabs from './VerticalTabs'; // Імпорт компонента VerticalTabs
-import ButtonAppBar from "../../layouts/ButtonAppBar";
-import CreateUser from "./CreateUser";
-import DeleteUser from "./DeleteUser";
-import CreateSubject from "./CreateSubject";
-import DeleteSubject from "./DeleteSubject";
-import DeleteTeacher from "./DeleteTeacher";
-import AddTeacher from "./AddTeacher";
+import VerticalTabs from './admin_panel/VerticalTabs'; // Імпорт компонента VerticalTabs
+import ApplicationBar from "../../layouts/app_bar/ApplicationBar";
+import CreateUser from "./admin_panel/CreateUser";
+import DeleteUser from "./admin_panel/DeleteUser";
+import CreateSubject from "./admin_panel/CreateSubject";
+import DeleteSubject from "./admin_panel/DeleteSubject";
+import DeleteTeacherFromSubject from "./admin_panel/DeleteTeacherFromSubject";
+import SetTeacher from "./admin_panel/SetTeacher";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
 
 const Admin = () => {
     const [currentForm, setCurrentForm] = useState('');
@@ -24,27 +26,29 @@ const Admin = () => {
             case 'deleteSubject':
                 return <DeleteSubject />;
             case 'addTeacher':
-                return <AddTeacher />;
+                return <SetTeacher />;
             case 'deleteTeacher':
-                return <DeleteTeacher />;
+                return <DeleteTeacherFromSubject />;
             default:
                 return null;
         }
     };
 
     return (
-        <div>
-            <ButtonAppBar />
-            <div className="home-container" style={{ marginTop: '65px' }}>
-                <h1>Admin Panel</h1>
-                <div className="sidebar">
+        <>
+            <ApplicationBar />
+            <Box align="center" style={{ marginTop: '80px' }}>
+                <Typography mb={2} variant="h4" align="center">
+                    Admin Panel
+                </Typography>
                     <VerticalTabs setCurrentForm={setCurrentForm} />
-                </div>
-                <div className="main-content">
-                    {renderForm()}
-                </div>
-            </div>
-        </div>
+
+                        {renderForm()}
+
+
+
+            </Box>
+        </>
     );
 };
 export default Admin;

@@ -71,21 +71,21 @@ public class SubjectController {
 
     @GetMapping("/getAllByName/")
     @ResponseStatus(HttpStatus.OK)
-    public List<SubjectResponseSimple> getByNameContaining(
+    public List<SubjectResponseWithTeacher> getByNameContaining(
             @RequestParam("subject_name") String name) {
         List<Subject> subjects = subjectService.findByNameContaining(name);
         return subjects.stream()
-                .map(SubjectResponseSimple::new)
+                .map(SubjectResponseWithTeacher::new)
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/getAllByTeacherId/{teacher_id}")
     @ResponseStatus(HttpStatus.OK)
-    public List<SubjectResponseSimple> getByTeacherId(@PathVariable("teacher_id") long teacherId) {
+    public List<SubjectResponseWithTeacher> getByTeacherId(@PathVariable("teacher_id") long teacherId) {
         List<Subject> subjects = subjectService.findByTeacher_Id(teacherId);
 
         return subjects.stream()
-                .map(SubjectResponseSimple::new)
+                .map(SubjectResponseWithTeacher::new)
                 .collect(Collectors.toList());
     }
 
@@ -135,6 +135,7 @@ public class SubjectController {
             @PathVariable("subject_id") long subjectId,
             @PathVariable("student_id") long studentId,
             Authentication auth) {
+        markService.deleteAllByStudentId(studentId);
         subjectService.deleteStudent(subjectId, studentId);
     }
 }

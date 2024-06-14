@@ -1,13 +1,17 @@
-import SubjectWithTeacherForList from "./SubjectWithTeacherForList";
+import React from 'react';
+import SubjectSimpleView from "./SubjectSimpleView";
+import {Grid} from "@mui/material";
 
-const SubjectWithTeacherList = ({subjects}) => {
+const SubjectWithTeacherList = ({ subjects }) => {
+
     return (
-        subjects.map((subject, index) => (
-            <SubjectWithTeacherForList
-                key={index}
-                subjectResponse={subject}
-            />
-        ))
+        <Grid  justifyContent="center">
+            {subjects.map((subject) => (
+                <Grid item key={subject.id}>
+                    <SubjectSimpleView subject={subject} />
+                </Grid>
+            ))}
+        </Grid>
 
     );
 };

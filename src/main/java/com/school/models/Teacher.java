@@ -35,7 +35,7 @@ public class Teacher implements Comparable<Teacher> {
 
     @Override
     public String toString() {
-        return "Teacher {" +
+        return "TeacherProfile {" +
                 "firstName:" + user.getFirstName() +
                 ", lastName:" + user.getLastName() +
                 ", subjects:" + subjects +

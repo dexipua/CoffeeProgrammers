@@ -4,6 +4,7 @@ import com.school.dto.subject.SubjectRequest;
 import com.school.models.Student;
 import com.school.models.Subject;
 import com.school.models.Teacher;
+import com.school.repositories.StudentRepository;
 import com.school.repositories.SubjectRepository;
 import com.school.service.StudentService;
 import com.school.service.SubjectService;
@@ -22,6 +23,7 @@ public class SubjectServiceImpl implements SubjectService {
     private final SubjectRepository subjectRepository;
     private final TeacherService teacherService;
     private final StudentService studentService;
+    private final StudentRepository studentRepository;
 
     @Override
     public Subject create(SubjectRequest subjectRequest) {
@@ -110,15 +112,11 @@ public class SubjectServiceImpl implements SubjectService {
         Subject subject = findById(subjectId);
         Student student = studentService.findById(studentId);
 
-        if (subject.getStudents().contains(student)) {
-            throw new UnsupportedOperationException(
-                    "Subject already have this student"
-            );
-        }
+        student.getSubjects().add(subject);
 
-        subject.getStudents().add(student);
+        studentRepository.save(student);
 
-        subjectRepository.save(subject);
+
     }
 
     @Override
@@ -132,7 +130,7 @@ public class SubjectServiceImpl implements SubjectService {
             );
         }
 
-        subject.getStudents().remove(student);
+        student.getSubjects().remove(subject);
 
         subjectRepository.save(subject);
     }

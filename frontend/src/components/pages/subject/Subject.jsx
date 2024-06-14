@@ -1,89 +1,160 @@
 import React, {useEffect, useState} from "react";
-import ButtonAppBar from "../../layouts/ButtonAppBar";
+import ApplicationBar from "../../layouts/app_bar/ApplicationBar";
 import SubjectService from "../../../services/SubjectService";
 import MarkService from "../../../services/MarkService";
 import {useParams} from "react-router-dom";
 import SubjectWithTeacherForProfile from "../../common/subject/SubjectWithTeacherForProfile";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import StudentListForProfile from "../../common/student/StudentListForProfile";
-import LabTabsForSubjectProfile from "../../layouts/LabTabsForSubjectProfile";
+import StudentsBox from "../../common/subject/StudentsBox";
+import ManageBox from "../../common/subject/ManageBox";
+import Loading from "../../layouts/Loading";
+import StudentService from "../../../services/StudentService";
 
 const Subject = () => {
-    const {id} = useParams();
+    const { id } = useParams();
 
-    const [canMark, setIfCanMark] = useState(false)
+    const [isTeacherOfThisSubject, setIsTeacherOfThisSubject] = useState(false);
     const [subject, setSubject] = useState(null);
     const [studentsWithMarks, setStudentsWithMarks] = useState([]);
     const [loadingSubject, setLoadingSubject] = useState(true);
     const [loadingMarks, setLoadingMarks] = useState(true);
 
+    const token = localStorage.getItem("jwtToken");
+
     useEffect(() => {
-        const token = localStorage.getItem("jwtToken");
+        const fetchMarks = () => {
+            MarkService.getBySubjectId(id, token)
+                .then(response => {
+                    setStudentsWithMarks(response);
+                    setIsTeacherOfThisSubject(true);
+                })
+                .catch(() => {
+                    setIsTeacherOfThisSubject(false);
+                })
+                .finally(() => {
+                    setLoadingMarks(false);
+                });
+        };
 
-        const fetchMarks = async () => {
-            try {
-                const response = await MarkService.getBySubjectId(id, token);
-                setStudentsWithMarks(response);
-                setIfCanMark(true);
-            } catch (error) {
-                setIfCanMark(false);
-            } finally {
-                setLoadingMarks(false);
-            }
-        }
-
-        const fetchSubject = async () => {
-            try {
-                const response = await SubjectService.getById(id, token);
-                setSubject(response);
-            } finally {
-                setLoadingSubject(false);
-            }
+        const fetchSubject = () => {
+            SubjectService.getById(id, token)
+                .then(response => {
+                    setSubject(response);
+                })
+                .finally(() => {
+                    setLoadingSubject(false);
+                });
         };
 
         const fetchData = async () => {
-            await fetchSubject().then(() => console.log("End work with subjects"));
-            await fetchMarks().then(() => console.log("End work with marks"))
+            await fetchSubject();
+            await fetchMarks();
         };
 
-
-        fetchData().then(() => console.log("End work with data"))
+        fetchData();
     }, [id]);
 
+    const handleNameChange = (newName) => {
+        setSubject(prevSubject => ({ ...prevSubject, name: newName }));
+    };
 
-    if (loadingSubject && loadingMarks) {
-        return <div>Loading...</div>;
+    const handleStudentAdd = async (studentId) => {
+        const response = await StudentService.getById(studentId, token)
+        setSubject((prevSubject) => ({
+            ...prevSubject,
+            students: [...prevSubject.students, response],
+        }));
+    };
+    const handleStudentDelete = (studentId) => {
+        setSubject(prevSubject => ({
+            ...prevSubject,
+            students: prevSubject.students.filter(student => student.id !== studentId)
+        }));
+    };
+
+    const handleMarkCreate = (studentId, newMark) => {
+        setStudentsWithMarks(prevState => {
+            const studentExists = prevState.some(studentMarkData => studentMarkData.studentResponseSimple.id === studentId);
+
+            if (studentExists) {
+                return prevState.map(studentMarkData => {
+                    if (studentMarkData.studentResponseSimple.id === studentId) {
+                        const updatedMarks = studentMarkData.marks ? [...studentMarkData.marks, newMark] : [newMark];
+                        return {
+                            ...studentMarkData,
+                            marks: updatedMarks
+                        };
+                    }
+                    return studentMarkData;
+                });
+            } else {
+                const newStudentMarkData = {
+                    studentResponseSimple: { id: studentId },
+                    marks: [newMark]
+                };
+                return [...prevState, newStudentMarkData];
+            }
+        });
+    };
+
+    const handleMarkUpdate = (studentId, updatedMark) => {
+        setStudentsWithMarks(prevState => prevState.map(studentMarkData => {
+            if (studentMarkData.studentResponseSimple.id === studentId) {
+                const updatedMarks = studentMarkData.marks.map(mark => mark.id === updatedMark.id ? updatedMark : mark);
+                return {
+                    ...studentMarkData,
+                    marks: updatedMarks
+                };
+            }
+            return studentMarkData;
+        }));
+    };
+
+    const handleMarkDelete = (studentId, markIdToDelete) => {
+        setStudentsWithMarks(prevState => prevState.map(studentMarkData => {
+            if (studentMarkData.studentResponseSimple.id === studentId) {
+                const updatedMarks = studentMarkData.marks.filter(mark => mark.id !== markIdToDelete);
+                return {
+                    ...studentMarkData,
+                    marks: updatedMarks
+                };
+            }
+            return studentMarkData;
+        }));
+    };
+
+    const getStudentsWithGradesOrEmpty = () => {
+        return subject?.students?.map(student => {
+            const studentMarkData = studentsWithMarks.find(({ studentResponseSimple }) => studentResponseSimple.id === student.id);
+            return { student, marks: studentMarkData ? studentMarkData.marks : [] };
+        }) || [];
+    };
+
+    if (loadingSubject || loadingMarks) {
+        return <Loading />;
     }
 
     return (
-        <div>
-            <ButtonAppBar/>
-            <Box mt="80px" ml="60px">
-                <Typography variant="h5" component="h2" sx={{marginBottom: 2}}>Subject</Typography>
-                <SubjectWithTeacherForProfile
-                    subject={{
-                        id: subject.id,
-                        name: subject.name,
-                        teacher: subject.teacher
-                    }}
+        <>
+            <ApplicationBar />
+            <SubjectWithTeacherForProfile subject={subject} />
+            {isTeacherOfThisSubject && (
+                <ManageBox
+                    subjectId={subject.id}
+                    onNameChange={handleNameChange}
+                    onStudentAdd={handleStudentAdd}
                 />
-            </Box>
-
-            <Box mt={4} ml="60px" mr="60px">
-                {!canMark ? (
-                    <>
-                        <Typography variant="h6" component="h2" sx={{marginBottom: 2}}>Students</Typography>
-                        <StudentListForProfile students={subject.students}/>
-                    </>
-                ) : (
-                    <LabTabsForSubjectProfile
-                        students={subject.students}
-                        studentsWithMarks={studentsWithMarks}
-                    />
-                )}
-            </Box>
-        </div>
+            )}
+            <StudentsBox
+                canGetMark={isTeacherOfThisSubject}
+                subjectId={subject.id}
+                studentsWithGradesOrEmpty={getStudentsWithGradesOrEmpty()}
+                subjectStudents={subject.students}
+                onStudentDelete={handleStudentDelete}
+                onMarkCreate={handleMarkCreate}
+                onMarkUpdate={handleMarkUpdate}
+                onMarkDelete={handleMarkDelete}
+            />
+        </>
     );
 };
 
