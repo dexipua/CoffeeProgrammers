@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import UserNewsService from '../../../services/UserNewsService';
 import ApplicationBar from "../../layouts/app_bar/ApplicationBar";
 import UserNewsBox from '../../common/news/user_news/UserNewsBox';
-import {Box, Container, Grid, Typography} from '@mui/material';
+import {Box, Container, Grid} from '@mui/material';
 
 const UserNews = () => {
     const [newsList, setNewsList] = useState([]);
@@ -30,11 +30,7 @@ const UserNews = () => {
                 flexDirection="column"
                 justifyContent="center"
                 alignItems="center"
-                mt="80px"
             >
-                <Typography variant="h6" component="h1" gutterBottom>
-                    My news
-                </Typography>
                 <Box
                     sx={{
                         border: '1px solid #ccc',

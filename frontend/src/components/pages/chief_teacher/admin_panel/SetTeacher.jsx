@@ -206,7 +206,7 @@ const SetTeacher = () => {
     return (
         <Box p={3}>
             <Typography variant="h5" gutterBottom>
-                Add Teacher to Subject
+                Set Teacher to Subject
             </Typography>
 
 

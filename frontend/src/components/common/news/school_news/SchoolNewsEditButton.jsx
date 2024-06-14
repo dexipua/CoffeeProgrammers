@@ -4,7 +4,7 @@ import SchoolNewsEditDialog from "./SchoolNewsEditDialog";
 import IconButton from "@mui/material/IconButton";
 
 
-export default function SchoolNewsEditButton({oldText, updateFunction}) {
+export default function SchoolNewsEditButton({newsId, oldText, updateFunction}) {
     const [open, setOpen] = React.useState(false);
 
     const handleClickOpen = () => {
@@ -27,6 +27,7 @@ export default function SchoolNewsEditButton({oldText, updateFunction}) {
                 <EditIcon/>
             </IconButton>
             <SchoolNewsEditDialog
+                newsId={newsId}
                 oldText={oldText}
                 open={open}
                 updateFunction={updateFunction}

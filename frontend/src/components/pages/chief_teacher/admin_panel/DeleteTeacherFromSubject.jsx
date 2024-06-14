@@ -160,7 +160,7 @@ const DeleteTeacherFromSubject = () => {
     return (
         <Box>
             <Typography variant="h5" gutterBottom>
-                Delete Subject
+                Delete Teacher from Subject
             </Typography>
 
             <Box

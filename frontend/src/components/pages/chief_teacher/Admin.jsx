@@ -37,8 +37,8 @@ const Admin = () => {
     return (
         <>
             <ApplicationBar />
-            <Box align="center" style={{ marginTop: '80px' }}>
-                <Typography mb={2} variant="h4" align="center">
+            <Box align="center" style={{ marginTop: '100px' }}>
+                <Typography  variant="h5" align="center">
                     Admin Panel
                 </Typography>
                     <VerticalTabs setCurrentForm={setCurrentForm} />

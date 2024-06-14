@@ -1,13 +1,16 @@
 import React, {useEffect, useState} from 'react';
 import SchoolNewsService from '../../../services/SchoolNewsService';
 import ApplicationBar from "../../layouts/app_bar/ApplicationBar";
-import {Box, Container, Grid, Typography} from "@mui/material";
+import {Box, Container, Grid} from "@mui/material";
 import SchoolNewsBox from "../../common/news/school_news/SchoolNewsBox";
+import CreateNewsAddButton from "../../common/news/school_news/SchoolNewsCreateButton";
 
 const SchoolNews = () => {
     const [newsList, setNewsList] = useState([]);
 
     const token = localStorage.getItem('jwtToken')
+    const role = localStorage.getItem('role');
+
     useEffect(() => {
         const fetchData = async () => {
             const response = await SchoolNewsService.getAll(token);
@@ -22,16 +25,15 @@ const SchoolNews = () => {
         setNewsList(filteredNews)
     }
 
-    const handleUpdate = async (newsId, text) => {
-        const updatedMark = await SchoolNewsService.update(
-            newsId,
-            {text: ""},
-            localStorage.getItem('jwtToken'))
-        console.log(updatedMark)
-        const updatedNews = newsList.map((news) =>
-            news.id === newsId ? updatedMark : news
+    const handleUpdate = async (newsId, updatedNews) => {
+        const updatedNewsList = newsList.map((news) =>
+            news.id === newsId ? updatedNews : news
         )
-        setNewsList(updatedNews)
+        setNewsList(updatedNewsList)
+    }
+
+    const handleCreate = async (createdNews) => {
+        setNewsList([...newsList, createdNews])
     }
 
     return (
@@ -42,12 +44,7 @@ const SchoolNews = () => {
                 flexDirection="column"
                 justifyContent="center"
                 alignItems="center"
-
-                mt="80px"
             >
-                <Typography variant="h6" component="h1" gutterBottom>
-                    School news
-                </Typography>
                 <Box
                     sx={{
                         border: '1px solid #ccc',
@@ -58,14 +55,21 @@ const SchoolNews = () => {
                         maxWidth: '800px',
                     }}
                 >
+                    {role === "CHIEF_TEACHER" &&
+                        <Box display="flex" justifyContent="flex-end" mb={2}>
+                            <CreateNewsAddButton onCreate={handleCreate} />
+                        </Box>
+                    }
+
                     <Grid container justifyContent="center">
                         {newsList.map((newsItem) => (
                             <Grid item xs={12} key={newsItem.id}>
                                 <SchoolNewsBox
+                                    role={role}
                                     text={newsItem.text}
                                     time={newsItem.time}
-                                    updateFunction={(text) =>
-                                        handleUpdate(newsItem.id, text)}
+                                    newsId={newsItem.id}
+                                    updateFunction={handleUpdate}
                                     deleteFunction={() =>
                                         handleDelete(newsItem.id)}
                                 />

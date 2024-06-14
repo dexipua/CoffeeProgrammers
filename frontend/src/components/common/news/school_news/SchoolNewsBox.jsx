@@ -4,7 +4,7 @@ import DeleteButton from "../../../layouts/DeleteButton";
 import SchoolNewsEditButton from "./SchoolNewsEditButton";
 
 
-const SchoolNewsBox = ({text, time, updateFunction, deleteFunction }) => {
+const SchoolNewsBox = ({role, newsId, text, time, updateFunction, deleteFunction }) => {
     return (
         <Box
             sx={{
@@ -16,7 +16,6 @@ const SchoolNewsBox = ({text, time, updateFunction, deleteFunction }) => {
                 backgroundColor: '#ffffff'
             }}
         >
-
             <Typography variant="body1" component="h3" gutterBottom>
                 {text}
             </Typography>
@@ -24,14 +23,19 @@ const SchoolNewsBox = ({text, time, updateFunction, deleteFunction }) => {
             <Typography variant="body2" color="textSecondary">
                 {new Date(time).toLocaleString()}
             </Typography>
-            <DeleteButton
-                text={"Do you really want to delete this news?"}
-                deleteFunction={deleteFunction}
-            />
-            <SchoolNewsEditButton
-                oldText={text}
-                updateFunction={updateFunction}
-            />
+            {role === "CHIEF_TEACHER" &&
+               <>
+                   <DeleteButton
+                       text={"Do you really want to delete this news?"}
+                       deleteFunction={deleteFunction}
+                   />
+                   <SchoolNewsEditButton
+                       newsId={newsId}
+                       oldText={text}
+                       updateFunction={updateFunction}
+                   />
+               </>
+            }
         </Box>
     );
 };

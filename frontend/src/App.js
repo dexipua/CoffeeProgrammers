@@ -10,8 +10,7 @@ import Subjects from "./components/pages/subject/Subjects";
 import Admin from "./components/pages/chief_teacher/Admin";
 import NotFound from "./components/pages/not_found/NotFound";
 import Bookmark from "./components/pages/bookmark/Bookmark";
-import UserNews from "./components/pages/user_news/UserNews";
-import SchoolNews from "./components/pages/school_news/SchoolNews";
+import News from "./components/pages/News";
 
 function App() {
     return (
@@ -27,8 +26,8 @@ function App() {
                     <Route path={"/subjects"} element={<Subjects/>}/>
                     <Route path={"/users"} element={<Users/>}/>
                     <Route path={"/bookmark"} element={<Bookmark/>}/>
-                    <Route path={"/my_news"} element={<UserNews/>}/>
-                    <Route path={"/school_news"} element={<SchoolNews/>}/>
+                    <Route path={"news"} element={<News/>}/>
+
                     <Route path={"*"} element={<NotFound/>}/>
 
                 </Routes>

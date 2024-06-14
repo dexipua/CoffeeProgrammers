@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -8,21 +8,18 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import SchoolNewsService from "../../../../services/SchoolNewsService";
 
-function SchoolNewsEditDialog({newsId, oldText, open, onClose, updateFunction}) {
-    const [newText, setNewText] = useState(oldText);
+function SchoolNewsCreateDialog({open, onClose, onCreate}) {
+    const [text, setText] = useState();
     const [errorMessages, setErrorMessages] = useState([]);
-
-    useEffect(() => {
-        setErrorMessages([]);
-    }, [open]);
 
     const handleAccept = async () => {
         try {
-            const updatedNews = await SchoolNewsService.update(
-                newsId,
-                {text: newText},
+            const createdNews = await SchoolNewsService.create(
+                {text: text},
                 localStorage.getItem('jwtToken'))
-            updateFunction(newsId, updatedNews);
+            onCreate(createdNews);
+            setErrorMessages([])
+            setText('');
             onClose();
         } catch (error) {
             if (error.response && error.response.data.messages && Array.isArray(error.response.data.messages)) {
@@ -36,13 +33,13 @@ function SchoolNewsEditDialog({newsId, oldText, open, onClose, updateFunction}) 
     };
 
     const handleChange = (event) => {
-        setNewText(event.target.value);
+        setText(event.target.value);
     };
 
     return (
 
         <Dialog onClose={onClose} open={open} maxWidth="md" fullWidth>
-            <DialogTitle>Edit News</DialogTitle>
+            <DialogTitle>Create News</DialogTitle>
             <DialogContent>
                 <TextField
                     autoFocus
@@ -50,7 +47,7 @@ function SchoolNewsEditDialog({newsId, oldText, open, onClose, updateFunction}) 
                     id="newText"
                     label="New Text"
                     fullWidth
-                    value={newText}
+                    value={text}
                     onChange={handleChange}
                     multiline
                     rows={8} // Initial number of rows
@@ -77,4 +74,4 @@ function SchoolNewsEditDialog({newsId, oldText, open, onClose, updateFunction}) 
     );
 }
 
-export default SchoolNewsEditDialog;
+export default SchoolNewsCreateDialog;
