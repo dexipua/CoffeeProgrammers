@@ -1,4 +1,4 @@
-package com.school.dto;
+package com.school.dto.userNews;
 
 import com.school.models.UserNews;
 import lombok.Data;

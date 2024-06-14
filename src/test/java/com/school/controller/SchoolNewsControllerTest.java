@@ -112,7 +112,7 @@ class SchoolNewsControllerTest {
     void create() throws Exception{
         when(schoolNewsService.create(any(SchoolNews.class))).thenReturn(schoolNews);
         SchoolNewsRequest request = new SchoolNewsRequest();
-        request.setTitle("You needn`t go to school tomorrow");
+        request.setText("You needn`t go to school tomorrow");
 
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders
                         .post("/schoolNews/createSchoolNews")

@@ -17,7 +17,6 @@ import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/timeTable")
@@ -40,7 +39,7 @@ public class SubjectDateController {
     @PutMapping("/update/{subject_date_id}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER')")
-    public SubjectDateResponse updateSubjectDate(@RequestBody SubjectDateRequest subjectDateRequest,
+    public SubjectDateResponse updateSubjectDate(@Valid @RequestBody SubjectDateRequest subjectDateRequest,
                                                  @PathVariable("subject_date_id") long subjectDateId) {
         long subjectId = subjectDateService.findById(subjectDateId).getId();
         SubjectDate subjectDate = SubjectDateRequest.toSubject(subjectDateRequest,
@@ -69,11 +68,15 @@ public class SubjectDateController {
         HashMap<DayOfWeek, HashMap<SubjectDate.NumOfLesson, Subject>> hashMap =
                 subjectDateService.findAllBySubject_Students_Id(student_id);
         List<SubjectDateResponseByStudentId> subjectDateResponseByStudentIds = new ArrayList<>();
-        for (Map.Entry<DayOfWeek, HashMap<SubjectDate.NumOfLesson, Subject>> entry : hashMap.entrySet()) {
-            for (Map.Entry<SubjectDate.NumOfLesson, Subject> inEntry : entry.getValue().entrySet()) {
-                subjectDateResponseByStudentIds.add(new SubjectDateResponseByStudentId(entry.getKey(), inEntry.getKey(), inEntry.getValue()));
-            }
-        }
+        hashMap.forEach((key, value) -> value.entrySet().stream()
+                .map(inEntry ->
+                        new SubjectDateResponseByStudentId(
+                                key,
+                                inEntry.getKey(),
+                                inEntry.getValue()
+                        )
+                )
+                .forEach(subjectDateResponseByStudentIds::add));
         return subjectDateResponseByStudentIds;
     }
 }

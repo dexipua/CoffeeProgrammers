@@ -1,6 +1,6 @@
 package com.school.controller;
 
-import com.school.dto.UserNewsResponse;
+import com.school.dto.userNews.UserNewsResponse;
 import com.school.models.UserNews;
 import com.school.service.UserNewsService;
 import com.school.service.UserService;

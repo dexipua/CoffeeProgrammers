@@ -4,11 +4,13 @@ import com.school.dto.schoolNews.SchoolNewsRequest;
 import com.school.dto.schoolNews.SchoolNewsResponse;
 import com.school.models.SchoolNews;
 import com.school.service.impl.SchoolNewsServiceImpl;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +21,24 @@ public class SchoolNewsController {
 
     private final SchoolNewsServiceImpl schoolNewsService;
 
+    @PostMapping("/create")
+    @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER')")
+    public SchoolNewsResponse create(@Valid @RequestBody SchoolNewsRequest schoolNewsRequest) { //TODO
+        SchoolNews schoolNews = SchoolNewsRequest.toSchoolNews(schoolNewsRequest);
+        return new SchoolNewsResponse(schoolNewsService.create(schoolNews));
+    }
+
+    @PutMapping("/{id}")
+    public SchoolNewsResponse updateSchoolNews(@PathVariable long id, @RequestBody SchoolNewsRequest schoolNewsRequest) { //TODO
+        SchoolNews newsToUpdate = new SchoolNews();
+        newsToUpdate.setId(id);
+        newsToUpdate.setTitle(schoolNewsRequest.getText());
+        newsToUpdate.setTime(LocalDateTime.now());
+
+        SchoolNews updatedNews = schoolNewsService.update(newsToUpdate);
+        return new SchoolNewsResponse(updatedNews);
+    }
     @GetMapping("/getAll")
     @ResponseStatus(HttpStatus.OK)
     public List<SchoolNewsResponse> getAll() {
@@ -29,13 +49,6 @@ public class SchoolNewsController {
         return result;
     }
 
-    @PostMapping("/createSchoolNews")
-    @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER')")
-    public SchoolNewsResponse create(@RequestBody SchoolNewsRequest schoolNewsRequest) {
-        SchoolNews schoolNews = SchoolNewsRequest.toSchoolNews(schoolNewsRequest);
-        return new SchoolNewsResponse(schoolNewsService.create(schoolNews));
-    }
 
     @DeleteMapping("/delete/{school_news_id}")
     @ResponseStatus(HttpStatus.OK)

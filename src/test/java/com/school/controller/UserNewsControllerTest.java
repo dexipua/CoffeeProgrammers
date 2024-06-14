@@ -2,7 +2,7 @@ package com.school.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.school.config.JWT.JwtUtils;
-import com.school.dto.UserNewsResponse;
+import com.school.dto.userNews.UserNewsResponse;
 import com.school.models.User;
 import com.school.models.UserNews;
 import com.school.service.impl.UserNewsServiceImpl;

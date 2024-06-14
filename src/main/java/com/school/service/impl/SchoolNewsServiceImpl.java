@@ -21,6 +21,14 @@ public class SchoolNewsServiceImpl implements SchoolNewsService {
     }
 
     @Override
+    public SchoolNews update(SchoolNews news) {
+        SchoolNews schoolNews = findById(news.getId());
+        schoolNews.setTitle(news.getTitle());
+        schoolNews.setTime(news.getTime());
+        return schoolNewsRepository.save(schoolNews);
+    }
+
+    @Override
     public void delete(long id) {
         SchoolNews schoolNews = findById(id);
         schoolNewsRepository.delete(schoolNews);
