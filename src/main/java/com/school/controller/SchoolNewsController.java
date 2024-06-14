@@ -29,7 +29,7 @@ public class SchoolNewsController {
         return new SchoolNewsResponse(schoolNewsService.create(schoolNews));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public SchoolNewsResponse updateSchoolNews(@PathVariable long id, @RequestBody SchoolNewsRequest schoolNewsRequest) { //TODO
         SchoolNews newsToUpdate = new SchoolNews();
         newsToUpdate.setId(id);

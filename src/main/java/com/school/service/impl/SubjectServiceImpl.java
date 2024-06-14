@@ -90,6 +90,12 @@ public class SubjectServiceImpl implements SubjectService {
         Subject subject = findById(subjectId);
         Teacher teacher = teacherService.findById(teacherId);
 
+        userNewsService.create(
+                new UserNews("You have become a teacher of the lesson: " + subject.getName(),
+                        teacher.getUser()
+                )
+        );
+
         subject.setTeacher(teacher);
 
         subjectRepository.save(subject);
@@ -97,7 +103,14 @@ public class SubjectServiceImpl implements SubjectService {
 
     @Override
     public void deleteTeacher(long subjectId) {
+
         Subject subject = findById(subjectId);
+
+        userNewsService.create(
+                new UserNews("You have been removed from a lesson: " + subject.getName(),
+                        subject.getTeacher().getUser()
+                )
+        );
 
         subject.setTeacher(null);
 

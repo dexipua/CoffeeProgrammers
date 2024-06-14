@@ -21,8 +21,8 @@ export default function ApplicationBar() {
 
                     />
                     <AccountItemButton
-                        link={"/news"}
-                        text={"News"}
+                        link={"/my_news"}
+                        text={"My news"}
                     />
                     <AccountItemButton
                         link={"/subjects"}

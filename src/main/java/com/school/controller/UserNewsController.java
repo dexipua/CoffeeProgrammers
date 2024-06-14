@@ -23,6 +23,7 @@ public class UserNewsController {
     private final UserNewsService newsService;
     private final UserService userService;
 
+
     @GetMapping("/myNews")
     @ResponseStatus(HttpStatus.OK)
     public List<UserNewsResponse> getAllNewsByUserId(Authentication authentication) {
