@@ -4,6 +4,7 @@ import com.school.models.UserNews;
 import com.school.repositories.UserNewsRepository;
 import com.school.service.UserNewsService;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -27,5 +28,11 @@ public class UserNewsServiceImpl implements UserNewsService {
     @Override
     public List<UserNews> getAllNewsByUserId(long userId) {
         return newsRepository.findAllByUser_IdOrderByTimeDesc(userId);
+    }
+
+    @Transactional
+    @Override
+    public void deleteAllByUserId(long userId) {
+        newsRepository.deleteAllByUser_Id(userId);
     }
 }

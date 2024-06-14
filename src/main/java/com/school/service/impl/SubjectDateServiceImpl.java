@@ -9,6 +9,7 @@ import com.school.service.SubjectDateService;
 import com.school.service.UserNewsService;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -76,6 +77,12 @@ public class SubjectDateServiceImpl implements SubjectDateService {
     public void delete(SubjectDate subjectDate) {
         findById(subjectDate.getId());
         subjectDateRepository.delete(subjectDate);
+    }
+
+    @Transactional
+    @Override
+    public void deleteAllBySubjectId(long subjectId) {
+        subjectDateRepository.deleteAllBySubjectId(subjectId);
     }
 
     @Override

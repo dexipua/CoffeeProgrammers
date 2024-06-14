@@ -7,6 +7,7 @@ import com.school.dto.user.UserRequestUpdate;
 import com.school.models.Teacher;
 import com.school.service.StudentService;
 import com.school.service.TeacherService;
+import com.school.service.UserNewsService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,7 +24,7 @@ import java.util.stream.Collectors;
 public class TeacherController {
     private final TeacherService teacherService;
     private final StudentService studentService;
-
+    private final UserNewsService userNewsService;
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER')")
@@ -75,6 +76,7 @@ public class TeacherController {
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER')")
     public void delete(@PathVariable("teacher_id") long teacher_id) {
+        userNewsService.deleteAllByUserId(teacherService.findById(teacher_id).getUser().getId());
         teacherService.delete(teacher_id);
     }
 

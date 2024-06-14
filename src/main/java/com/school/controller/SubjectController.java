@@ -6,6 +6,7 @@ import com.school.dto.subject.SubjectResponseSimple;
 import com.school.dto.subject.SubjectResponseWithTeacher;
 import com.school.models.Subject;
 import com.school.service.MarkService;
+import com.school.service.SubjectDateService;
 import com.school.service.SubjectService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,7 @@ public class SubjectController {
 
     private final SubjectService subjectService;
     private final MarkService markService;
+    private final SubjectDateService subjectDateService;
 
     @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER')")
     @PostMapping("/create")
@@ -57,6 +59,7 @@ public class SubjectController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("subject_id") long subjectId) {
         markService.deleteAllBySubjectId(subjectId);
+        subjectDateService.deleteAllBySubjectId(subjectId);
         subjectService.delete(subjectId);
     }
 
