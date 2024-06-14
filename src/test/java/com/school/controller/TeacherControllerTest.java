@@ -11,6 +11,7 @@ import com.school.models.Teacher;
 import com.school.models.User;
 import com.school.service.TeacherService;
 import com.school.service.impl.UserServiceImpl;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -46,16 +47,40 @@ class TeacherControllerTest {
     @MockBean
     private UserServiceImpl userService;
 
-    @Test
-    @WithMockUser(roles = "CHIEF_TEACHER")
-    void createTeacher() throws Exception{
-        UserRequestCreate request = new UserRequestCreate();
+    private UserRequestCreate request;
+    private Teacher teacher;
+    private Teacher teacher2;
+
+    private Teacher updated;
+
+    private UserRequestUpdate requestUpdate;
+
+    @BeforeEach
+    void setUp() {
+        request = new UserRequestCreate();
         request.setFirstName("Vlad");
         request.setLastName("Bulakovskyi");
         request.setEmail("vlad@gmail.com");
         request.setPassword("passWord1");
-        Teacher teacher = new Teacher(new User("Vlad", "Bulakovskyi", "vlad@gmail.com", "passWord1"));
 
+        requestUpdate = new UserRequestUpdate();
+        requestUpdate.setFirstName("Rename");
+        requestUpdate.setLastName("Surname");
+        requestUpdate.setPassword("NewPassword111");
+
+        teacher = new Teacher(new User("Vlad", "Bulakovskyi", "vlad@gmail.com", "passWord1"));
+        teacher.setId(1);
+
+        teacher2 = new Teacher(new User("Vlad2", "Bulakovskyi2", "vlad2@gmail.com", "passWord1"));
+        teacher2.setId(2);
+
+        updated = new Teacher(new User("Rename", "Surname", "vlad@gmail.com", "NewPassword111"));
+        updated.setId(1);
+    }
+
+    @Test
+    @WithMockUser(roles = "CHIEF_TEACHER")
+    void createTeacher() throws Exception{
         when(teacherService.create(request)).thenReturn(teacher);
 
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders
@@ -77,13 +102,6 @@ class TeacherControllerTest {
     @Test
     @WithMockUser(roles = "CHIEF_TEACHER")
     void getByName() throws Exception{
-        UserRequestCreate request = new UserRequestCreate();
-        request.setFirstName("Vlad");
-        request.setLastName("Bulakovskyi");
-        request.setEmail("vlad@gmail.com");
-        request.setPassword("passWord1");
-        Teacher teacher = new Teacher(new User("Vlad", "Bulakovskyi", "vlad@gmail.com", "passWord1"));
-
         when(teacherService.findAllByUser_FirstNameAndAndUser_LastName("Vlad", "Bulakovskyi")).thenReturn(List.of(teacher));
 
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders
@@ -106,9 +124,7 @@ class TeacherControllerTest {
     @Test
     @WithMockUser(roles = "CHIEF_TEACHER")
     void getTeacherById() throws Exception{
-        Teacher t1 = new Teacher(new User("Vlad", "Bulakovskyi", "vlad@gmail.com", "passWord1"));
-
-        when(teacherService.findById(1L)).thenReturn(t1);
+        when(teacherService.findById(teacher.getId())).thenReturn(teacher);
 
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders
                         .get("/teachers/getById/1"))
@@ -116,7 +132,7 @@ class TeacherControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        TeacherResponseAll expectedResponseBody = new TeacherResponseAll(t1);
+        TeacherResponseAll expectedResponseBody = new TeacherResponseAll(teacher);
         String actualResponseBody = mvcResult.getResponse().getContentAsString();
 
         assertThat(actualResponseBody).isEqualToIgnoringWhitespace(
@@ -126,10 +142,7 @@ class TeacherControllerTest {
     @Test
     @WithMockUser(roles = "CHIEF_TEACHER")
     void getAllTeachers() throws Exception{
-        Teacher t1 = new Teacher(new User("Vlad", "Bulakovskyi", "vlad@gmail.com", "passWord1"));
-        Teacher t2 = new Teacher(new User("Vlad2", "Bulakovskyi2", "vlad2@gmail.com", "passWord1"));
-
-        when(teacherService.findAll()).thenReturn(List.of(t1, t2));
+        when(teacherService.findAll()).thenReturn(List.of(teacher, teacher2));
 
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders
                     .get("/teachers/getAll"))
@@ -137,7 +150,7 @@ class TeacherControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        List<TeacherResponseSimple> expectedResponseBody = new ArrayList<>(Arrays.asList(new TeacherResponseSimple(t1), new TeacherResponseSimple(t2)));
+        List<TeacherResponseSimple> expectedResponseBody = new ArrayList<>(Arrays.asList(new TeacherResponseSimple(teacher), new TeacherResponseSimple(teacher2)));
         String actualResponseBody = mvcResult.getResponse().getContentAsString();
 
         assertThat(actualResponseBody).isEqualToIgnoringWhitespace(
@@ -147,24 +160,10 @@ class TeacherControllerTest {
     @Test
     @WithMockUser(roles = "CHIEF_TEACHER")
     void updateTeacher() throws Exception{
-        //given
-        Teacher t1 = new Teacher(new User("Vlad", "Bulakovskyi", "vlad@gmail.com", "passWord1"));
-        UserRequestCreate request = new UserRequestCreate();
-        request.setFirstName("Vlad");
-        request.setLastName("Bulakovskyi");
-        request.setEmail("vlad@gmail.com");
-        request.setPassword("passWord1");
-        t1.setId(1L);
         teacherService.create(request);
 
-        UserRequestUpdate requestUpdate = new UserRequestUpdate();
-        requestUpdate.setFirstName("Rename");
-        requestUpdate.setLastName("Surname");
-        requestUpdate.setPassword("NewPassword111");
-        Teacher updated = new Teacher(new User("Rename", "Surname", "vlad@gmail.com", "NewPassword111"));
-        updated.setId(1L);
-        when(teacherService.findById(1L)).thenReturn(updated);
-        when(teacherService.update(t1.getId(), requestUpdate)).thenReturn(updated);
+        when(teacherService.findById(teacher.getId())).thenReturn(updated);
+        when(teacherService.update(teacher.getId(), requestUpdate)).thenReturn(updated);
         //then
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders
                         .put("/teachers/update/1")
@@ -174,7 +173,6 @@ class TeacherControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn();
-        //when
 
         TeacherResponseAll expectedResponseBody = new TeacherResponseAll(updated);
         String actualResponseBody = mvcResult.getResponse().getContentAsString();
@@ -186,16 +184,9 @@ class TeacherControllerTest {
     @Test
     @WithMockUser(roles = "CHIEF_TEACHER")
     void deleteTeacher() throws Exception{
-        Teacher t1 = new Teacher(new User("Rename", "Surname", "newEmail@gmail.com", "NewPassword111"));
-        t1.setId(1L);
-        UserRequestCreate request = new UserRequestCreate();
-        request.setFirstName("Vlad");
-        request.setLastName("Bulakovskyi");
-        request.setEmail("vlad@gmail.com");
-        request.setPassword("passWord1");
         teacherService.create(request);
 
-        when(teacherService.findById(1L)).thenReturn(t1);
+        when(teacherService.findById(teacher.getId())).thenReturn(teacher);
 
         mvc.perform(MockMvcRequestBuilders
                         .delete("/teachers/delete/1")
@@ -207,16 +198,10 @@ class TeacherControllerTest {
     @Test
     @WithMockUser(roles = "CHIEF_TEACHER")
     void getTeacherBySubjectName() throws Exception{
-        Teacher t1 = new Teacher(new User("Vlad", "Bulakovskyi", "vlad@gmail.com", "passWord1"));
-        t1.setSubjects(List.of(new Subject("Maths")));
-        UserRequestCreate request = new UserRequestCreate();
-        request.setFirstName("Vlad");
-        request.setLastName("Bulakovskyi");
-        request.setEmail("vlad@gmail.com");
-        request.setPassword("passWord1");
+        teacher.setSubjects(List.of(new Subject("Maths")));
         teacherService.create(request);
 
-        when(teacherService.findBySubjectName("Maths")).thenReturn(List.of(t1));
+        when(teacherService.findBySubjectName("Maths")).thenReturn(List.of(teacher));
 
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders
                         .get("/teachers/getAllBySubjectName/?subject_name=Maths"))
@@ -224,7 +209,7 @@ class TeacherControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        List<TeacherResponseSimple> expectedResponseBody = new ArrayList<>(Arrays.asList(new TeacherResponseSimple(t1)));
+        List<TeacherResponseSimple> expectedResponseBody = new ArrayList<>(List.of(new TeacherResponseSimple(teacher)));
         String actualResponseBody = mvcResult.getResponse().getContentAsString();
 
         assertThat(actualResponseBody).isEqualToIgnoringWhitespace(

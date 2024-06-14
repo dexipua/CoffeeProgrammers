@@ -8,6 +8,7 @@ import com.school.models.User;
 import com.school.repositories.SubjectRepository;
 import com.school.service.StudentService;
 import com.school.service.TeacherService;
+import com.school.service.UserNewsService;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,6 +37,8 @@ class SubjectServiceImplTest {
     private TeacherService teacherService;
     @Mock
     private StudentService studentService;
+    @Mock
+    private UserNewsService userNewsService;
 
     @InjectMocks
     private SubjectServiceImpl subjectService;
@@ -63,7 +66,7 @@ class SubjectServiceImplTest {
         subjectRequest1.setName("Math");
 
         subjectRequest2 = new SubjectRequest();
-        subjectRequest2.setName("Math");
+        subjectRequest2.setName("Philosophy");
 
         teacher = new Teacher(new User("Vlad", "Bulakovskyi", "vlad1@gmail.com", "Vlad123"));
         teacher.setId(1);
@@ -117,14 +120,40 @@ class SubjectServiceImplTest {
     void update() {
         //when
         when(subjectRepository.findById(subject1.getId())).thenReturn(Optional.of(subject1));
-        when(subjectRepository.save(subject1)).thenReturn(subject1);
+        when(subjectRepository.save(any(Subject.class))).thenReturn(subject2);
+
+        Subject updatedSubject = subjectService.update(subject1.getId(), subjectRequest2);
+
+        //then
+        assertEquals(subject2, updatedSubject);
+        verify(subjectRepository, times(1)).findById(subject1.getId());
+        verify(subjectRepository, times(1)).save(subject1);
+
+    }
+
+    @Test
+    void updateEqualsName() {
+        //when
+        when(subjectRepository.findById(subject1.getId())).thenReturn(Optional.of(subject1));
+        when(subjectRepository.save(any(Subject.class))).thenReturn(subject2);
 
         Subject updatedSubject = subjectService.update(subject1.getId(), subjectRequest1);
 
         //then
-        assertEquals(subject1, updatedSubject);
+        assertEquals(subject2, updatedSubject);
         verify(subjectRepository, times(1)).findById(subject1.getId());
         verify(subjectRepository, times(1)).save(subject1);
+
+    }
+
+    @Test
+    void updateNotPresent() {
+        // when
+        when(subjectRepository.findByName(subject1.getName())).thenReturn(Optional.empty());
+        when(subjectRepository.findById(subject2.getId())).thenReturn(Optional.of(subject2));
+        when(subjectRepository.save(any(Subject.class))).thenReturn(subject1);
+
+        assertEquals(subject1, subjectService.update(subject2.getId(), subjectRequest1));
 
     }
 
@@ -257,7 +286,7 @@ class SubjectServiceImplTest {
     }
 
     @Test
-    void GetNoneByOrderByName() {
+    void getNoneByOrderByName() {
         //given
         List<Subject> empty = new ArrayList<>();
 
