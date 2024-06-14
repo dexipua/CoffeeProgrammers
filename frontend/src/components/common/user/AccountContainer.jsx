@@ -37,7 +37,7 @@ function AccountContainer({edit, user, topic, onNameUpdate}) {
                             Name:
                         </Typography>
                         <Typography variant="subtitle1" sx={{margin: 0, color: '#333'}}>
-                            {user.lastName + " " + user.firstName}
+                            {user.firstName + " " + user.lastName}
                         </Typography>
                     </Box>
                     <Box width="100%" display="flex" alignItems="center" gap={0.5}>

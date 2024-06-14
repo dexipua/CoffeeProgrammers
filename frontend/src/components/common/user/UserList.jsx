@@ -6,10 +6,10 @@ const UserList = ({role, teachers}) => {
 
     return (
         <Box>
-            {teachers.map((teacher) => (
+            {teachers.map((user) => (
                 <UserBox
-                    key={teacher.id}
-                    teacher={teacher}
+                    key={user.id}
+                    user={user}
                     role={role}
                 />
             ))}

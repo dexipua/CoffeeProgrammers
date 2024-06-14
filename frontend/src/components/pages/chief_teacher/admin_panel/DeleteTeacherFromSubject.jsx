@@ -14,6 +14,7 @@ import {
     Typography
 } from '@mui/material';
 import SubjectSearchBar from "../../../layouts/SubjectSearchBar";
+import {Link} from "react-router-dom";
 
 const DeleteTeacherFromSubject = () => {
     const [subjectsWithTeacher, setSubjectsWithTeacher] = useState([]);
@@ -129,11 +130,15 @@ const DeleteTeacherFromSubject = () => {
                                 {page * rowsPerPage + index + 1}
                             </TableCell>
                             <TableCell align="center" style={{...cellBorderStyle, width: cellWidthStyle.widthSubject}}>
-                                {subject.name}
+                                <Link to={`/subjects/${subject.id}`} style={{color: 'inherit' }}>
+                                    {subject.name}
+                                </Link>
                             </TableCell>
                             <TableCell align="center" style={cellBorderStyle}>
                                 {subject.teacher && (
-                                    subject.teacher.lastName + " " + subject.teacher.firstName
+                                    <Link to={`/teachers/${subject.teacher.id}`} style={{color: 'inherit' }}>
+                                        {subject.teacher.firstName} {subject.teacher.lastName}
+                                    </Link>
                                 )}
 
                             </TableCell>

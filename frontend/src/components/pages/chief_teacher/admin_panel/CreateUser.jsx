@@ -9,7 +9,6 @@ import CircularProgress from "@mui/material/CircularProgress";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
-import FormLabel from "@mui/material/FormLabel";
 
 const CreateUser = () => {
     const [firstName, setFirstName] = useState('');
@@ -71,6 +70,7 @@ const CreateUser = () => {
             <Typography variant="h6" gutterBottom>
                 Create User
             </Typography>
+
             <form onSubmit={handleCreateUser} style={{ width: '100%' }}>
                 <TextField
                     fullWidth
@@ -117,7 +117,7 @@ const CreateUser = () => {
                         ))}
                     </Box>
                 )}
-                <FormLabel component="legend">Role</FormLabel>
+
                 <RadioGroup
                     row
                     aria-label="role"
@@ -133,6 +133,7 @@ const CreateUser = () => {
                     <FormControlLabel value="STUDENT" control={<Radio />} label="Student" />
                     <FormControlLabel value="TEACHER" control={<Radio />} label="Teacher" />
                 </RadioGroup>
+
                 {isLoading ? (
                     <Button variant="contained" color="primary" disabled sx={{ mb: 2 }}>
                         <CircularProgress size={24} />

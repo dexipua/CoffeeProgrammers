@@ -4,9 +4,9 @@ import Typography from "@mui/material/Typography";
 import {Link} from "react-router-dom";
 import React from "react";
 
-const UserBox = ({role, teacher}) => {
+const UserBox = ({role, user}) => {
     return (
-        <Link to={`/${ role === "STUDENT" ? "teachers" : "students"}/${teacher.id}`}
+        <Link to={`/${ role === "STUDENT" ? "teachers" : "students"}/${user.id}`}
               style={{textDecoration: 'none', color: 'inherit'}}>
             <Box
                 width="300px"
@@ -37,7 +37,7 @@ const UserBox = ({role, teacher}) => {
                                 {role === "STUDENT" ? "Teacher:" : "Student:"}
                             </Typography>
                             <Typography variant="subtitle1" sx={{margin: 0, color: '#333'}}>
-                                {teacher.lastName + " " + teacher.firstName}
+                                {user.firstName + " " + user.lastName}
                             </Typography>
                         </Box>
                         <Box width="100%" display="flex" alignItems="center" gap={0.5}>
@@ -45,7 +45,7 @@ const UserBox = ({role, teacher}) => {
                                 Email:
                             </Typography>
                             <Typography variant="subtitle1" sx={{margin: 0, color: '#333'}}>
-                                {teacher.email}
+                                {user.email}
                             </Typography>
                         </Box>
                     </Box>

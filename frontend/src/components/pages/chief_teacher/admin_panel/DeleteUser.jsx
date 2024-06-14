@@ -16,6 +16,7 @@ import TablePaginationActions from "../../../layouts/TablePaginationActions";
 import UserSearchBar from "../../../layouts/UserSearchBar";
 import Typography from "@mui/material/Typography";
 import Snackbar from '@mui/material/Snackbar'
+import {Link} from "react-router-dom";
 
 const DeleteUser = () => {
     const [role, setRole] = useState('STUDENT');
@@ -123,7 +124,12 @@ const DeleteUser = () => {
                             {studentNumber}
                         </TableCell>
                         <TableCell align="center" style={cellBorderStyle}>
-                            {user.lastName} {user.firstName}
+                            <Link to={
+                                role === "STUDENT" ? `/students/${user.id}` : `/teachers/${user.id}`}
+                                  style={{color: 'inherit' }}
+                            >
+                                {user.firstName} {user.lastName}
+                            </Link>
                         </TableCell>
                         <TableCell align="center" style={{...cellBorderStyle, width: cellWidthStyle.widthEmail}}>
                             {user.email}

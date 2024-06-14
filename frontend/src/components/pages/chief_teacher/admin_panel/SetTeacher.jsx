@@ -16,6 +16,7 @@ import {
 } from '@mui/material';
 import UserSearchBar from "../../../layouts/UserSearchBar";
 import SubjectSearchBar from "../../../layouts/SubjectSearchBar";
+import {Link} from "react-router-dom";
 
 const SetTeacher = () => {
     const [subjectsWithoutTeachers, setSubjectsWithoutTeachers] = useState([]);
@@ -192,7 +193,9 @@ const SetTeacher = () => {
                                     checked={selectedTeacherId === teacher.id}
                                     onChange={() => setSelectedTeacherId(teacher.id)}
                                 />
-                                {teacher.lastName} {teacher.firstName}
+                                <Link to={`/teachers/${teacher.id}`} style={{color: 'inherit' }}>
+                                    {teacher.firstName} {teacher.lastName}
+                                </Link>
                             </TableCell>
                         </TableRow>
                     ))}

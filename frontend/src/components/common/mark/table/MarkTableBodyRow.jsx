@@ -4,6 +4,7 @@ import SubjectService from "../../../../services/SubjectService";
 import DeleteButton from "../../../layouts/DeleteButton";
 import MarkMenu from "../MarkMenu";
 import CreateMarkButton from "../create_button/CreateMarkButton";
+import {Link} from "react-router-dom";
 
 const MarkTableBodyRow = (
     {
@@ -26,7 +27,12 @@ const MarkTableBodyRow = (
                 {studentNumber}
             </TableCell>
             <TableCell align="center" style={{...cellStyles, width: cellStyles.widthStudent}}>
-                {`${student.lastName} ${student.firstName}`}
+                <Link
+                    to={`/students/${student.id}`}
+                    style={{color: 'inherit'}}
+                >
+                    {student.firstName} {student.lastName}
+                </Link>
             </TableCell>
             <TableCell align="center" style={{...cellStyles, width: cellStyles.widthEmail}}>
                 {student.email}

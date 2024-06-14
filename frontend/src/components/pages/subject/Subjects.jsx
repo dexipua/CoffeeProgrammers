@@ -13,8 +13,9 @@ import TablePaginationActions from "../../layouts/TablePaginationActions";
 import SubjectSearchBar from "../../layouts/SubjectSearchBar";
 import {Paper} from "@mui/material";
 import Typography from "@mui/material/Typography";
+import {Link} from "react-router-dom";
 
-const SubjectList = () => {
+const Subjects = () => {
     const [searchSubject, setSearchSubject] = useState('');
     const [subjects, setSubjects] = useState([]);
     const [filteredSubjects, setFilteredSubjects] = useState([]);
@@ -99,15 +100,19 @@ const SubjectList = () => {
                 {filteredSubjects.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((subject, index) => (
                         <TableRow key={subject.id} style={{backgroundColor: getRowColor(index)}}>
-                            <TableCell align="center" style={{...cellBorderStyle, width: cellWidthStyle.widthNumber}}>
+                            <TableCell  align="center" style={{...cellBorderStyle, width: cellWidthStyle.widthNumber}}>
                                 {page * rowsPerPage + index + 1}
                             </TableCell>
                             <TableCell align="center" style={{...cellBorderStyle, width: cellWidthStyle.widthSubject}}>
-                                {subject.name}
+                                <Link to={`${subject.id}`} style={{color: 'inherit' }}>
+                                    {subject.name}
+                                </Link>
                             </TableCell>
                             <TableCell align="center" style={cellBorderStyle}>
                                 {subject.teacher && (
-                                    subject.teacher.lastName + " " + subject.teacher.firstName
+                                    <Link to={`/teachers/${subject.teacher.id}`} style={{color: 'inherit' }}>
+                                        { subject.teacher.lastName + " " + subject.teacher.firstName}
+                                    </Link>
                                 )}
 
                             </TableCell>
@@ -178,4 +183,4 @@ const SubjectList = () => {
         </Box>
     );
 };
-export default SubjectList;
+export default Subjects;
