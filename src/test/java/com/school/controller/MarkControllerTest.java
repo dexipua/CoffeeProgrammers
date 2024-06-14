@@ -168,7 +168,7 @@ class MarkControllerTest {
         when(markService.findAllByStudentId(1)).thenReturn(new HashMap<>(Map.of(subject, List.of(mark))));
 
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders
-                        .get("/marks/getAllByStudentId/1"))
+                        .get("/marks/student/1"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn();

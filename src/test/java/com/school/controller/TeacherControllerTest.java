@@ -9,6 +9,7 @@ import com.school.dto.user.UserRequestUpdate;
 import com.school.models.Subject;
 import com.school.models.Teacher;
 import com.school.models.User;
+import com.school.service.StudentService;
 import com.school.service.TeacherService;
 import com.school.service.impl.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,6 +26,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -40,6 +42,9 @@ class TeacherControllerTest {
 
     @MockBean
     private TeacherService teacherService;
+
+    @MockBean
+    private StudentService studentService;
 
     @MockBean
     private JwtUtils jwtUtils;
@@ -132,7 +137,7 @@ class TeacherControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        TeacherResponseAll expectedResponseBody = new TeacherResponseAll(teacher);
+        TeacherResponseAll expectedResponseBody = new TeacherResponseAll(teacher, List.of());
         String actualResponseBody = mvcResult.getResponse().getContentAsString();
 
         assertThat(actualResponseBody).isEqualToIgnoringWhitespace(
@@ -174,7 +179,7 @@ class TeacherControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        TeacherResponseAll expectedResponseBody = new TeacherResponseAll(updated);
+        TeacherResponseAll expectedResponseBody = new TeacherResponseAll(updated, List.of());
         String actualResponseBody = mvcResult.getResponse().getContentAsString();
 
         assertThat(actualResponseBody).isEqualToIgnoringWhitespace(
@@ -198,7 +203,9 @@ class TeacherControllerTest {
     @Test
     @WithMockUser(roles = "CHIEF_TEACHER")
     void getTeacherBySubjectName() throws Exception{
-        teacher.setSubjects(List.of(new Subject("Maths")));
+        Subject subject = new Subject();
+        subject.setName("Math");
+        teacher.setSubjects(Set.of(subject));
         teacherService.create(request);
 
         when(teacherService.findBySubjectName("Maths")).thenReturn(List.of(teacher));
