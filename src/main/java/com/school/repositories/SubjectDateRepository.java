@@ -9,6 +9,7 @@ import java.time.DayOfWeek;
 import java.util.List;
 
 public interface SubjectDateRepository extends JpaRepository<SubjectDate, Long> {
+    void deleteAllBySubjectId(long subjectId);
     List<SubjectDate> findAllBySubject_Students_Id(long studentId);
     List<SubjectDate> findAllByDayOfWeekAndNumOfLessonAndSubject_Teacher(DayOfWeek dayOfWeek, SubjectDate.NumOfLesson numOfLesson, Teacher teacher);
     List<SubjectDate> findAllByDayOfWeekAndNumOfLessonAndSubject_StudentsContains(DayOfWeek dayOfWeek, SubjectDate.NumOfLesson numOfLesson, Student student);
