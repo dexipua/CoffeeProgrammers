@@ -1,14 +1,14 @@
 // Admin.jsx
 import * as React from 'react';
 import {useState} from 'react';
-import VerticalTabs from './adminPanel/VerticalTabs'; // Імпорт компонента VerticalTabs
+import VerticalTabs from './admin_panel/VerticalTabs'; // Імпорт компонента VerticalTabs
 import ApplicationBar from "../../layouts/ApplicationBar";
-import CreateUser from "./adminPanel/CreateUser";
-import DeleteUser from "./adminPanel/DeleteUser";
-import CreateSubject from "./adminPanel/CreateSubject";
-import DeleteSubject from "./adminPanel/DeleteSubject";
-import DeleteTeacherFromSubject from "./adminPanel/DeleteTeacherFromSubject";
-import SetTeacher from "./adminPanel/SetTeacher";
+import CreateUser from "./admin_panel/CreateUser";
+import DeleteUser from "./admin_panel/DeleteUser";
+import CreateSubject from "./admin_panel/CreateSubject";
+import DeleteSubject from "./admin_panel/DeleteSubject";
+import DeleteTeacherFromSubject from "./admin_panel/DeleteTeacherFromSubject";
+import SetTeacher from "./admin_panel/SetTeacher";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 

@@ -37,22 +37,24 @@ export default function AccountMenu() {
                 onClose={handleMenuClose}
             >
                 <MenuItem onClick={handleMenuClose}>
-                    <Link to= {role === "STUDENT" ? `/students/${roleId}` : `/teachers/${roleId}`} style={{ textDecoration: 'none', color: 'inherit' }}>Account</Link>
+                    <Link to= {role === "STUDENT" ? `/students/${roleId}` : `/teachers/${roleId}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                        Account
+                    </Link>
                 </MenuItem>
                 <MenuItem onClick={handleMenuClose}>
-                    <Link to="/news" style={{ textDecoration: 'none', color: 'inherit' }}>News</Link>
+                    <Link to="/subjects" style={{ textDecoration: 'none', color: 'inherit' }}>
+                        Subjects
+                    </Link>
                 </MenuItem>
                 <MenuItem onClick={handleMenuClose}>
-                    <Link to="/teachers" style={{ textDecoration: 'none', color: 'inherit' }}>Teachers</Link>
+                    <Link to="/users" style={{ textDecoration: 'none', color: 'inherit' }}>
+                        Users
+                    </Link>
                 </MenuItem>
                 <MenuItem onClick={handleMenuClose}>
-                    <Link to="/subjects" style={{ textDecoration: 'none', color: 'inherit' }}>Subjects</Link>
-                </MenuItem>
-                <MenuItem onClick={handleMenuClose}>
-                    <Link to="/students" style={{ textDecoration: 'none', color: 'inherit' }}>Students</Link>
-                </MenuItem>
-                <MenuItem onClick={handleMenuClose}>
-                    <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>Logout</Link>
+                    <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
+                        Logout
+                    </Link>
                 </MenuItem>
             </Menu>
         </div>

@@ -17,7 +17,7 @@ import Typography from "@mui/material/Typography";
 import {Paper} from "@mui/material";
 import ApplicationBar from "../../layouts/ApplicationBar";
 
-const DeleteUser = () => {
+const Users = () => {
     const [role, setRole] = useState('STUDENT');
     const [users, setUsers] = useState([]);
 
@@ -207,4 +207,4 @@ const DeleteUser = () => {
     );
 };
 
-export default DeleteUser;
+export default Users;

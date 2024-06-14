@@ -4,7 +4,6 @@ import TeacherService from '../../../../services/TeacherService';
 import {
     Box,
     Button,
-    Paper,
     Radio,
     Table,
     TableBody,
@@ -218,7 +217,26 @@ const SetTeacher = () => {
 
             <Box mt={3} display="flex" justifyContent="space-between">
                 {/* Subjects */}
-                <Paper sx={{flex: 1, mr: 2, p: 2, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                <Box
+                    height="auto"
+                    my={2}
+                    display="flex"
+                    flexDirection="column"
+                    justifyContent="center"
+                    alignItems="center"
+                    gap={2}
+                    p={2}
+                    sx={{
+                        flex: 1,
+                        mr: 2,
+                        p: 2, display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        border: '1px solid #ddd',
+                        borderRadius: '8px',
+                        backgroundColor: '#ffffff',
+                    }}
+                >
                     <Box mb={2}>
                         <SubjectSearchBar
                             name={searchSubjectName}
@@ -244,10 +262,29 @@ const SetTeacher = () => {
                         onPageChange={handleChangePageSubjects}
                         onRowsPerPageChange={handleChangeRowsPerPageSubjects}
                     />
-                </Paper>
+                </Box>
 
                 {/* Teachers */}
-                <Paper sx={{flex: 1, mr: 2, p: 2, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                <Box
+                    height="auto"
+                    my={2}
+                    display="flex"
+                    flexDirection="column"
+                    justifyContent="center"
+                    alignItems="center"
+                    gap={2}
+                    p={2}
+                    sx={{
+                        flex: 1,
+                        mr: 2,
+                        p: 2, display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        border: '1px solid #ddd',
+                        borderRadius: '8px',
+                        backgroundColor: '#ffffff',
+                    }}
+                >
                     <Box mb={2}>
                         <UserSearchBar
                             firstName={searchFirstname}
@@ -276,7 +313,7 @@ const SetTeacher = () => {
                         onPageChange={handleChangePageTeachers}
                         onRowsPerPageChange={handleChangeRowsPerPageTeachers}
                     />
-                </Paper>
+                </Box>
             </Box>
         </Box>
     );
