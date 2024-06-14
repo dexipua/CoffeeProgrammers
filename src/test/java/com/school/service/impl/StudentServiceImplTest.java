@@ -16,10 +16,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -158,14 +158,16 @@ class StudentServiceImplTest {
 
     @Test
     void findBySubjectName_WhenSubjectExists() {
-        student.setSubjects(List.of(new Subject("Mathematics")));
+        Subject math = new Subject();
+        math.setName("Math");
+        student.setSubjects(Set.of(math));
         List<Student> students = List.of(student);
-        when(studentRepository.findStudentBySubjectNameContainingIgnoreCase("Mathematics")).thenReturn(students);
+        when(studentRepository.findStudentBySubjectNameContainingIgnoreCase(math.getName())).thenReturn(students);
 
-        List<Student> result = studentService.findBySubjectName("Mathematics");
+        List<Student> result = studentService.findBySubjectName(math.getName());
 
         assertEquals(students, result);
-        verify(studentRepository).findStudentBySubjectNameContainingIgnoreCase("Mathematics");
+        verify(studentRepository).findStudentBySubjectNameContainingIgnoreCase(math.getName());
     }
 
     @Test
@@ -179,10 +181,10 @@ class StudentServiceImplTest {
     @Test
     void findStudentsByTeacherId_WhenTeacherExists() {
         Subject subject = new Subject();
-        subject.setStudents(List.of(student));
+        subject.setStudents(Set.of(student));
         Teacher teacher = new Teacher();
         teacher.setId(1);
-        teacher.setSubjects(List.of(subject));
+        teacher.setSubjects(Set.of(subject));
 
         when(teacherService.findById(teacher.getId())).thenReturn(teacher);
         when(studentRepository.findAllByTeacherId(teacher.getId())).thenReturn(List.of(student));
@@ -197,7 +199,6 @@ class StudentServiceImplTest {
     void findStudentsByTeacherId_WhenTeacherHasNoStudents() {
         Teacher teacher = new Teacher();
         teacher.setId(1);
-        teacher.setSubjects(new ArrayList<>());
 
         when(teacherService.findById(teacher.getId())).thenReturn(teacher);
 

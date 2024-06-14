@@ -19,7 +19,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,7 +52,6 @@ public class TeacherServiceImplTest {
         teacher = new Teacher(new User("Vlad", "Bulakovskyi", "email@gmail.com", "Vlad123"));
         teacher.getUser().setRole(teacherRole);
         teacher.setId(1);
-        teacher.setSubjects(new ArrayList<>());
 
         userRequestCreate = new UserRequestCreate();
         userRequestCreate.setFirstName("Vlad");
@@ -127,7 +125,8 @@ public class TeacherServiceImplTest {
 
     @Test
     void deleteWithSubjects() {
-        Subject subject = new Subject("Math");
+        Subject subject = new Subject();
+        subject.setName("Math");
         subject.setTeacher(teacher);
         teacher.getSubjects().add(subject);
         teacherService.create(userRequestCreate);
@@ -171,7 +170,8 @@ public class TeacherServiceImplTest {
 
     @Test
     void findBySubjectName() {
-        Subject subject = new Subject("Mathematics");
+        Subject subject = new Subject();
+        subject.setName("Math");
         teacher.getSubjects().add(subject);
         subject.setTeacher(teacher);
         teacherService.create(userRequestCreate);
@@ -185,7 +185,8 @@ public class TeacherServiceImplTest {
 
     @Test
     void notFindBySubjectName() {
-        Subject subject = new Subject("Mathematics");
+        Subject subject = new Subject();
+        subject.setName("Math");
         teacher.getSubjects().add(subject);
         subject.setTeacher(teacher);
         teacherService.create(userRequestCreate);

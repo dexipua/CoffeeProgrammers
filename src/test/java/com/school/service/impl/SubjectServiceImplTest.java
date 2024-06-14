@@ -5,6 +5,7 @@ import com.school.models.Student;
 import com.school.models.Subject;
 import com.school.models.Teacher;
 import com.school.models.User;
+import com.school.repositories.StudentRepository;
 import com.school.repositories.SubjectRepository;
 import com.school.service.StudentService;
 import com.school.service.TeacherService;
@@ -19,9 +20,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -37,6 +36,8 @@ class SubjectServiceImplTest {
     private TeacherService teacherService;
     @Mock
     private StudentService studentService;
+    @Mock
+    private StudentRepository studentRepository;
     @Mock
     private UserNewsService userNewsService;
 
@@ -196,28 +197,12 @@ class SubjectServiceImplTest {
     @Test
     void addStudent() {
         // given
-        subject1.setStudents(new ArrayList<>());
         subject1.setTeacher(teacher);
         // when
         when(subjectRepository.findById(subject1.getId())).thenReturn(Optional.of(subject1));
         when(studentService.findById(student.getId())).thenReturn(student);
         // then
         subjectService.addStudent(subject1.getId(), student.getId());
-        verify(subjectRepository, times(1)).save(subject1);
-        verify(subjectRepository, times(1)).findById(subject1.getId());
-        verify(studentService, times(1)).findById(student.getId());
-    }
-
-    @Test
-    void addStudentAlreadyHaveStudent() {
-        // given
-        subject1.setStudents(new ArrayList<>(List.of(student)));
-        // when
-        when(subjectRepository.findById(subject1.getId())).thenReturn(Optional.of(subject1));
-        when(studentService.findById(student.getId())).thenReturn(student);
-        // then
-        assertThrowsExactly(UnsupportedOperationException.class, () -> subjectService.addStudent(subject1.getId(), student.getId()));
-        verify(subjectRepository, never()).save(subject1);
         verify(subjectRepository, times(1)).findById(subject1.getId());
         verify(studentService, times(1)).findById(student.getId());
     }
@@ -225,7 +210,7 @@ class SubjectServiceImplTest {
     @Test
     void deleteStudent() {
         // given
-        subject1.setStudents(new ArrayList<>(List.of(student)));
+        subject1.setStudents(new HashSet<>(Set.of(student)));
         // when
         when(subjectRepository.findById(subject1.getId())).thenReturn(Optional.of(subject1));
         when(studentService.findById(student.getId())).thenReturn(student);
@@ -238,8 +223,6 @@ class SubjectServiceImplTest {
 
     @Test
     void deleteStudentHaveNotStudent() {
-        // given
-        subject1.setStudents(new ArrayList<>());
         // when
         when(subjectRepository.findById(subject1.getId())).thenReturn(Optional.of(subject1));
         when(studentService.findById(student.getId())).thenReturn(student);
@@ -372,8 +355,6 @@ class SubjectServiceImplTest {
         //given
         Student student = new Student();
         Student anotherStudent = new Student();
-        subject1.setStudents(new ArrayList<>());
-        subject2.setStudents(new ArrayList<>());
         List<Subject> studentSubjects = List.of(
                 subject1,
                 subject2
@@ -381,7 +362,8 @@ class SubjectServiceImplTest {
         studentSubjects.get(0).getStudents().add(student);
         studentSubjects.get(1).getStudents().add(student);
 
-        Subject anotherStudentSubject = new Subject("Art");
+        Subject anotherStudentSubject = new Subject();
+        anotherStudentSubject.setName("Art");
         SubjectRequest subjectRequest3 = new SubjectRequest();
         subjectRequest3.setName("Art");
         anotherStudentSubject.getStudents().add(anotherStudent);

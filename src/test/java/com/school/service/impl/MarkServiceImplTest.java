@@ -60,12 +60,10 @@ public class MarkServiceImplTest {
         subject1 = new Subject();
         subject1.setName("Math");
         subject1.setId(1);
-        subject1.setStudents(new ArrayList<>());
 
         subject2 = new Subject();
         subject2.setName("Art");
         subject2.setId(2);
-        subject2.setStudents(new ArrayList<>());
 
         expected = MarkRequest.toMark(markRequest);
         expected.setValue(10);
@@ -84,7 +82,7 @@ public class MarkServiceImplTest {
     @Test
     void create() {
         // given
-        subject1.setStudents(new ArrayList<>(List.of(student1)));
+        subject1.setStudents(Set.of(student1));
 
         // when
         when(subjectService.findById(subject1.getId())).thenReturn(subject1);
@@ -132,7 +130,7 @@ public class MarkServiceImplTest {
     void notFindById() {
         // then
         assertThrows(EntityNotFoundException.class, () -> markService.findById(-1));
-        verify(markRepository, times(1)).findById(-1);
+        verify(markRepository, times(1)).findById((long) -1);
     }
 
     @Test
@@ -169,9 +167,9 @@ public class MarkServiceImplTest {
     @Test
     void findAllByStudentId() {
         // given
-        subject1.setStudents(List.of(student1));
+        subject1.setStudents(Set.of(student1));
 
-        subject2.setStudents(List.of(student1));
+        subject2.setStudents(Set.of(student1));
 
         mark1.setStudent(student1);
         mark1.setSubject(subject1);
@@ -191,7 +189,7 @@ public class MarkServiceImplTest {
     @Test
     void findAllBySubjectId() {
         // given
-        subject1.setStudents(List.of(student1, student2));
+        subject1.setStudents(Set.of(student1, student2));
 
         mark1.setStudent(student1);
         mark1.setSubject(subject1);
@@ -211,9 +209,9 @@ public class MarkServiceImplTest {
     @Test
     void findAverageByStudentId() {
         // given
-        subject1.setStudents(List.of(student1));
+        subject1.setStudents(Set.of(student1));
 
-        subject2.setStudents(List.of(student1));
+        subject2.setStudents(Set.of(student1));
 
         mark1.setStudent(student1);
         mark1.setSubject(subject1);
