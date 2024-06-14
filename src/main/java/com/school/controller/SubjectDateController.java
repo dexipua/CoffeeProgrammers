@@ -3,6 +3,7 @@ package com.school.controller;
 import com.school.dto.subjectDate.SubjectDateRequest;
 import com.school.dto.subjectDate.SubjectDateResponse;
 import com.school.dto.subjectDate.SubjectDateResponseByStudentId;
+import com.school.dto.subjectDate.SubjectDateResponseBySubjectId;
 import com.school.models.Subject;
 import com.school.models.SubjectDate;
 import com.school.service.SubjectDateService;
@@ -15,8 +16,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.DayOfWeek;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.TreeMap;
 
 @RestController
 @RequestMapping("/timeTable")
@@ -65,10 +66,10 @@ public class SubjectDateController {
     @GetMapping("/getAllByStudent/{student_id}")
     @ResponseStatus(HttpStatus.OK)
     public List<SubjectDateResponseByStudentId> getAllByStudentId(@PathVariable("student_id") int student_id) {
-        HashMap<DayOfWeek, HashMap<SubjectDate.NumOfLesson, Subject>> hashMap =
+        TreeMap<DayOfWeek, TreeMap<SubjectDate.NumOfLesson, Subject>> treeMap =
                 subjectDateService.findAllBySubject_Students_Id(student_id);
         List<SubjectDateResponseByStudentId> subjectDateResponseByStudentIds = new ArrayList<>();
-        hashMap.forEach((key, value) -> value.entrySet().stream()
+        treeMap.forEach((key, value) -> value.entrySet().stream()
                 .map(inEntry ->
                         new SubjectDateResponseByStudentId(
                                 key,
@@ -78,5 +79,23 @@ public class SubjectDateController {
                 )
                 .forEach(subjectDateResponseByStudentIds::add));
         return subjectDateResponseByStudentIds;
+    }
+
+    @GetMapping("/getAllBySubject/{subject_id}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<SubjectDateResponseBySubjectId> getAllBySubjectId(@PathVariable("subject_id") int subject_id) {
+        TreeMap<DayOfWeek, TreeMap<SubjectDate.NumOfLesson, Boolean>> treeMap =
+                subjectDateService.findAllBySubject_Id(subject_id);
+        List<SubjectDateResponseBySubjectId> subjectDateResponseBySubjectIds = new ArrayList<>();
+        treeMap.forEach((key, value) -> value.entrySet().stream()
+                .map(inEntry ->
+                        new SubjectDateResponseBySubjectId(
+                                key,
+                                inEntry.getKey(),
+                                inEntry.getValue()
+                        )
+                )
+                .forEach(subjectDateResponseBySubjectIds::add));
+        return subjectDateResponseBySubjectIds;
     }
 }
