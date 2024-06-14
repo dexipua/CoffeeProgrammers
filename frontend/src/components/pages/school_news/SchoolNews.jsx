@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useEffect, useState} from 'react';
 import SchoolNewsService from '../../../services/SchoolNewsService';
 import ApplicationBar from "../../layouts/app_bar/ApplicationBar";
 
