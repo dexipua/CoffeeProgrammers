@@ -1,6 +1,7 @@
 package com.school.repositories;
 
 import com.school.models.*;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -19,10 +20,17 @@ class MarkRepositoryTest {
     @Autowired
     private SubjectRepository subjectRepository;
 
+    private Subject subject;
+
+    @BeforeEach
+    void setUp() {
+        subject = new Subject();
+        subject.setName("Math");
+    }
+
     @Test
     void findAllByStudentId() {
         Student student = new Student(new User("Id", "Od", "cemnc@idv.fi", "piehvhuoe08475780ldkjfIHFGEROSIg"));
-        Subject subject = new Subject("Maths");
         studentRepository.save(student);
         subjectRepository.save(subject);
         markRepository.save(new Mark(1, student, subject));
@@ -34,7 +42,6 @@ class MarkRepositoryTest {
     @Test
     void findAllBySubject_Id() {
         Student student = new Student(new User("Id", "Od", "cemnc@idv.fi", "piehvhuoe08475780ldkjfIHFGEROSIg"));
-        Subject subject = new Subject("Maths");
         studentRepository.save(student);
         subjectRepository.save(subject);
         markRepository.save(new Mark(1, student, subject));
@@ -46,7 +53,6 @@ class MarkRepositoryTest {
     @Test
     void findById() {
         Student student = new Student(new User("Id", "Od", "cemnc@idv.fi", "piehvhuoe08475780ldkjfIHFGEROSIg"));
-        Subject subject = new Subject("Maths");
         studentRepository.save(student);
         subjectRepository.save(subject);
         Mark mark = new Mark(1, student, subject);
@@ -57,14 +63,13 @@ class MarkRepositoryTest {
     @Test
     void NotFindById() {
         Student student = new Student(new User("Id", "Od", "cemnc@idv.fi", "piehvhuoe08475780ldkjfIHFGEROSIg"));
-        Subject subject = new Subject("Maths");
         studentRepository.save(student);
         subjectRepository.save(subject);
         Mark mark = new Mark(1, student, subject);
         markRepository.save(mark);
 
         //then
-        Optional<Mark> res = markRepository.findById(-1);
+        Optional<Mark> res = markRepository.findById((long)-1);
         assertThrows(NoSuchElementException.class, res::get);
     }
 }

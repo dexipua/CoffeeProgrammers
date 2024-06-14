@@ -5,13 +5,14 @@ import com.school.models.Subject;
 import com.school.models.Teacher;
 import com.school.models.User;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -28,6 +29,18 @@ class StudentRepositoryTest {
     @Autowired
     private TeacherRepository teacherRepository;
 
+    private Subject subject1;
+    private Subject subject2;
+
+    @BeforeEach
+    void setUp() {
+        subject1 = new Subject();
+        subject1.setName("Math");
+
+        subject2 = new Subject();
+        subject2.setName("Philosophy");
+    }
+
     @AfterEach
     void tearDown() {
         studentRepository.deleteAll();
@@ -37,14 +50,11 @@ class StudentRepositoryTest {
     @Test
     void findStudentBySubjectName() {
         // Given
-        Subject subject1 = new Subject("Math");
-        Subject subject2 = new Subject("Art");
-
         Student student1 = new Student();
-        student1.setSubjects(new ArrayList<>(List.of(subject1)));
+        student1.getSubjects().add(subject1);
 
         Student student2 = new Student();
-        student2.setSubjects(new ArrayList<>(List.of(subject2)));
+        student2.getSubjects().add(subject2);
 
         subjectRepository.saveAll(List.of(subject1, subject2));
         studentRepository.saveAll(List.of(student1, student2));
@@ -60,12 +70,9 @@ class StudentRepositoryTest {
     @Test
     void NotFindStudentBySubjectName(){
         // Given
-        Subject subject1 = new Subject("Math");
-        Subject subject2 = new Subject("Art");
 
         Student student1 = new Student();
-        student1.setSubjects(new ArrayList<>(List.of(subject1)));
-
+        student1.getSubjects().add(subject1);
 
         subjectRepository.saveAll(List.of(subject1, subject2));
         studentRepository.save(student1);
@@ -97,17 +104,16 @@ class StudentRepositoryTest {
     @Test
     void findAllByTeacherId() {
         // Given
-        Subject subject = new Subject("Art");
         Teacher teacher = new Teacher(new User("Teacher", "Bdk", "cemncSd@idv.fi", "piehvhuoe08475780ldkjfdsfIHFGEROSIg"));
 
-        subject.setTeacher(teacher);
+        subject1.setTeacher(teacher);
         Student student1 = new Student(new User("Id", "Od", "cemnc@idv.fi", "piehvhuoe08475780ldkjfdsfIHFGEROSIg"));
 
         Student student2 = new Student(new User("Id", "Ad", "cemsdnc@idv.fi", "piehvhuoe08475780ldkjfdsfIHFGEROSIg"));
-        student1.setSubjects(List.of(subject));
-        student2.setSubjects(List.of(subject));
+        student1.setSubjects(Set.of(subject1));
+        student2.setSubjects(Set.of(subject1));
 
-        subjectRepository.save(subject);
+        subjectRepository.save(subject1);
         teacherRepository.save(teacher);
         studentRepository.save(student1);
         studentRepository.save(student2);
