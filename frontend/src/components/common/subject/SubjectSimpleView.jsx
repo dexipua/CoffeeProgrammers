@@ -1,15 +1,17 @@
-import React from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import React from "react";
 import {Link} from "react-router-dom";
 
-const SubjectWithTeacherForProfile = ({subject}) => {
+const SubjectSimpleView = ({subject}) => {
     return (
-        <Box mt="80px" ml="60px">
+        <Link to={`/subjects/${subject.id}`} style={{textDecoration: 'none', color: 'inherit'}}>
             <Box
-                width={300}
+                width="600px"
                 height="auto"
                 my={2}
+                mr={2}
+                ml={2}
                 display="flex"
                 flexDirection="column"
                 justifyContent="flex-start"
@@ -22,32 +24,28 @@ const SubjectWithTeacherForProfile = ({subject}) => {
                     backgroundColor: '#ffffff',
                 }}
             >
-                <Typography variant="h6" component="h3">Subject</Typography>
-
                 <Box width="100%" display="flex" alignItems="center" gap={0.5}>
-                    <Typography variant="subtitle1" sx={{ margin: 0, fontWeight: 'bold', color: '#333' }}>
-                        Name:
+                    <Typography variant="subtitle1" sx={{margin: 0, fontWeight: 'bold', color: '#333'}}>
+                        Subject:
                     </Typography>
-                    <Typography variant="subtitle1" sx={{ margin: 0, color: '#333' }}>
+                    <Typography variant="subtitle1" sx={{margin: 0, color: '#333'}}>
                         {subject.name}
                     </Typography>
                 </Box>
 
                 <Box width="100%" display="flex" alignItems="center" gap={0.5}>
-                    <Typography variant="subtitle1" sx={{ margin: 0, fontWeight: 'bold', color: '#333' }}>
+                    <Typography variant="subtitle1" sx={{margin: 0, fontWeight: 'bold', color: '#333'}}>
                         Teacher:
                     </Typography>
-                    <Typography variant="subtitle1" sx={{ margin: 0, color: '#333' }}>
+                    <Typography variant="subtitle1" sx={{margin: 0, color: '#333'}}>
                         {subject.teacher && (
-                            <Link to={`/teachers/${subject.teacher.id}`} style={{ color: 'inherit' }}>
-                                {subject.teacher.lastName + " " + subject.teacher.firstName}
-                            </Link>
+                            subject.teacher.firstName + " " + subject.teacher.lastName
                         )}
                     </Typography>
                 </Box>
             </Box>
-        </Box>
+        </Link>
     );
 }
 
-export default SubjectWithTeacherForProfile;
+export default SubjectSimpleView;

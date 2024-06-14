@@ -1,11 +1,13 @@
-import AccountService from "../../../services/AccountService";
-import {useEffect, useState} from "react";
-import ButtonAppBar from "../../layouts/ButtonAppBar";
+import AccountService from "../../../services/UserService";
+import React, {useEffect, useState} from "react";
+import ApplicationBar from "../../layouts/ApplicationBar";
 import SubjectWithTeacherList from "../../common/subject/SubjectWithTeacherList";
-import {Link} from "react-router-dom";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import AccountContainer from "../../common/user/AccountContainer";
+import Loading from "../../layouts/Loading";
+import {Grid} from "@mui/material";
+import AverageMarkView from "../../common/student/AverageMarkView";
 
 const Account = () => {
     const [account, setAccount] = useState(null);
@@ -28,77 +30,74 @@ const Account = () => {
         fetchAccount().then();
     }, []);
 
+    const handleNameUpdate = (newFirstName, newLastName) => {
+        console.log(newFirstName + " " + newLastName)
+        setAccount(prevAccount => ({
+            ...prevAccount,
+                firstName: newFirstName,
+                lastName: newLastName
+        }))
+    }
+
     if (loading) {
-        return <div>Loading...</div>;
+        return <Loading/>;
     }
 
     const role = localStorage.getItem('role');
 
     return (
-        <div style={{ display: 'flex' }}>
-            <div style={{ flex: 1, marginRight: '20px', marginTop: '125px' }}>
-                <ButtonAppBar />
-                <Box
-                    width={300}
-                    height={100}
-                    display="flex"
-                    flexDirection="column"
-                    justifyContent="center"
-                    alignItems="center"
-                    gap={2}
-                    p={2}
-                    sx={{
-                        border: '1px solid #ccc',
-                        borderRadius: '8px',
-                        backgroundColor: '#FFFFFFFF',
-                        transition: 'transform 0.2s, box-shadow 0.2s',
-                    }}
-                >
-                    <Box height="30px" display="flex" justifyContent="center" alignItems="center">
-                        <Typography variant="h6" align="center">
-                            My Account
-                        </Typography>
-                    </Box>
-                    <Box height="70px" display="flex" alignItems="center" justifyContent="center" mt={-2}>
-                        <AccountContainer
-                            user={account}/>
-                    </Box>
-                </Box>
-                <Box
-                    width={300}
-                    height={40}
-                    my={1}
-                    display="flex"
-                    flexDirection="column"
-                    justifyContent="center"
-                    alignItems="center"
-                    gap={2}
-                    p={2}
-                    sx={{
-                        border: '1px solid #ccc',
-                        borderRadius: '8px',
-                        backgroundColor: '#FFFFFFFF',
-                        transition: 'transform 0.2s, box-shadow 0.2s',
-                    }}
-                >
-                    {role === "STUDENT" ? (
-                        <Link to={`/marks/getAllByStudentId/${account.id}`} style={{textDecoration: 'none', color: 'inherit'}}>
-                            <div>My marks</div>
-                        </Link>
-                    ) : role === "CHIEF_TEACHER" ? (
-                        <Link to={"/admin"} style={{textDecoration: 'none', color: 'inherit'}}>
-                            <div>Admin panel</div>
-                        </Link>
-                    ) : null}
-                </Box>
-            </div>
-            <div style={{ flex: 3, marginTop: '70px' }}>
-                <Typography variant="h3" align="center">Subjects</Typography>
-                <div>
-                    <SubjectWithTeacherList subjects={account.subjects} />
-                </div>
-            </div>
-        </div>
+        <>
+            <ApplicationBar/>
+            <Box mt="80px" ml="60px" mr="60px">
+
+                <Grid container spacing={2} alignItems="flex-start">
+
+                    <Grid item xs={12} sm={6} md={4}>
+                        <Box>
+                            <AccountContainer
+                                edit={true}
+                                topic={"Account"}
+                                user= {account}
+                                onNameUpdate={handleNameUpdate}
+                            />
+                            {role === "STUDENT" && (
+                                <AverageMarkView
+                                    averageMark={account.averageMark}
+                                />
+                            )}
+                        </Box>
+
+                    </Grid>
+
+                    <Grid item xs={12} sm={6} md={8}>
+                        <Box
+                            sx={{
+                                width: '100%',
+                                border: '1px solid #ddd',
+                                borderRadius: '8px',
+                                backgroundColor: '#ffffff',
+                                textAlign: 'center',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                mt: 2
+                            }}
+                        >
+                            <Typography mt="10px" variant="h6" component="h3">My Subjects</Typography>
+                            <Box
+                                sx={{
+                                    width: '100%',
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                }}
+                            >
+                                <SubjectWithTeacherList subjects={account.subjects}/>
+                            </Box>
+                        </Box>
+                    </Grid>
+                </Grid>
+            </Box>
+        </>
     );
 }
 

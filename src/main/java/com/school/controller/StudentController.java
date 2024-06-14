@@ -11,6 +11,7 @@ import com.school.service.StudentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -87,10 +88,10 @@ public class StudentController {
 
     @GetMapping("/getAllByTeacherId/{teacher_id}")
     @ResponseStatus(HttpStatus.OK)
-    public List<StudentResponseSimple> getByTeacherId(@PathVariable("teacher_id") long teacherId) {
+    public List<StudentResponseWithEmail> getByTeacherId(@PathVariable("teacher_id") long teacherId) {
         List<Student> students = studentService.findStudentsByTeacherId(teacherId);
         return students.stream()
-                .map(StudentResponseSimple::new)
+                .map(StudentResponseWithEmail   ::new)
                 .collect(Collectors.toList());
     }
 
@@ -105,4 +106,20 @@ public class StudentController {
                 .map(StudentResponseSimple::new)
                 .collect(Collectors.toList());
     }
+
+    @GetMapping("/count")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<Long> getStudentsCount() {
+        return ResponseEntity.ok(studentService.getStudentsCount());
+    }
+
+    @GetMapping("/subjectIdIsNot/{subject_id}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<StudentResponseWithEmail> findAllBySubjectsIdIsNot(
+            @PathVariable("subject_id") long subjectId){
+        return studentService.findAllBySubjectsIdIsNot(subjectId).stream()
+                .map(StudentResponseWithEmail::new).
+                collect(Collectors.toList());
+    }
+
 }

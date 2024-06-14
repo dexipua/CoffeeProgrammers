@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import StudentListForProfile from "../student/StudentListForProfile";
+import StudentTable from "../student/StudentTable";
 import MarkTableForSubject from "../mark/MarkTableForSubject";
 
 const StudentsBox = (
@@ -29,7 +29,7 @@ const StudentsBox = (
             <Typography variant="h6" component="h3">Students</Typography>
         </Box>
         {!canGetMark ? (
-            <StudentListForProfile students={subjectStudents} />
+            <StudentTable students={subjectStudents} />
         ) : (
             <MarkTableForSubject
                 subjectId={subjectId}

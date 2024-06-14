@@ -7,7 +7,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import AddStudentList from "../student/AddStudentList";
 import Box from "@mui/material/Box";
 
-function AddStudentDialog({ onClose, open, subjectId}) {
+function AddStudentDialog({ onClose, open, subjectId, onStudentAdd}) {
     const handleClose = () => {
         onClose();
     };
@@ -22,7 +22,9 @@ function AddStudentDialog({ onClose, open, subjectId}) {
                     alignItems="center"
                     height="100%"
                 >
-                    <AddStudentList subjectId={subjectId} />
+                    <AddStudentList
+                        onStudentAdd={onStudentAdd}
+                        subjectId={subjectId} />
                 </Box>
                 <Button
                     onClick={handleClose}
@@ -47,7 +49,7 @@ AddStudentDialog.propTypes = {
     subjectId: PropTypes.number.isRequired,
 };
 
-export default function AddStudentButton({ subjectId }) {
+export default function AddStudentButton({ subjectId, onStudentAdd }) {
     const [open, setOpen] = React.useState(false);
 
     const handleClickOpen = () => {
@@ -67,6 +69,7 @@ export default function AddStudentButton({ subjectId }) {
                 onClose={handleClose}
                 open={open}
                 subjectId={subjectId}
+                onStudentAdd={onStudentAdd}
             />
         </div>
     );

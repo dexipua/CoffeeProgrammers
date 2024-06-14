@@ -2,6 +2,8 @@ package com.school.service.impl;
 
 import com.school.dto.student.StudentResponseAll;
 import com.school.dto.teacher.TeacherResponseAll;
+import com.school.models.Mark;
+import com.school.models.Subject;
 import com.school.models.User;
 import com.school.service.AccountService;
 import com.school.service.MarkService;
@@ -11,20 +13,49 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class AccountServiceImpl implements AccountService {
     private final MarkService markService;
     private final StudentService studentService;
     private final TeacherService teacherService;
+
     @Override
     public Object findAllInformationByRoleAndUserId() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if(user.getRole().getName().equals("STUDENT")){
-            return new StudentResponseAll(studentService.findByUserId(user.getId()),
-                    markService.findAverageByStudentId(studentService.findByUserId(user.getId()).getId()));
-        }else{
-            return new TeacherResponseAll(teacherService.findByUserId(user.getId()));
+        long userId = user.getId();
+        if (user.getRole().getName().equals("STUDENT")) {
+            return new StudentResponseAll(studentService.findByUserId(userId),
+                    markService.findAverageByStudentId(studentService.findByUserId(userId).getId()));
+        } else {
+            return new TeacherResponseAll(
+                    teacherService.findByUserId(userId),
+                    studentService.findStudentsByTeacherId(userId));
         }
     }
+
+    @Override
+    public long findRoleIdByRoleAndUserId() {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        long userId = user.getId();
+        if (user.getRole().getName().equals("STUDENT")) {
+            return studentService.findByUserId(userId).getId();
+        } else {
+            return teacherService.findByUserId(userId).getId();
+        }
+    }
+
+
+    @Override
+    public HashMap<Subject, List<Mark>> findBookmark() {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        long studentId = studentService.findByUserId(user.getId()).getId();
+        return markService.findAllByStudentId(studentId);
+
+    }
+
+
 }

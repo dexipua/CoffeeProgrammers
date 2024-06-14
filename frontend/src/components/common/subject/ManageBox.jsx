@@ -3,7 +3,7 @@ import ChangeSubjectNameButton from "./ChangeSubjectNameButton";
 import Box from "@mui/material/Box";
 import AddStudentButton from "./AddStudentButton";
 
-const ManageBox = ({ subjectId, onNameChange }) => (
+const ManageBox = ({subjectId, onNameChange, onStudentAdd }) => (
     <Box
         width={300}
         mt={4}
@@ -25,7 +25,9 @@ const ManageBox = ({ subjectId, onNameChange }) => (
             />
         </Box>
         <Box>
-            <AddStudentButton subjectId={subjectId} />
+            <AddStudentButton
+                onStudentAdd={onStudentAdd}
+                subjectId={subjectId} />
         </Box>
     </Box>
 );

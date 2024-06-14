@@ -26,10 +26,6 @@ public class StudentResponseAll {
         this.lastName = student.getUser().getLastName();
         this.email = student.getUser().getEmail();
         this.averageMark = Math.round(averageMark * 10.0) / 10.0;
-//        this.subjects = new SubjectResponseWithTeacher[student.getSubjects().size()];
-//        for(int i = 0; i < subjects.length; i++){
-//            subjects[i] = new SubjectResponseWithTeacher(student.getSubjects().get(i));
-//        }
         this.subjects = student.getSubjects().stream()
                 .map(SubjectResponseWithTeacher::new)
                 .collect(Collectors.toList());

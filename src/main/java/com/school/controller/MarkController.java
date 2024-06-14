@@ -69,7 +69,7 @@ public class MarkController {
         markService.delete(id);
     }
 
-    @GetMapping("/getAllByStudentId/{student_id}")
+    @GetMapping("/student/{student_id}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("@userSecurity.checkUserByStudent(#auth, #student_id)")
     public List<MarkResponseForStudent> getAllByStudentId(

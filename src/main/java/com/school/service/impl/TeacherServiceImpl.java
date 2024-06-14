@@ -27,7 +27,7 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public Teacher create(UserRequestCreate userRequest) {
         User userToCreate = UserRequestCreate.toUser(userRequest);
-        userToCreate.setRole(roleService.findByName("STUDENT"));
+        userToCreate.setRole(roleService.findByName("TEACHER"));
         userService.create(userToCreate);
         return teacherRepository.save(new Teacher(userToCreate));
     }
@@ -35,7 +35,7 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public Teacher findById(long id) {
         return teacherRepository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException("Teacher with id " + id + " not found"));
+                () -> new EntityNotFoundException("TeacherProfile with id " + id + " not found"));
     }
 
     @Override
@@ -76,6 +76,12 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public Teacher findByUserId(long userId) {
-        return teacherRepository.findByUserId(userId).orElseThrow(() -> new EntityNotFoundException("Teacher with id " + userId + " not found"));
+        return teacherRepository.findByUserId(userId).orElseThrow(() -> new EntityNotFoundException("TeacherProfile with id " + userId + " not found"));
+    }
+
+    @Override
+    public List<Teacher> findAllByStudentId(long studentId) {
+        findById(studentId);
+        return teacherRepository.findAllBySubjectsByStudents_Id(studentId);
     }
 }

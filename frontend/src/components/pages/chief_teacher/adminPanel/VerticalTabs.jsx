@@ -8,8 +8,8 @@ import CreateUser from "./CreateUser";
 import DeleteUser from "./DeleteUser";
 import CreateSubject from "./CreateSubject";
 import DeleteSubject from "./DeleteSubject";
-import AddTeacher from "./AddTeacher";
-import DeleteTeacher from "./DeleteTeacher";
+import SetTeacher from "./SetTeacher";
+import DeleteTeacherFromSubject from "./DeleteTeacherFromSubject";
 
 function a11yProps(index) {
     return {
@@ -19,11 +19,11 @@ function a11yProps(index) {
 }
 
 export default function VerticalTabs({ setCurrentForm }) {
-    const [value, setValue] = React.useState(0); // Початкова форма - перший таб
+    const [value, setValue] = React.useState(0);
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
-        setCurrentForm(newValue); // Передача індексу вибраної вкладки
+        setCurrentForm(newValue);
     };
 
     const renderTabPanel = (index) => {
@@ -37,9 +37,9 @@ export default function VerticalTabs({ setCurrentForm }) {
             case 3:
                 return <DeleteSubject />;
             case 4:
-                return <AddTeacher />;
+                return <SetTeacher />;
             case 5:
-                return <DeleteTeacher />;
+                return <DeleteTeacherFromSubject />;
             default:
                 return null;
         }
@@ -61,10 +61,10 @@ export default function VerticalTabs({ setCurrentForm }) {
                 <Tab label="Delete User" {...a11yProps(1)} />
                 <Tab label="Create Subject" {...a11yProps(2)} />
                 <Tab label="Delete Subject" {...a11yProps(3)} />
-                <Tab label="Add Teacher" {...a11yProps(4)} />
+                <Tab label="Set Teacher" {...a11yProps(4)} />
                 <Tab label="Delete Teacher" {...a11yProps(5)} />
             </Tabs>
-            <Box ml={2}>
+            <Box mr={"162px"} style={{flex: 1}}>
                 {renderTabPanel(value)}
             </Box>
         </Box>

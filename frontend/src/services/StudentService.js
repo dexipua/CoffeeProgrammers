@@ -121,6 +121,34 @@ class StudentService {
             throw error;
         }
     }
+
+    async getStudentsCount(token) {
+        try {
+            const response = await axios.get(`${API_URL}/count`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            return response.data;
+        } catch (error) {
+            console.error('Error getting students count:', error);
+            throw error;
+        }
+    }
+
+    async findAllBySubjectsIdIsNot(subjectId, token) {
+        try {
+            const response = await axios.get(`${API_URL}/subjectIdIsNot/${subjectId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            return response.data;
+        } catch (error) {
+            console.error('Error finding students by subject id:', error);
+            throw error;
+        }
+    }
 }
 
 export default new StudentService();

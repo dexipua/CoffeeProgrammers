@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import ButtonAppBar from "../../layouts/ButtonAppBar";
+import ApplicationBar from "../../layouts/ApplicationBar";
 import SubjectService from "../../../services/SubjectService";
 import MarkService from "../../../services/MarkService";
 import {useParams} from "react-router-dom";
@@ -7,26 +7,28 @@ import SubjectWithTeacherForProfile from "../../common/subject/SubjectWithTeache
 import StudentsBox from "../../common/subject/StudentsBox";
 import ManageBox from "../../common/subject/ManageBox";
 import Loading from "../../layouts/Loading";
+import StudentService from "../../../services/StudentService";
 
 const Subject = () => {
     const { id } = useParams();
-    const [canGetMark, setCanGetMark] = useState(false);
+
+    const [isTeacherOfThisSubject, setIsTeacherOfThisSubject] = useState(false);
     const [subject, setSubject] = useState(null);
     const [studentsWithMarks, setStudentsWithMarks] = useState([]);
     const [loadingSubject, setLoadingSubject] = useState(true);
     const [loadingMarks, setLoadingMarks] = useState(true);
 
-    useEffect(() => {
-        const token = localStorage.getItem("jwtToken");
+    const token = localStorage.getItem("jwtToken");
 
+    useEffect(() => {
         const fetchMarks = () => {
             MarkService.getBySubjectId(id, token)
                 .then(response => {
                     setStudentsWithMarks(response);
-                    setCanGetMark(true);
+                    setIsTeacherOfThisSubject(true);
                 })
                 .catch(() => {
-                    setCanGetMark(false);
+                    setIsTeacherOfThisSubject(false);
                 })
                 .finally(() => {
                     setLoadingMarks(false);
@@ -55,6 +57,13 @@ const Subject = () => {
         setSubject(prevSubject => ({ ...prevSubject, name: newName }));
     };
 
+    const handleStudentAdd = async (studentId) => {
+        const response = await StudentService.getById(studentId, token)
+        setSubject((prevSubject) => ({
+            ...prevSubject,
+            students: [...prevSubject.students, response],
+        }));
+    };
     const handleStudentDelete = (studentId) => {
         setSubject(prevSubject => ({
             ...prevSubject,
@@ -126,16 +135,17 @@ const Subject = () => {
 
     return (
         <>
-            <ButtonAppBar />
+            <ApplicationBar />
             <SubjectWithTeacherForProfile subject={subject} />
-            {canGetMark && (
+            {isTeacherOfThisSubject && (
                 <ManageBox
                     subjectId={subject.id}
                     onNameChange={handleNameChange}
+                    onStudentAdd={handleStudentAdd}
                 />
             )}
             <StudentsBox
-                canGetMark={canGetMark}
+                canGetMark={isTeacherOfThisSubject}
                 subjectId={subject.id}
                 studentsWithGradesOrEmpty={getStudentsWithGradesOrEmpty()}
                 subjectStudents={subject.students}

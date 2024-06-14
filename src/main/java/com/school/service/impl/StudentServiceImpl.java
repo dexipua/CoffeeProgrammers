@@ -15,13 +15,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class StudentServiceImpl implements StudentService {
 
-    private final UserService userService;
     private final StudentRepository studentRepository;
+    private final UserService userService;
     private final RoleService roleService;
     private final TeacherService teacherService;
 
@@ -81,5 +82,18 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public Student findByUserId(long userId) {
         return studentRepository.findByUserId(userId).orElseThrow(() -> new EntityNotFoundException("Student with id " + userId + " not found"));
+    }
+
+    @Override
+    public long getStudentsCount() {
+        return studentRepository.findAll().size();
+    }
+
+    @Override
+    public List<Student> findAllBySubjectsIdIsNot(long subjectId) {
+        return studentRepository.findAll().stream()
+                .filter(student -> student.getSubjects().stream()
+                        .noneMatch(subject -> subject.getId() == subjectId))
+                .collect(Collectors.toList());
     }
 }

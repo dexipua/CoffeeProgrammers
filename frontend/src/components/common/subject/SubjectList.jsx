@@ -1,4 +1,3 @@
-import SubjectData from "./SubjectData";
 import Box from "@mui/material/Box";
 import {Link} from "react-router-dom";
 
@@ -30,8 +29,7 @@ const SubjectList = ({subjects}) => {
                                 },
                             }}
                         >
-                            <SubjectData
-                                subject={subject}/>
+                            {subject.name}
                         </Box>
                     </Link>
                 </div>

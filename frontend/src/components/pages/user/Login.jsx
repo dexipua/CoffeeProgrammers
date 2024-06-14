@@ -1,7 +1,9 @@
 import React, {useState} from 'react';
-import axios from 'axios';
 import {useNavigate} from "react-router-dom";
 import '../../../assets/styles/Login.css';
+import UserService from "../../../services/UserService";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 
 
 const PASSWORD = "passWord1"; //TODO: better for testing
@@ -10,30 +12,30 @@ const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
-    let navigate = useNavigate();
+    const navigate = useNavigate();
 
-    const handleLogin = async (e) => { //TODO
+    const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:9091/api/auth/login', {
-                username,
-                password,
-            });
-
-            const jwtToken = response.data.accessToken;
-
-            localStorage.setItem('jwtToken', jwtToken);
-            localStorage.setItem('role', response.data.role)
+            await UserService.login(username, password);
             navigate("/home");
         } catch (error) {
             console.error('Login failed. Check your credentials.');
-            navigate("");
         }
     };
 
     return (
-        <div className="login-container">
-            <h2>Login</h2>
+        <Box className="login-container">
+            <Box sx={{textAlign: 'center'}}>
+                <Typography variant="h5" sx={{
+                    fontSize: '24px',
+                    marginBottom: '20px',
+                    color: '#333'
+                }}
+                >
+                    Login
+                </Typography>
+            </Box>
             <form onSubmit={handleLogin}>
                 <input
                     type="text"
@@ -52,7 +54,7 @@ const Login = () => {
                 />
                 <button type="submit">Login</button>
             </form>
-        </div>
+        </Box>
     );
 };
 

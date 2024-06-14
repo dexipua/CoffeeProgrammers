@@ -2,7 +2,7 @@ import React from "react";
 import {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow} from "@mui/material";
 import TablePaginationActions from "../../layouts/TablePaginationActions";
 
-function StudentListForProfile({ students }) {
+function StudentTable({ students }) {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
@@ -68,25 +68,27 @@ function StudentListForProfile({ students }) {
     };
 
     return (
-        <>
+        <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
             <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
+                <Table sx={{minWidth: 700}} aria-label="custom pagination table">
                     <TableHead>{renderHead()}</TableHead>
                     <TableBody>{renderBody()}</TableBody>
                 </Table>
             </TableContainer>
-            <TablePagination
-                rowsPerPageOptions={[10]}
-                colSpan={3}
-                count={students.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-                ActionsComponent={TablePaginationActions}
-            />
-        </>
+            <div style={{alignSelf: 'center'}}>
+                <TablePagination
+                    rowsPerPageOptions={[10]}
+                    colSpan={3}
+                    count={students.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                    ActionsComponent={TablePaginationActions}
+                />
+            </div>
+        </div>
     );
 }
 
-export default StudentListForProfile;
+export default StudentTable;

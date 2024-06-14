@@ -3,7 +3,7 @@ import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
 
-const SearchBar = ({firstName, lastName, onFirstNameChange, onLastNameChange, onSearch}) => {
+const UserSearchBar = ({firstName, lastName, onFirstNameChange, onLastNameChange, onSearch}) => {
     const handleSearchClick = async () => {
         await onSearch();
     };
@@ -15,6 +15,7 @@ const SearchBar = ({firstName, lastName, onFirstNameChange, onLastNameChange, on
                 value={firstName}
                 onChange={onFirstNameChange}
                 placeholder="First Name"
+                required
                 
             />
             <TextField
@@ -22,7 +23,7 @@ const SearchBar = ({firstName, lastName, onFirstNameChange, onLastNameChange, on
                 value={lastName}
                 onChange={onLastNameChange}
                 placeholder="Last Name"
-
+                required
             />
             <IconButton onClick={handleSearchClick} aria-label="search">
                 <SearchIcon/>
@@ -32,4 +33,4 @@ const SearchBar = ({firstName, lastName, onFirstNameChange, onLastNameChange, on
     );
 };
 
-export default SearchBar;
+export default UserSearchBar;

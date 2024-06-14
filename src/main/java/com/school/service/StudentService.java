@@ -16,4 +16,6 @@ public interface StudentService {
     List<Student> findStudentsByTeacherId(long teacherId);
     List<Student> findAllByUser_FirstNameAndAndUser_LastName(String firstName, String lastName);
     Student findByUserId(long userId);
+    long getStudentsCount();
+    List<Student> findAllBySubjectsIdIsNot(long subjectId);
 }

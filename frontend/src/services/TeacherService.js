@@ -106,6 +106,20 @@ class TeacherService {
             throw error;
         }
     }
+
+    async getAllByStudentId(studentId, token) {
+        try {
+            const response = await axios.get(`${API_URL}/getByStudentId/${studentId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            return response.data;
+        } catch (error) {
+            console.error('Error getAllByStudentId:', error);
+            throw error;
+        }
+    }
 }
 
 export default new TeacherService();
