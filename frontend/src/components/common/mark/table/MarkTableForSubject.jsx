@@ -1,9 +1,9 @@
 import React, {useCallback, useState} from "react";
 import {Paper, Table, TableBody, TableContainer, TableHead, TablePagination, TableRow} from "@mui/material";
-import TablePaginationActions from "../../layouts/TablePaginationActions";
-import MarkTableBodyRow from "../../common/mark/MarkTableBodyRow";
+import TablePaginationActions from "../../../layouts/TablePaginationActions";
+import MarkTableBodyRow from "./MarkTableBodyRow";
 import TableCell from "@mui/material/TableCell";
-import MarkTableHeadRow from "../../common/mark/MarkTableHeadRow";
+import MarkTableHeadRow from "./MarkTableHeadRow";
 
 const MarkTableForSubject = (
     {

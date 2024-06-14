@@ -4,7 +4,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import SubjectService from "../../../services/SubjectService";
+import SubjectService from "../../../../services/SubjectService";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 

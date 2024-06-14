@@ -1,5 +1,5 @@
 import Typography from "@mui/material/Typography";
-import ChangeSubjectNameButton from "./ChangeSubjectNameButton";
+import ChangeSubjectNameButton from "./change_name_button/ChangeSubjectNameButton";
 import Box from "@mui/material/Box";
 import AddStudentButton from "./AddStudentButton";
 

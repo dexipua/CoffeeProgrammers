@@ -1,9 +1,9 @@
 import React from "react";
 import {Box, TableCell, TableRow} from "@mui/material";
-import SubjectService from "../../../services/SubjectService";
-import DeleteButton from "../../layouts/DeleteButton";
-import MarkMenu from "./MarkMenu";
-import CreateMarkButton from "./CreateMarkButton";
+import SubjectService from "../../../../services/SubjectService";
+import DeleteButton from "../../../layouts/DeleteButton";
+import MarkMenu from "../MarkMenu";
+import CreateMarkButton from "../create_button/CreateMarkButton";
 
 const MarkTableBodyRow = (
     {

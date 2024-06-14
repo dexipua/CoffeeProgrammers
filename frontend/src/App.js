@@ -8,7 +8,7 @@ import Subject from "./components/pages/subject/Subject";
 import TeacherProfile from "./components/pages/teacher/TeacherProfile";
 import SubjectList from "./components/pages/subject/Subjects";
 import Admin from "./components/pages/chief_teacher/Admin";
-import NotFound from "./components/pages/notFound/NotFound";
+import NotFound from "./components/pages/not_found/NotFound";
 import Bookmark from "./components/pages/Bookmark/Bookmark";
 
 function App() {

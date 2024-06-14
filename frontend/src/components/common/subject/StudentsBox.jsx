@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import StudentTable from "../student/StudentTable";
-import MarkTableForSubject from "../mark/MarkTableForSubject";
+import MarkTableForSubject from "../mark/table/MarkTableForSubject";
 
 const StudentsBox = (
     {
