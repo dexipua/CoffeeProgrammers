@@ -6,8 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @NoArgsConstructor
@@ -26,11 +26,10 @@ public class Teacher implements Comparable<Teacher> {
     private User user;
 
     @OneToMany(mappedBy = "teacher")
-    private List<Subject> subjects;
+    private Set<Subject> subjects = new HashSet<>();
 
     public Teacher(User user) {
         this.user = user;
-        this.subjects = new ArrayList<>();
     }
 
     @Override
