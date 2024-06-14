@@ -13,8 +13,9 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -52,10 +53,10 @@ public class TeacherServiceImpl implements TeacherService {
             throw new UnsupportedOperationException(
                     "Cannot delete teacher with role CHIEF_TEACHER");
         } else {
-            List<Subject> subjects = teacher.getSubjects();
+            Set<Subject> subjects = teacher.getSubjects();
             subjects.forEach(subject -> subject.setTeacher(null));
         }
-        teacher.setSubjects(new ArrayList<>());
+        teacher.setSubjects(new HashSet<>());
         teacherRepository.delete(teacher);
     }
 
