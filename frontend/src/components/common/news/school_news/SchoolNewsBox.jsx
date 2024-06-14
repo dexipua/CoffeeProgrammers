@@ -29,6 +29,7 @@ const SchoolNewsBox = ({text, time, updateFunction, deleteFunction }) => {
                 deleteFunction={deleteFunction}
             />
             <SchoolNewsEditButton
+                oldText={text}
                 updateFunction={updateFunction}
             />
         </Box>

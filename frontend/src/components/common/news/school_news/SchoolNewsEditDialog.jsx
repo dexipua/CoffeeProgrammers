@@ -7,15 +7,15 @@ import Button from '@mui/material/Button';
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 
-function SchoolNewsEditDialog({open, onClose, updateFunction}) {
-    const [newText, setNewText] = useState('');
+function SchoolNewsEditDialog({oldText, open, onClose, updateFunction}) {
+    const [newText, setNewText] = useState(oldText);
     const [errorMessages, setErrorMessages] = useState([]);
 
     useEffect(() => {
         setErrorMessages([]);
     }, [open]);
 
-    const handleAccept = async () => {
+    const handleAccept =  () => {
         try {
             updateFunction(newText);
             onClose();
@@ -49,7 +49,7 @@ function SchoolNewsEditDialog({open, onClose, updateFunction}) {
                     onChange={handleChange}
                     multiline
                     rows={8} // Initial number of rows
-
+                    required={true}
                     variant="outlined"
                 />
                 {errorMessages.length > 0 && (

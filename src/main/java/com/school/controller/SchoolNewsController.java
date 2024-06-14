@@ -30,7 +30,10 @@ public class SchoolNewsController {
     }
 
     @PutMapping("/update/{id}")
-    public SchoolNewsResponse updateSchoolNews(@PathVariable long id, @RequestBody SchoolNewsRequest schoolNewsRequest) { //TODO
+    @ResponseStatus(HttpStatus.OK)
+    public SchoolNewsResponse updateSchoolNews(
+            @PathVariable long id,
+            @Valid @RequestBody SchoolNewsRequest schoolNewsRequest) { //TODO
         SchoolNews newsToUpdate = new SchoolNews();
         newsToUpdate.setId(id);
         newsToUpdate.setText(schoolNewsRequest.getText());

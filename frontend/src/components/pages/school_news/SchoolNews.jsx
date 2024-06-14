@@ -25,8 +25,9 @@ const SchoolNews = () => {
     const handleUpdate = async (newsId, text) => {
         const updatedMark = await SchoolNewsService.update(
             newsId,
-            {text: text},
+            {text: ""},
             localStorage.getItem('jwtToken'))
+        console.log(updatedMark)
         const updatedNews = newsList.map((news) =>
             news.id === newsId ? updatedMark : news
         )
