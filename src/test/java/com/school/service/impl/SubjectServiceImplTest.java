@@ -176,18 +176,19 @@ class SubjectServiceImplTest {
         // given
         teacher.setSubjects(new HashSet<>(Set.of(subject1)));
         SubjectDate subjectDate1 = new SubjectDate(subject1, DayOfWeek.MONDAY, SubjectDate.NumOfLesson.FIRST);
+        SubjectDate subjectDate2 = new SubjectDate(subject2, DayOfWeek.MONDAY, SubjectDate.NumOfLesson.FIRST);
         // when
         when(subjectRepository.findById(subject2.getId())).thenReturn(Optional.of(subject2));
         when(teacherService.findById(teacher.getId())).thenReturn(teacher);
-        when(subjectDateRepository.findAllBySubject_Id(subject1.getId())).thenReturn(List.of(subjectDate1));
-        when(subjectDateRepository.findAllByDayOfWeekAndNumOfLessonAndSubject_Teacher(subjectDate1.getDayOfWeek(), subjectDate1.getNumOfLesson(), teacher)).thenReturn(List.of());
+        when(subjectDateRepository.findAllBySubject_Id(subject2.getId())).thenReturn(List.of(subjectDate2));
+        when(subjectDateRepository.findAllByDayOfWeekAndNumOfLessonAndSubject_IdIsNotAndSubject_Teacher(subjectDate1.getDayOfWeek(), subjectDate1.getNumOfLesson(), subject2.getId(), teacher)).thenReturn(List.of());
         // then
         subjectService.setTeacher(subject2.getId(), teacher.getId());
-        verify(subjectDateRepository, times(1)).findAllBySubject_Id(subject1.getId());
+        verify(subjectDateRepository, times(1)).findAllBySubject_Id(subject2.getId());
         verify(teacherService, times(1)).findById(teacher.getId());
         verify(userNewsService, times(1)).create(any(UserNews.class));
         verify(subjectRepository, times(1)).findById(subject2.getId());
-        verify(subjectDateRepository, times(1)).findAllByDayOfWeekAndNumOfLessonAndSubject_Teacher(subjectDate1.getDayOfWeek(), subjectDate1.getNumOfLesson(), teacher);
+        verify(subjectDateRepository, times(1)).findAllByDayOfWeekAndNumOfLessonAndSubject_IdIsNotAndSubject_Teacher(subjectDate1.getDayOfWeek(), subjectDate1.getNumOfLesson(), subject2.getId(), teacher);
         verify(subjectRepository, times(1)).save(any(Subject.class));
     }
 
@@ -201,15 +202,14 @@ class SubjectServiceImplTest {
         // when
         when(subjectRepository.findById(subject2.getId())).thenReturn(Optional.of(subject2));
         when(teacherService.findById(teacher.getId())).thenReturn(teacher);
-        when(subjectDateRepository.findAllBySubject_Id(subject1.getId())).thenReturn(List.of(subjectDate1));
-        when(subjectDateRepository.findAllByDayOfWeekAndNumOfLessonAndSubject_Teacher(subjectDate1.getDayOfWeek(), subjectDate1.getNumOfLesson(), teacher)).thenReturn(List.of(subjectDate2));
+        when(subjectDateRepository.findAllBySubject_Id(subject2.getId())).thenReturn(List.of(subjectDate2));
+        when(subjectDateRepository.findAllByDayOfWeekAndNumOfLessonAndSubject_IdIsNotAndSubject_Teacher(subjectDate1.getDayOfWeek(), subjectDate1.getNumOfLesson(), subject2.getId(), teacher)).thenReturn(List.of(subjectDate1));
         // then
         assertThrowsExactly(UnsupportedOperationException.class, () -> subjectService.setTeacher(subject2.getId(), teacher.getId()));
-        verify(subjectDateRepository, times(1)).findAllBySubject_Id(subject1.getId());
+        verify(subjectDateRepository, times(1)).findAllBySubject_Id(subject2.getId());
         verify(teacherService, times(1)).findById(teacher.getId());
         verify(subjectRepository, times(1)).findById(subject2.getId());
-        verify(subjectDateRepository, times(1)).findAllByDayOfWeekAndNumOfLessonAndSubject_Teacher(subjectDate1.getDayOfWeek(), subjectDate1.getNumOfLesson(), teacher);
-        verify(subjectRepository, never()).save(any(Subject.class));
+        verify(subjectDateRepository, times(1)).findAllByDayOfWeekAndNumOfLessonAndSubject_IdIsNotAndSubject_Teacher(subjectDate1.getDayOfWeek(), subjectDate1.getNumOfLesson(), subject2.getId(), teacher);
     }
 
     @Test
