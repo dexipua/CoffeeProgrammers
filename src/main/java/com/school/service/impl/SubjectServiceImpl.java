@@ -14,7 +14,6 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -86,35 +85,6 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     @Override
-    public void setTeacher(long subjectId, long teacherId) {
-        Subject subject = findById(subjectId);
-        Teacher teacher = teacherService.findById(teacherId);
-
-        List<SubjectDate> subjectDates = new ArrayList<>();
-        for(Subject subject1 : teacher.getSubjects()) {
-            subjectDates.addAll(subjectDateRepository.findAllBySubject_Id(subject1.getId()));
-        }
-        for(SubjectDate subjectDate : subjectDates) {
-            if(!subjectDateRepository.findAllByDayOfWeekAndNumOfLessonAndSubject_Teacher_IdIsNot(
-                    subjectDate.getDayOfWeek(),
-                    subjectDate.getNumOfLesson(),
-                    teacherId).isEmpty()){
-                throw new UnsupportedOperationException("Can't set teacher for this subject because dates of lesson are same");
-            }
-        }
-
-        userNewsService.create(
-                new UserNews("You have become a teacher of the subject: " + subject.getName(),
-                        teacher.getUser()
-                )
-        );
-
-        subject.setTeacher(teacher);
-
-        subjectRepository.save(subject);
-    }
-
-    @Override
     public void deleteTeacher(long subjectId) {
 
         Subject subject = findById(subjectId);
@@ -126,6 +96,33 @@ public class SubjectServiceImpl implements SubjectService {
         );
 
         subject.setTeacher(null);
+
+        subjectRepository.save(subject);
+    }
+
+    @Override
+    public void setTeacher(long subjectId, long teacherId) {
+        Subject subject = findById(subjectId);
+        Teacher teacher = teacherService.findById(teacherId);
+        List<SubjectDate> subjectDatesSubject = subjectDateRepository.findAllBySubject_Id(subjectId);
+
+        for(SubjectDate subjectDate : subjectDatesSubject){
+            if(!subjectDateRepository.findAllByDayOfWeekAndNumOfLessonAndSubject_IdIsNot(
+                    subjectDate.getDayOfWeek(),
+                    subjectDate.getNumOfLesson(),
+                    subjectId
+            ).isEmpty()){
+                throw new UnsupportedOperationException("Some");
+            }
+        }
+
+        userNewsService.create(
+                new UserNews("You have become a teacher of the subject: " + subject.getName(),
+                        teacher.getUser()
+                )
+        );
+
+        subject.setTeacher(teacher);
 
         subjectRepository.save(subject);
     }
