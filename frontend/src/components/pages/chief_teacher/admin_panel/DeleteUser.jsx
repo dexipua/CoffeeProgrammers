@@ -17,6 +17,7 @@ import UserSearchBar from "../../../layouts/UserSearchBar";
 import Typography from "@mui/material/Typography";
 import {Link} from "react-router-dom";
 import ErrorSnackbar from "../../../layouts/ErrorSnackbar";
+import {Paper} from "@mui/material";
 
 const DeleteUser = () => {
     const [role, setRole] = useState('STUDENT');
@@ -28,7 +29,9 @@ const DeleteUser = () => {
     const [lastName, setLastName] = useState('');
     const [filteredUsers, setFilteredUsers] = useState([]);
 
-    const [page, setPage] = useState(0);
+    const [pageStudents, setPageStudents] = useState(0);
+    const [pageTeachers, setPageTeachers] = useState(0);
+
     const [rowsPerPage, setRowsPerPage] = useState(10);
 
     const [showSnackbar, setShowSnackbar] = useState(false);
@@ -69,13 +72,22 @@ const DeleteUser = () => {
     };
 
 
-    const handleChangePage = (event, newPage) => {
-        setPage(newPage);
+    const handleChangePageStudents = (event, newPage) => {
+        setPageStudents(newPage);
     };
 
-    const handleChangeRowsPerPage = (event) => {
+    const handleChangeRowsPerPageStudents = (event) => {
         setRowsPerPage(parseInt(event.target.value, 10));
-        setPage(0);
+        setPageStudents(0);
+    };
+
+    const handleChangePageTeachers = (event, newPage) => {
+        setPageTeachers(newPage);
+    };
+
+    const handleChangeRowsPerPageTeachers = (event) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPageTeachers(0);
     };
 
     const getRowColor = (index) => {
@@ -105,7 +117,7 @@ const DeleteUser = () => {
         );
     };
 
-    const renderBody = () => {
+    const renderBody = (page) => {
         if (!filteredUsers.length) {
             return (
                 <TableRow style={{backgroundColor: "#f0f0f0"}}>
@@ -227,25 +239,52 @@ const DeleteUser = () => {
                         Delete
                     </Button>
                 </Box>
-                <TableContainer style={{width: '100%'}}>
-                    <Table>
-                        <TableBody>
-                            {renderHead()}
-                            {renderBody()}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
+                {role === 'STUDENT' ? (
+                    <>
+                        <TableContainer component={Paper} sx={{width: '100%'}}>
+                            <Table>
+                                <TableBody>
+                                    {renderHead()}
+                                    {renderBody(pageStudents)}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                        <div style={{alignSelf: 'center'}}>
+                            <TablePagination
+                                rowsPerPageOptions={[10]}
+                                colSpan={3}
+                                count={users.length}
+                                rowsPerPage={rowsPerPage}
+                                page={pageStudents}
+                                onPageChange={handleChangePageStudents}
+                                onRowsPerPageChange={handleChangeRowsPerPageStudents}
+                                ActionsComponent={TablePaginationActions}
+                            />
+                        </div>
+                    </>) : (<>
+                    <TableContainer component={Paper} sx={{width: '100%'}}>
+                        <Table>
+                            <TableBody>
+                                {renderHead()}
+                                {renderBody(pageTeachers)}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                    <div style={{alignSelf: 'center'}}>
+                        <TablePagination
+                            rowsPerPageOptions={[10]}
+                            colSpan={3}
+                            count={users.length}
+                            rowsPerPage={rowsPerPage}
+                            page={pageTeachers}
+                            onPageChange={handleChangePageTeachers}
+                            onRowsPerPageChange={handleChangeRowsPerPageTeachers}
+                            ActionsComponent={TablePaginationActions}
+                        />
+                    </div>
+                </>)
 
-                <TablePagination
-                    rowsPerPageOptions={[10]}
-                    component="div"
-                    count={users.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
-                    ActionsComponent={TablePaginationActions}
-                />
+                }
             </Box>
             <ErrorSnackbar
                 open={showSnackbar}

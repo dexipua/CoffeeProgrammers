@@ -26,7 +26,9 @@ const Users = () => {
     const [lastName, setLastName] = useState('');
     const [filteredUsers, setFilteredUsers] = useState([]);
 
-    const [page, setPage] = useState(0);
+    const [pageStudents, setPageStudents] = useState(0);
+    const [pageTeachers, setPageTeachers] = useState(0);
+
     const [rowsPerPage, setRowsPerPage] = useState(10);
 
     const token = localStorage.getItem('jwtToken');
@@ -34,11 +36,7 @@ const Users = () => {
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const response = role === 'STUDENT' ? (
-                    await StudentService.getAll(token)
-                ) : (
-                    await TeacherService.getAll(token)
-                )
+                const response = role === 'STUDENT' ? (await StudentService.getAll(token)) : (await TeacherService.getAll(token))
                 setUsers(response);
                 setFilteredUsers(response)
             } catch (error) {
@@ -50,14 +48,24 @@ const Users = () => {
     }, [role, token]);
 
 
-    const handleChangePage = (event, newPage) => {
-        setPage(newPage);
+    const handleChangePageStudents = (event, newPage) => {
+        setPageStudents(newPage);
     };
 
-    const handleChangeRowsPerPage = (event) => {
+    const handleChangeRowsPerPageStudents = (event) => {
         setRowsPerPage(parseInt(event.target.value, 10));
-        setPage(0);
+        setPageStudents(0);
     };
+
+    const handleChangePageTeachers = (event, newPage) => {
+        setPageTeachers(newPage);
+    };
+
+    const handleChangeRowsPerPageTeachers = (event) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPageTeachers(0);
+    };
+
 
     const getRowColor = (index) => {
         return index % 2 === 0 ? '#f0f0f0' : 'white';
@@ -68,64 +76,56 @@ const Users = () => {
     const cellBorderStyle = {border: "1px solid #e0e0e0"};
 
     const renderHead = () => {
-        return (
-            <TableRow>
-                <TableCell align="center" style={{border: "1px solid #e0e0e0", width: "20px"}}>
-                    <strong>№</strong>
-                </TableCell>
-                <TableCell align="center" style={{border: "1px solid #e0e0e0"}}>
-                    <strong>Student</strong>
-                </TableCell>
-                <TableCell align="center" style={{border: "1px solid #e0e0e0", width: "150px"}}>
-                    <strong>Email</strong>
-                </TableCell>
-            </TableRow>
-        );
+        return (<TableRow>
+            <TableCell align="center" style={{border: "1px solid #e0e0e0", width: "20px"}}>
+                <strong>№</strong>
+            </TableCell>
+            <TableCell align="center" style={{border: "1px solid #e0e0e0"}}>
+                <strong>Student</strong>
+            </TableCell>
+            <TableCell align="center" style={{border: "1px solid #e0e0e0", width: "150px"}}>
+                <strong>Email</strong>
+            </TableCell>
+        </TableRow>);
     };
 
-    const renderBody = () => {
+    const renderBody = (page) => {
         if (!filteredUsers.length) {
-            return (
-                <TableRow style={{backgroundColor: "#f0f0f0"}}>
-                    <TableCell colSpan={4} align="center" style={cellBorderStyle}>No users data available</TableCell>
-                </TableRow>
-            );
+            return (<TableRow style={{backgroundColor: "#f0f0f0"}}>
+                <TableCell colSpan={4} align="center" style={cellBorderStyle}>No users data available</TableCell>
+            </TableRow>);
         }
 
-        return filteredUsers
-            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            .map((user, index) => {
-                const studentNumber = page * rowsPerPage + index + 1;
-                return (
-                    <TableRow key={user.id} style={{backgroundColor: getRowColor(index)}}>
-                        <TableCell align="center" style={{...cellBorderStyle, width: cellWidthStyle.widthNumber}}>
-                            {studentNumber}
-                        </TableCell>
-                        <TableCell align="center" style={cellBorderStyle}>
-                            <Link to={
-                                role === "STUDENT" ? `/students/${user.id}` : `/teachers/${user.id}`}
-                                  style={{color: 'inherit' }}
-                            >
-                                {user.firstName} {user.lastName}
-                            </Link>
+        return (filteredUsers
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((user, index) => {
+                    const studentNumber = page * rowsPerPage + index + 1;
+                    return (
+                        <TableRow key={user.id} style={{backgroundColor: getRowColor(index)}}>
+                            <TableCell align="center" style={{...cellBorderStyle, width: cellWidthStyle.widthNumber}}>
+                                {studentNumber}
+                            </TableCell>
+                            <TableCell align="center" style={cellBorderStyle}>
+                                <Link to={role === "STUDENT" ? `/students/${user.id}` : `/teachers/${user.id}`}
+                                      style={{color: 'inherit'}}
+                                >
+                                    {user.firstName} {user.lastName}
+                                </Link>
 
 
-                        </TableCell>
-                        <TableCell align="center" style={{...cellBorderStyle, width: cellWidthStyle.widthEmail}}>
-                            {user.email}
-                        </TableCell>
-                    </TableRow>
-                );
-            });
+                            </TableCell>
+                            <TableCell align="center" style={{...cellBorderStyle, width: cellWidthStyle.widthEmail}}>
+                                {user.email}
+                            </TableCell>
+                        </TableRow>
+                    );
+                })
+        );
     }
 
     const handleSearch = async () => {
         if (firstName || lastName) {
-            const response = role === "STUDENT" ? (
-                await StudentService.getByName(firstName, lastName, token)
-            ) : (
-                await TeacherService.getByName(firstName, lastName, token)
-            )
+            const response = role === "STUDENT" ? (await StudentService.getByName(firstName, lastName, token)) : (await TeacherService.getByName(firstName, lastName, token))
             setFilteredUsers(response);
             setFirstName('');
             setLastName('')
@@ -134,15 +134,14 @@ const Users = () => {
         }
     };
 
-    return (
-        <Box
+    return (<Box
             display="flex"
             flexDirection="column"
             justifyContent="center"
             alignItems="center"
             p={2}
         >
-            <ApplicationBar />
+            <ApplicationBar/>
             <Typography mt="80px" variant="h5" gutterBottom>
                 Users
             </Typography>
@@ -152,10 +151,10 @@ const Users = () => {
                 name="role"
                 value={role}
                 onChange={(e) => setRole(e.target.value)}
-                sx={{ display: 'flex', justifyContent: 'center', width: '100%', mb: 2 }}
+                sx={{display: 'flex', justifyContent: 'center', width: '100%', mb: 2}}
             >
-                <FormControlLabel value="STUDENT" control={<Radio />} label="Student" />
-                <FormControlLabel value="TEACHER" control={<Radio />} label="Teacher" />
+                <FormControlLabel value="STUDENT" control={<Radio/>} label="Student"/>
+                <FormControlLabel value="TEACHER" control={<Radio/>} label="Teacher"/>
             </RadioGroup>
             <Box
                 width="80%"
@@ -166,9 +165,7 @@ const Users = () => {
                 gap={2}
                 p={2}
                 sx={{
-                    border: '1px solid #ddd',
-                    borderRadius: '8px',
-                    backgroundColor: '#ffffff',
+                    border: '1px solid #ddd', borderRadius: '8px', backgroundColor: '#ffffff',
                 }}
             >
                 <Box
@@ -189,26 +186,51 @@ const Users = () => {
                             fullWidth
                         />
                     </Box>
-                    <TableContainer component={Paper} sx={{width: '100%'}}>
-                        <Table>
-                            <TableBody>
-                                {renderHead()}
-                                {renderBody()}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                    <div style={{alignSelf: 'center'}}>
-                        <TablePagination
-                            rowsPerPageOptions={[10]}
-                            colSpan={3}
-                            count={users.length}
-                            rowsPerPage={rowsPerPage}
-                            page={page}
-                            onPageChange={handleChangePage}
-                            onRowsPerPageChange={handleChangeRowsPerPage}
-                            ActionsComponent={TablePaginationActions}
-                        />
-                    </div>
+                    {role === 'STUDENT' ? (
+                        <>
+                            <TableContainer component={Paper} sx={{width: '100%'}}>
+                                <Table>
+                                    <TableBody>
+                                        {renderHead()}
+                                        {renderBody(pageStudents)}
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
+                            <div style={{alignSelf: 'center'}}>
+                                <TablePagination
+                                    rowsPerPageOptions={[10]}
+                                    colSpan={3}
+                                    count={users.length}
+                                    rowsPerPage={rowsPerPage}
+                                    page={pageStudents}
+                                    onPageChange={handleChangePageStudents}
+                                    onRowsPerPageChange={handleChangeRowsPerPageStudents}
+                                    ActionsComponent={TablePaginationActions}
+                                />
+                            </div>
+                        </>) : (<>
+                            <TableContainer component={Paper} sx={{width: '100%'}}>
+                                <Table>
+                                    <TableBody>
+                                        {renderHead()}
+                                        {renderBody(pageTeachers)}
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
+                            <div style={{alignSelf: 'center'}}>
+                                <TablePagination
+                                    rowsPerPageOptions={[10]}
+                                    colSpan={3}
+                                    count={users.length}
+                                    rowsPerPage={rowsPerPage}
+                                    page={pageTeachers}
+                                    onPageChange={handleChangePageTeachers}
+                                    onRowsPerPageChange={handleChangeRowsPerPageTeachers}
+                                    ActionsComponent={TablePaginationActions}
+                                />
+                            </div>
+                        </>
+                    )}
                 </Box>
             </Box>
         </Box>
