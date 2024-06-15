@@ -1,75 +1,103 @@
-# New School
+# School
 
-___
+## Overview
 
-## Project Description
+The School is a Java-based application developed using the Spring framework. It provides functionalities to manage various aspects of a school environment, including grades, school news, students, subjects, schedules, teachers, and user-specific news.
 
-New School is a project that serves as an online course platform with
-students, teachers, and chief-teachers. Students can view the information
-they have access to, teachers can add grades and manage students in their
-subjects and can add timetable for their subjects, and chief-teacher can 
-create and delete users, subjects, and assign teachers to subjects.
+## Key Roles and Functionalities
 
-## User Roles and Permissions
+- Students:
+   - View accessible information about grades and subjects.
 
-- **Students**: Can view accessible information.
-- **Teachers**: Can add grades and manage students in their subjects.
-- **Teacher-Admins**: Have all the functionalities of teachers, plus the
-  ability to create and delete users, subjects, and assign teachers to subjects.
+- Teachers:
+   - Add grades for students.
+   - Manage students enrolled in their subjects.
 
-## Features
+- Chief-teacher:
+   - All functionalities of teachers.
+   - Create and delete users (including students and teachers).
+   - Manage subjects, including creation, deletion, and assignment of teachers.
 
-- Easy interface to understand
-- Have base functions
-- Real-time collaboration tools
-- Good for online courses
-- Real-time changes
-- Adding new features in feature
-- Can work with timetable
+## Functionalities of the Project:
 
----
+Mark:
+- Manages student grades across different subjects.
+- Allows creation, updating, and deletion of grades.
+- Retrieves all grades for a specific student or subject.
+
+SchoolNews:
+- Manages school news, including creation, updating, and deletion of news articles.
+- Retrieves all school news for viewing.
+
+Student:
+- Handles student management within the school.
+- Allows creation, updating, and deletion of students.
+- Retrieves detailed information about a student, including their average grade.
+- Retrieves a list of students based on various criteria (name, teacher, etc.).
+
+Subject:
+- Manages the subjects taught in the school.
+- Allows creation, updating, and deletion of subjects.
+- Assigns and removes teachers for subjects.
+- Adds and removes students from subjects.
+- Retrieves a list of subjects based on various criteria (name, teacher, students).
+
+SubjectDate:
+- Manages class schedules for subjects.
+- Creates and deletes class schedule entries.
+- Retrieves class schedules for students and subjects.
+
+Teacher:
+- Handles teacher management within the school.
+- Allows creation, updating, and deletion of teachers.
+- Retrieves detailed information about a teacher.
+- Retrieves a list of teachers based on various criteria (name, students, etc.).
+
+UserNews
+- Manages user-specific news tailored for users of the system (e.g., teachers or students).
+
+## Usage
+
+To run the School Management System:
+
+1. Clone the repository:
+
 
 ## Technologies Used
 
-- **Java**: Backend services
-- **JavaScript**: Frontend functionality
-- **HTML**: Structure and content
-- **Spring Boot**: Backend framework
-- **React**: frontend framework
-- **MUI**: library of React components
-- **H2**: database for our project
+- Java: 19
+- Spring Boot: 3.2.5
+- React: 18.0.0
+- MUI: library of React components
+- H2: database for our project
 
 ## Installation Instructions
 
 1. Clone the repository:
-    ```bash
-    git clone https://github.com/dexipua/CoffeeProgrammers.git
-    ```
+   ```git clone https://github.com/dexipua/CoffeeProgrammers.git```
+
 2. Navigate to the project directory:
-    ```bash
-    cd CoffeeProgrammers
-    ```
+   ```cd CoffeeProgrammers```
+
 3. Build the project:
-    ```bash
-    mvn clean install
-    ```
+   ```mvn clean install```
+
 
 ## Usage Instructions
 
 1. Start the backend server:
-    ```bash
-    mvn spring-boot:run
-    ```
+   ```mvn spring-boot:run```
+
 2. Navigate to the frontend directory:
-    ```bash
-    cd frontend
-    ```
-3. Install dependencies and start the frontend server:
-    ```bash
-    npm install
-    npm start
-    ```
-4. Open your browser and go to `http://localhost:3000` to access the application.
+   ```cd frontend```
+
+3. Before this if you have something on port 3000 use:
+   ```npx kill-port 3000```
+4. Install dependencies and start the frontend server:
+   ```npm install```
+   ```npm start```
+
+4. Open your browser and go to http://localhost:3000 to access the application.
 
 ---
 
@@ -77,24 +105,17 @@ create and delete users, subjects, and assign teachers to subjects.
 
 1. Fork the repository.
 2. Create a new branch for your feature or bugfix:
-    ```bash
-    git checkout -b feature-name
-    ```
+   ```git checkout -b feature-name```
+
 3. Commit your changes:
-    ```bash
-    git commit -m "Description of your changes"
-    ```
+   ```git commit -m "Description of your changes"```
+
 4. Push to your branch:
-    ```bash
-    git push origin feature-name
-    ```
+   ```git push origin feature-name```
+
 5. Create a pull request.
 
 ---
-
-## License
-
-This project is licensed under the MIT License.
 
 ## Contact
 
