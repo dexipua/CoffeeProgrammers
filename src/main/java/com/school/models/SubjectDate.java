@@ -41,8 +41,7 @@ public class SubjectDate {
         FIFTH(LocalTime.of(12, 0), LocalTime.of(12, 45)),
         SIXTH(LocalTime.of(13, 0), LocalTime.of(13, 45)),
         SEVENTH(LocalTime.of(14, 0), LocalTime.of(14, 45)),
-        EIGHTH(LocalTime.of(15, 0), LocalTime.of(15, 45)),
-        NINTH(LocalTime.of(16, 0), LocalTime.of(16, 45));
+        EIGHTH(LocalTime.of(15, 0), LocalTime.of(15, 45));
 
         final LocalTime start;
         final LocalTime end;

@@ -33,6 +33,10 @@ export default function ApplicationBar() {
                         text={"Users"}
                     />
 
+                    <AccountItemButton
+                        link={"/schedule"}
+                        text={"Schedule"}
+                    />
 
                     {role === "STUDENT" ? (
                         <AccountItemButton

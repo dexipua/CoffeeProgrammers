@@ -67,10 +67,24 @@ class SubjectDateService {
             });
             return response.data;
         } catch (error) {
-            console.error('Error getAllByStudentId:', error);
+            console.error('Error getting all subject dates by student ID:', error);
+            throw error;
+        }
+    }
+
+    async getAllBySubjectId(subjectId, token) {
+        try {
+            const response = await axios.get(`${API_URL}/getAllBySubject/${subjectId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            return response.data;
+        } catch (error) {
+            console.error('Error getting all subject dates by subject ID:', error);
             throw error;
         }
     }
 }
 
-export default new SubjectDateService();
+export default new SubjectDateService;

@@ -8,9 +8,10 @@ import StudentsBox from "../../common/subject/StudentsBox";
 import ManageBox from "../../common/subject/ManageBox";
 import Loading from "../../layouts/Loading";
 import StudentService from "../../../services/StudentService";
+import SubjectSchedule from "../schedule/SubjectSchedule";
 
 const Subject = () => {
-    const { id } = useParams();
+    const {id} = useParams();
 
     const [isTeacherOfThisSubject, setIsTeacherOfThisSubject] = useState(false);
     const [subject, setSubject] = useState(null);
@@ -54,7 +55,7 @@ const Subject = () => {
     }, [id]);
 
     const handleNameChange = (newName) => {
-        setSubject(prevSubject => ({ ...prevSubject, name: newName }));
+        setSubject(prevSubject => ({...prevSubject, name: newName}));
     };
 
     const handleStudentAdd = async (studentId) => {
@@ -88,7 +89,7 @@ const Subject = () => {
                 });
             } else {
                 const newStudentMarkData = {
-                    studentResponseSimple: { id: studentId },
+                    studentResponseSimple: {id: studentId},
                     marks: [newMark]
                 };
                 return [...prevState, newStudentMarkData];
@@ -124,19 +125,19 @@ const Subject = () => {
 
     const getStudentsWithGradesOrEmpty = () => {
         return subject?.students?.map(student => {
-            const studentMarkData = studentsWithMarks.find(({ studentResponseSimple }) => studentResponseSimple.id === student.id);
-            return { student, marks: studentMarkData ? studentMarkData.marks : [] };
+            const studentMarkData = studentsWithMarks.find(({studentResponseSimple}) => studentResponseSimple.id === student.id);
+            return {student, marks: studentMarkData ? studentMarkData.marks : []};
         }) || [];
     };
 
     if (loadingSubject || loadingMarks) {
-        return <Loading />;
+        return <Loading/>;
     }
 
     return (
         <>
-            <ApplicationBar />
-            <SubjectWithTeacherForProfile subject={subject} />
+            <ApplicationBar/>
+            <SubjectWithTeacherForProfile subject={subject}/>
             {isTeacherOfThisSubject && (
                 <ManageBox
                     subjectId={subject.id}
@@ -144,6 +145,9 @@ const Subject = () => {
                     onStudentAdd={handleStudentAdd}
                 />
             )}
+            <SubjectSchedule
+                subjectId={subject.id}
+            />
             <StudentsBox
                 canGetMark={isTeacherOfThisSubject}
                 subjectId={subject.id}

@@ -15,7 +15,7 @@ public class SubjectDateRequest {
     private int dayOfWeek;
 
     @Min(value = 1, message = "Number of lesson must be greater than 0")
-    @Max(value = 9, message = "Number of lesson must be less than 10")
+    @Max(value = 8, message = "Number of lesson must be less than 9")
     private int numOfLesson;
 
     public static SubjectDate toSubject(
