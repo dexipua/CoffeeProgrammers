@@ -1,6 +1,5 @@
 package com.school.repositories;
 
-import com.school.models.Subject;
 import com.school.models.Teacher;
 import com.school.models.User;
 import org.junit.jupiter.api.AfterEach;
@@ -8,12 +7,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DataJpaTest
@@ -29,51 +26,6 @@ public class TeacherRepositoryTest {
     @AfterEach
     void tearDown() {
         teacherRepository.deleteAll();
-    }
-
-    @Test
-    void findBySubjectName() {
-        //given
-        Subject mathSubject = new Subject();
-        mathSubject.setName("Math");
-        Subject artSubject = new Subject();
-        artSubject.setName("Art");
-
-        Teacher teacher = new Teacher(new User("Artem", "Moseichenko",  "am@gmil.com","Abekpr257"));
-        mathSubject.setTeacher(teacher);
-        artSubject.setTeacher(teacher);
-
-        mathSubject.setTeacher(teacher);
-
-        subjectRepository.saveAll(List.of(mathSubject, artSubject));
-        teacherRepository.save(teacher);
-
-        //when
-        List<Teacher> res = teacherRepository.findBySubjectNameIgnoreCase(mathSubject.getName());
-
-        //then
-        assertEquals(res, List.of(teacher));
-    }
-
-    @Test
-    void notFindBySubjectName() {
-        //given
-        Subject mathSubject = new Subject();
-        mathSubject.setName("Math");
-        Subject artSubject = new Subject();
-        artSubject.setName("Art");
-
-        Teacher teacher = new Teacher(new User("Artem", "Moseichenko",  "am@gmil.com","Abekpr257"));
-        mathSubject.setTeacher(teacher);
-
-        mathSubject.setTeacher(teacher);
-
-        subjectRepository.saveAll(List.of(mathSubject, artSubject));
-        teacherRepository.save(teacher);
-
-        //then
-        List<Teacher> res = teacherRepository.findBySubjectNameIgnoreCase("Art");
-        assertEquals(0, res.size());
     }
 
     @Test

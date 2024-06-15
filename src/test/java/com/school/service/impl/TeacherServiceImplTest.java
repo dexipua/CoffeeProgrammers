@@ -189,30 +189,4 @@ public class TeacherServiceImplTest {
         teacherService.findAll();
         verify(teacherRepository).findAllByOrderByUser_LastNameAsc();
     }
-
-    @Test
-    void findBySubjectName() {
-        Subject subject = new Subject();
-        subject.setName("Math");
-        teacher.getSubjects().add(subject);
-        subject.setTeacher(teacher);
-        teacherService.create(userRequestCreate);
-
-        when(teacherRepository.findBySubjectNameIgnoreCase(subject.getName())).thenReturn(List.of(teacher));
-
-        List<Teacher> result = teacherService.findBySubjectName(subject.getName());
-
-        assertEquals(List.of(teacher), result);
-    }
-
-    @Test
-    void notFindBySubjectName() {
-        Subject subject = new Subject();
-        subject.setName("Math");
-        teacher.getSubjects().add(subject);
-        subject.setTeacher(teacher);
-        teacherService.create(userRequestCreate);
-
-        assertEquals(List.of(), teacherService.findBySubjectName("Art"));
-    }
 }

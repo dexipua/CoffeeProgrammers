@@ -60,18 +60,6 @@ class SchoolNewsServiceImplTest {
     }
 
     @Test
-    void update() {
-        when(schoolNewsRepository.findById(schoolNews.getId())).thenReturn(Optional.of(schoolNews));
-        SchoolNews schoolNews2 = new SchoolNews("Some text");
-        schoolNews2.setId(1);
-
-        schoolNewsService.update(schoolNews2);
-
-        verify(schoolNewsRepository, times(1)).save(any(SchoolNews.class));
-        verify(schoolNewsRepository, times(1)).findById(schoolNews.getId());
-    }
-
-    @Test
     void getAllSchoolNews() {
         SchoolNews schoolNews1 = new SchoolNews("The fair will be held tomorrow at 11 o'clock");
         when(schoolNewsRepository.findAllByOrderByTimeDesc()).thenReturn(List.of(schoolNews1, schoolNews));

@@ -12,6 +12,7 @@ import com.school.models.Teacher;
 import com.school.models.User;
 import com.school.service.StudentService;
 import com.school.service.TeacherService;
+import com.school.service.UserNewsService;
 import com.school.service.impl.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -49,6 +50,9 @@ class TeacherControllerTest {
 
     @MockBean
     private UserServiceImpl userService;
+
+    @MockBean
+    private UserNewsService userNewsService;
 
     private UserRequestCreate request;
     private Teacher teacher;
@@ -216,29 +220,6 @@ class TeacherControllerTest {
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
-    }
-
-    @Test
-    @WithMockUser(roles = "CHIEF_TEACHER")
-    void getTeacherBySubjectName() throws Exception{
-        Subject subject = new Subject();
-        subject.setName("Math");
-        teacher.setSubjects(Set.of(subject));
-        teacherService.create(request);
-
-        when(teacherService.findBySubjectName("Maths")).thenReturn(List.of(teacher));
-
-        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders
-                        .get("/teachers/getAllBySubjectName/?subject_name=Maths"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andReturn();
-
-        List<TeacherResponseSimple> expectedResponseBody = new ArrayList<>(List.of(new TeacherResponseSimple(teacher)));
-        String actualResponseBody = mvcResult.getResponse().getContentAsString();
-
-        assertThat(actualResponseBody).isEqualToIgnoringWhitespace(
-                new ObjectMapper().writeValueAsString(expectedResponseBody));
     }
     @Test
     @WithMockUser(roles = "CHIEF_TEACHER")

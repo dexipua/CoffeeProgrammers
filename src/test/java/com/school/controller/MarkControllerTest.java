@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.school.config.JWT.JwtUtils;
 import com.school.dto.mark.MarkRequest;
 import com.school.dto.mark.MarkResponseAll;
-import com.school.dto.mark.MarkResponseForStudent;
 import com.school.dto.mark.MarkResponseForSubject;
 import com.school.models.Mark;
 import com.school.models.Student;
@@ -106,24 +105,6 @@ class MarkControllerTest {
 
     @Test
     @WithMockUser(roles = "CHIEF_TEACHER")
-    void getById() throws Exception{
-        when(markService.findById(mark.getId())).thenReturn(mark);
-
-        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders
-                        .get("/marks/getById/1"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andReturn();
-
-        MarkResponseAll expectedResponseBody = new MarkResponseAll(mark);
-        String actualResponseBody = mvcResult.getResponse().getContentAsString();
-
-        assertThat(actualResponseBody).isEqualToIgnoringWhitespace(
-                new ObjectMapper().writeValueAsString(expectedResponseBody));
-    }
-
-    @Test
-    @WithMockUser(roles = "CHIEF_TEACHER")
     void update() throws Exception{
         markService.create(request, subject.getId(), student.getId());
 
@@ -158,26 +139,6 @@ class MarkControllerTest {
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
-    }
-
-    @Test
-    @WithMockUser(roles = "CHIEF_TEACHER")
-    void getAllByStudentId() throws Exception{
-        markService.create(request, subject.getId(), student.getId());
-
-        when(markService.findAllByStudentId(1)).thenReturn(new HashMap<>(Map.of(subject, List.of(mark))));
-
-        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders
-                        .get("/marks/student/1"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andReturn();
-
-        List<MarkResponseForStudent> expectedResponseBody = new ArrayList<>(List.of(new MarkResponseForStudent(subject, List.of(mark))));
-        String actualResponseBody = mvcResult.getResponse().getContentAsString();
-
-        assertThat(actualResponseBody).isEqualToIgnoringWhitespace(
-                new ObjectMapper().writeValueAsString(expectedResponseBody));
     }
 
     @Test

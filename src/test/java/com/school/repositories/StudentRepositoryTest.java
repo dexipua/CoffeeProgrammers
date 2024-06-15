@@ -14,7 +14,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DataJpaTest
@@ -45,44 +44,6 @@ class StudentRepositoryTest {
     void tearDown() {
         studentRepository.deleteAll();
         subjectRepository.deleteAll();
-    }
-
-    @Test
-    void findStudentBySubjectName() {
-        // Given
-        Student student1 = new Student();
-        student1.getSubjects().add(subject1);
-
-        Student student2 = new Student();
-        student2.getSubjects().add(subject2);
-
-        subjectRepository.saveAll(List.of(subject1, subject2));
-        studentRepository.saveAll(List.of(student1, student2));
-
-        // When
-        List<Student> res = studentRepository.findStudentBySubjectNameContainingIgnoreCase("Math");
-        boolean result = res.equals(List.of(student1));
-
-        // Then
-        assertThat(result).isTrue();
-    }
-
-    @Test
-    void NotFindStudentBySubjectName(){
-        // Given
-
-        Student student1 = new Student();
-        student1.getSubjects().add(subject1);
-
-        subjectRepository.saveAll(List.of(subject1, subject2));
-        studentRepository.save(student1);
-
-        // When
-        List<Student> res = studentRepository.findStudentBySubjectNameContainingIgnoreCase("Art");
-        boolean result = res.equals(List.of());
-
-        // Then
-        assertThat(result).isTrue();
     }
 
     @Test

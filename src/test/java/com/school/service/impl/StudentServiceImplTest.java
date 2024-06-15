@@ -16,7 +16,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -195,28 +198,6 @@ class StudentServiceImplTest {
 
         assertEquals(students, result);
         verify(studentRepository).findAllByOrderByUser_LastNameAsc();
-    }
-
-    @Test
-    void findBySubjectName_WhenSubjectExists() {
-        Subject math = new Subject();
-        math.setName("Math");
-        student.setSubjects(Set.of(math));
-        List<Student> students = List.of(student);
-        when(studentRepository.findStudentBySubjectNameContainingIgnoreCase(math.getName())).thenReturn(students);
-
-        List<Student> result = studentService.findBySubjectName(math.getName());
-
-        assertEquals(students, result);
-        verify(studentRepository).findStudentBySubjectNameContainingIgnoreCase(math.getName());
-    }
-
-    @Test
-    void findBySubjectName_WhenSubjectNotExists() {
-        when(studentRepository.findStudentBySubjectNameContainingIgnoreCase("Mathematics")).thenReturn(List.of());
-
-        assertEquals(List.of(), studentService.findBySubjectName("Mathematics"));
-        verify(studentRepository).findStudentBySubjectNameContainingIgnoreCase("Mathematics");
     }
 
     @Test

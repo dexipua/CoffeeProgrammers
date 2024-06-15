@@ -3,7 +3,6 @@ package com.school.service.impl;
 import com.school.models.User;
 import com.school.models.UserNews;
 import com.school.repositories.UserNewsRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,10 +11,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -42,19 +39,6 @@ class UserNewsServiceImplTest {
         when(userNewsRepository.save(userNews)).thenReturn(userNews);
         userNewsService.create(userNews);
         verify(userNewsRepository, times(1)).save(userNews);
-    }
-
-    @Test
-    void findById() {
-        when(userNewsRepository.findById(userNews.getId())).thenReturn(Optional.of(userNews));
-        assertEquals(userNews, userNewsService.findById(userNews.getId()));
-        verify(userNewsRepository, times(1)).findById(userNews.getId());
-    }
-
-    @Test
-    void notFindById() {
-        assertThrowsExactly(EntityNotFoundException.class,() -> userNewsService.findById(-1));
-        verify(userNewsRepository, times(1)).findById((long) -1);
     }
 
     @Test

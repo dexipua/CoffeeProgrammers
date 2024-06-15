@@ -12,6 +12,7 @@ import com.school.models.Subject;
 import com.school.models.Teacher;
 import com.school.models.User;
 import com.school.service.StudentService;
+import com.school.service.UserNewsService;
 import com.school.service.impl.MarkServiceImpl;
 import com.school.service.impl.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -51,6 +52,9 @@ class StudentControllerTest {
 
     @MockBean
     private MarkServiceImpl markService;
+
+    @MockBean
+    private UserNewsService userNewsService;
 
     private UserRequestCreate request;
     private Student student;
@@ -191,29 +195,6 @@ class StudentControllerTest {
         assertThat(actualResponseBody).isEqualToIgnoringWhitespace(
                 new ObjectMapper().writeValueAsString(expectedResponseBody));
 
-    }
-
-    @Test
-    @WithMockUser(roles = "CHIEF_TEACHER")
-    void getStudentsBySubjectName() throws Exception {
-        Subject subject = new Subject();
-        subject.setName("Math");
-        student.setSubjects(Set.of(subject));
-        studentService.create(request);
-
-        when(studentService.findBySubjectName("Maths")).thenReturn(List.of(student));
-
-        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders
-                        .get("/students/getAllBySubjectName/?subject_name=Maths"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andReturn();
-
-        List<StudentResponseSimple> expectedResponseBody = new ArrayList<>(List.of(new StudentResponseSimple(student)));
-        String actualResponseBody = mvcResult.getResponse().getContentAsString();
-
-        assertThat(actualResponseBody).isEqualToIgnoringWhitespace(
-                new ObjectMapper().writeValueAsString(expectedResponseBody));
     }
 
     @Test

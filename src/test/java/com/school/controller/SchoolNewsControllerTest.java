@@ -77,24 +77,6 @@ class SchoolNewsControllerTest {
 
     @Test
     @WithMockUser(roles = "CHIEF_TEACHER")
-    void getById() throws Exception {
-        when(schoolNewsService.findById(schoolNews.getId())).thenReturn(schoolNews);
-
-        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders
-                        .get("/schoolNews/getById/1"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andReturn();
-
-        SchoolNewsResponse expectedResponseBody = new SchoolNewsResponse(schoolNews);
-        String actualResponseBody = mvcResult.getResponse().getContentAsString();
-
-        assertThat(actualResponseBody).isEqualToIgnoringWhitespace(
-                new ObjectMapper().writeValueAsString(expectedResponseBody));
-    }
-
-    @Test
-    @WithMockUser(roles = "CHIEF_TEACHER")
     void delete() throws Exception {
         schoolNewsService.create(schoolNews);
 
@@ -105,34 +87,6 @@ class SchoolNewsControllerTest {
                         .with(csrf()))
                 .andDo(print())
                 .andExpect(status().isOk());
-    }
-
-    @Test
-    @WithMockUser(roles = "CHIEF_TEACHER")
-    void update() throws Exception{
-        schoolNewsService.create(schoolNews);
-        schoolNews2.setId(1);
-
-        SchoolNewsRequest schoolNewsRequest = new SchoolNewsRequest();
-        schoolNewsRequest.setText("Some text");
-
-        when(schoolNewsService.findById(schoolNews.getId())).thenReturn(schoolNews);
-        when(schoolNewsService.update(any(SchoolNews.class))).thenReturn(schoolNews2);
-        //then
-        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders
-                        .put("/schoolNews/update/1")
-                        .with(csrf())
-                        .content(asJsonString(schoolNewsRequest))
-                        .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andReturn();
-
-        SchoolNewsResponse expectedResponseBody = new SchoolNewsResponse(schoolNews2);
-        String actualResponseBody = mvcResult.getResponse().getContentAsString();
-
-        assertThat(actualResponseBody).isEqualToIgnoringWhitespace(
-                new ObjectMapper().writeValueAsString(expectedResponseBody));
     }
 
     @Test

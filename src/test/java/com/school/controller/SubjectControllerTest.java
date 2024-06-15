@@ -10,6 +10,8 @@ import com.school.models.Student;
 import com.school.models.Subject;
 import com.school.models.Teacher;
 import com.school.models.User;
+import com.school.service.SubjectDateService;
+import com.school.service.UserNewsService;
 import com.school.service.impl.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -54,6 +56,12 @@ class SubjectControllerTest {
 
     @MockBean
     private StudentServiceImpl studentService;
+
+    @MockBean
+    private UserNewsService userNewsService;
+
+    @MockBean
+    private SubjectDateService subjectDateService;
 
     private Subject subject;
     private Subject subject2;
