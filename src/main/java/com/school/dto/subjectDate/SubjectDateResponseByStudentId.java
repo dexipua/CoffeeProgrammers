@@ -9,7 +9,6 @@ import java.time.DayOfWeek;
 
 @Data
 public class SubjectDateResponseByStudentId {
-    private long id;
     private String dayOfWeek;
     private String numOfLesson;
     private SubjectResponseSimple subjectResponseSimple;
@@ -17,7 +16,6 @@ public class SubjectDateResponseByStudentId {
         this.dayOfWeek = dayOfWeek.toString();
         this.numOfLesson = numOfLesson.toString();
         if(subject == null) return;
-        this.id = subject.getId();
         this.subjectResponseSimple = new SubjectResponseSimple(subject);
     }
 }
