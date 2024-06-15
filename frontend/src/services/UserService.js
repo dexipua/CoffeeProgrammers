@@ -19,9 +19,8 @@ class UserService {
             localStorage.setItem('jwtToken', accessToken);
             localStorage.setItem('role',role)
             localStorage.setItem('roleId', roleId)
-        } catch
-            (error) {
-            throw new Error('Login failed. Check your credentials.');
+        } catch (error) {
+            throw error;
         }
     }
 
