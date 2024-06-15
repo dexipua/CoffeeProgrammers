@@ -30,7 +30,7 @@ public class SubjectDateServiceImpl implements SubjectDateService {
                 subjectDate.getDayOfWeek(),
                 subjectDate.getNumOfLesson(),
                 subjectDate.getSubject().getTeacher()).isEmpty()){
-            throw new EntityExistsException("Subject time with the same option already exists(TEACHER)");
+            throw new EntityExistsException("You already have subject  with the same time");
         }
         for (Student student : subjectDate.getSubject().getStudents()){
             if (!subjectDateRepository.findAllByDayOfWeekAndNumOfLessonAndSubject_StudentsContains(
@@ -38,11 +38,11 @@ public class SubjectDateServiceImpl implements SubjectDateService {
                     subjectDate.getNumOfLesson(),
                     student
             ).isEmpty()){
-                throw new EntityExistsException("Subject time with the same option already exists(STUDENT)");
+                throw new EntityExistsException("Student of this subject already have subject with the same time");
             }
         }
         for(Student student : subjectDate.getSubject().getStudents()) {
-            userNewsService.create(new UserNews(subjectDate.getSubject().getName() + "have been set at time "
+            userNewsService.create(new UserNews(subjectDate.getSubject().getName() + " have been set at time "
                     + subjectDate.getDayOfWeek().toString() + " " + subjectDate.getNumOfLesson().toString(), student.getUser()));
         }
         return subjectDateRepository.save(subjectDate);

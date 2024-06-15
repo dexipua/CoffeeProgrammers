@@ -9,6 +9,8 @@ import ManageBox from "../../common/subject/ManageBox";
 import Loading from "../../layouts/Loading";
 import StudentService from "../../../services/StudentService";
 import SubjectSchedule from "../schedule/SubjectSchedule";
+import SubjectTabs from "../../common/subject/SubjectTabs";
+import Box from "@mui/material/Box";
 
 const Subject = () => {
     const {id} = useParams();
@@ -137,27 +139,48 @@ const Subject = () => {
     return (
         <>
             <ApplicationBar/>
-            <SubjectWithTeacherForProfile subject={subject}/>
-            {isTeacherOfThisSubject && (
-                <ManageBox
-                    subjectId={subject.id}
-                    onNameChange={handleNameChange}
-                    onStudentAdd={handleStudentAdd}
+            <Box
+                mt="80px"
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+            >
+                <Box
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                    flexDirection="row"
+                    gap={3}
+                >
+                    <SubjectWithTeacherForProfile subject={subject}/>
+                    {isTeacherOfThisSubject && (
+                        <ManageBox
+                            subjectId={subject.id}
+                            onNameChange={handleNameChange}
+                            onStudentAdd={handleStudentAdd}
+                        />
+                    )}
+                </Box>
+            </Box>
+            <Box display="flex" flexDirection="column" alignItems="center">
+                <SubjectTabs
+                    tab2={
+                        <SubjectSchedule subjectId={subject.id}/>
+                    }
+                    tab1={
+                        <StudentsBox
+                            isTeacherOfThisSubject={isTeacherOfThisSubject}
+                            subjectId={subject.id}
+                            studentsWithGradesOrEmpty={getStudentsWithGradesOrEmpty()}
+                            subjectStudents={subject.students}
+                            onStudentDelete={handleStudentDelete}
+                            onMarkCreate={handleMarkCreate}
+                            onMarkUpdate={handleMarkUpdate}
+                            onMarkDelete={handleMarkDelete}
+                        />
+                    }
                 />
-            )}
-            <SubjectSchedule
-                subjectId={subject.id}
-            />
-            <StudentsBox
-                canGetMark={isTeacherOfThisSubject}
-                subjectId={subject.id}
-                studentsWithGradesOrEmpty={getStudentsWithGradesOrEmpty()}
-                subjectStudents={subject.students}
-                onStudentDelete={handleStudentDelete}
-                onMarkCreate={handleMarkCreate}
-                onMarkUpdate={handleMarkUpdate}
-                onMarkDelete={handleMarkDelete}
-            />
+            </Box>
         </>
     );
 };

@@ -1,33 +1,27 @@
 import React, {useEffect, useState} from 'react';
-import ApplicationBar from "../../layouts/app_bar/ApplicationBar";
-import {
-    Box,
-    CircularProgress,
-    Paper,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    Typography
-} from '@mui/material';
+import {Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from '@mui/material';
 import SubjectDateService from "../../../services/SubjectDateService";
 import ScheduleDeleteButton from "../../common/schedule/ScheduleDeleteButton";
 import ScheduleCreateButton from "../../common/schedule/ScheduleCreateButton";
+import Loading from "../../layouts/Loading";
+import EventAvailableIcon from "@mui/icons-material/EventAvailable";
+import ErrorSnackbar from "../../layouts/ErrorSnackbar";
 
 const SubjectSchedule = ({subjectId}) => {
     const [tableData, setTableData] = useState({});
     const [loading, setLoading] = useState(true);
 
+    const [errorMessage, setErrorMessage] = useState("");
+    const [showSnackbar, setShowSnackbar] = useState(false);
+
     const token = localStorage.getItem('jwtToken');
+    const role = localStorage.getItem('role');
     const roleId = localStorage.getItem('roleId');
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const response = await SubjectDateService.getAllBySubjectId(subjectId, token);
-                console.log('Fetched schedule:', response);
                 generateTableData(response);
             } catch (error) {
                 console.error('Error fetching student schedule:', error);
@@ -52,7 +46,6 @@ const SubjectSchedule = ({subjectId}) => {
                 token
             );
 
-            // Update tableData with the newly created subject
             setTableData(prevTableData => {
                 const newLessonData = {
                     ...prevTableData[numOfLesson],
@@ -70,7 +63,8 @@ const SubjectSchedule = ({subjectId}) => {
                 };
             });
         } catch (error) {
-            console.error('Error creating subject date:', error);
+            setErrorMessage(error.response.data.messages);
+            setShowSnackbar(true);
         }
     }
 
@@ -104,7 +98,13 @@ const SubjectSchedule = ({subjectId}) => {
         scheduleData.forEach(item => {
             const day = item.dayOfWeek;
             const lesson = item.numOfLesson;
-            const subject = item.id ? (
+            const subject = role === "STUDENT" ? (
+                item.id && (
+                    <EventAvailableIcon sx={{
+                        color: "#5B5B5BEF",
+                    }}/>
+                )
+            ) : (item.id ? (
                 <ScheduleDeleteButton
                     onDelete={() => handleDelete(item.id, item.dayOfWeek, item.numOfLesson)}
                 />
@@ -112,7 +112,8 @@ const SubjectSchedule = ({subjectId}) => {
                 <ScheduleCreateButton
                     onCreate={() => handleCreate(item.dayOfWeek, item.numOfLesson)}
                 />
-            )
+            ))
+
 
             if (!newTableData[lesson]) {
                 newTableData[lesson] = {};
@@ -128,17 +129,17 @@ const SubjectSchedule = ({subjectId}) => {
         return index % 2 === 0 ? '#f0f0f0' : 'white';
     };
 
-    const cellWidthStyle = {width: "10px", widthName: "250px", widthEmail: "150px"};
+    const cellWidthStyle = {widthNumber: "30px", widthDays: "100px"};
     const cellBorderStyle = {border: "1px solid #e0e0e0"};
 
     const renderHead = () => {
         return (
             <TableRow>
-                <TableCell align="center" style={{...cellBorderStyle, width: cellWidthStyle.width}}>
+                <TableCell align="center" style={{...cellBorderStyle, width: cellWidthStyle.widthNumber}}>
                     <strong>№</strong>
                 </TableCell>
                 {daysOfWeek.map(day => (
-                    <TableCell key={day} align="center" style={{...cellBorderStyle, width: cellWidthStyle.width}}>
+                    <TableCell key={day} align="center" style={{...cellBorderStyle, width: cellWidthStyle.widthDays}}>
                         <strong>{day}</strong>
                     </TableCell>
                 ))}
@@ -161,12 +162,12 @@ const SubjectSchedule = ({subjectId}) => {
         return (
             numOfLessons.map((lesson, index) => (
                 <TableRow key={lesson} style={{backgroundColor: getRowColor(index)}}>
-                    <TableCell align="center" style={{...cellBorderStyle, width: cellWidthStyle.width}}>
+                    <TableCell align="center" style={{...cellBorderStyle, width: cellWidthStyle.widthNumber}}>
                         {index + 1}
                     </TableCell>
                     {daysOfWeek.map(day => (
                         <TableCell key={`${lesson}-${day}`} align="center"
-                                   style={{...cellBorderStyle, width: cellWidthStyle.width}}>
+                                   style={{...cellBorderStyle, width: cellWidthStyle.widthDays}}>
                             {tableData[lesson] && tableData[lesson][day] ?
                                 tableData[lesson][day] : ""}
                         </TableCell>
@@ -177,33 +178,36 @@ const SubjectSchedule = ({subjectId}) => {
     };
 
     return (
-        <Box
-            mt="80px"
-            sx={{
-                width: "1000px",
-                margin: '80px auto 0', // центрування по горизонталі, зберігає mt="80px"
-                border: '1px solid #ddd',
-                borderRadius: '8px',
-                backgroundColor: '#ffffff',
-                padding: '20px',
-            }}
-        >
-            <ApplicationBar/>
-            <Box display="flex" flexDirection="column" alignItems="center">
-                <Typography variant="h5" component="h3" gutterBottom style={{textAlign: 'center'}}>
-                    Schedule
-                </Typography>
-                {loading ? (
-                    <CircularProgress/>
-                ) : (
-                    <TableContainer component={Paper}>
-                        <Table sx={{minWidth: 700}} aria-label="custom pagination table">
-                            <TableHead>{renderHead()}</TableHead>
-                            <TableBody>{renderBody()}</TableBody>
-                        </Table>
-                    </TableContainer>
-                )}
+        <Box display="flex" flexDirection="column" alignItems="center">
+            <Box
+                sx={{
+                    width: "1020px",
+                    border: '1px solid #ddd',
+                    borderRadius: '8px',
+                    backgroundColor: '#ffffff',
+                    padding: '20px',
+                }}
+            >
+
+                <Box display="flex" flexDirection="column" alignItems="center">
+                    {loading ? (
+                        <Loading/>
+                    ) : (
+                        <TableContainer component={Paper}>
+                            <Table sx={{minWidth: 700}} aria-label="custom pagination table">
+                                <TableHead>{renderHead()}</TableHead>
+                                <TableBody>{renderBody()}</TableBody>
+                            </Table>
+                        </TableContainer>
+                    )}
+                </Box>
             </Box>
+
+            <ErrorSnackbar
+                open={showSnackbar}
+                onClose={() => setShowSnackbar(false)}
+                message={errorMessage}
+            />
         </Box>
     );
 };

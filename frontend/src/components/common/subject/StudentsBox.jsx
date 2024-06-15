@@ -1,11 +1,10 @@
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
 import StudentTable from "../student/StudentTable";
 import MarkTableForSubject from "../mark/table/MarkTableForSubject";
 
 const StudentsBox = (
     {
-        canGetMark,
+        isTeacherOfThisSubject,
         subjectId,
         studentsWithGradesOrEmpty,
         subjectStudents,
@@ -15,20 +14,16 @@ const StudentsBox = (
         onMarkDelete
     }) => (
     <Box
-        mt={4}
-        ml="60px"
-        mr="60px"
+        display="flex" flexDirection="column" alignItems="center"
         p={2}
         sx={{
+            width: "1200px",
             border: '1px solid #ddd',
             borderRadius: '8px',
             backgroundColor: '#ffffff'
         }}
     >
-        <Box mb={2}>
-            <Typography variant="h6" component="h3">Students</Typography>
-        </Box>
-        {!canGetMark ? (
+        {!isTeacherOfThisSubject ? (
             <StudentTable students={subjectStudents} />
         ) : (
             <MarkTableForSubject

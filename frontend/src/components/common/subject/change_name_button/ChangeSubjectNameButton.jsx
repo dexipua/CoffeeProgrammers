@@ -20,7 +20,7 @@ const ChangeSubjectNameButton = ({ subjectId, onNameChange }) => {
                 variant="contained"
                 onClick={handleClickOpen}
             >
-                Change subject name
+                Change name
             </Button>
             <ChangeSubjectNameDialog
                 subjectId={subjectId}
