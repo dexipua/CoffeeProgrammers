@@ -107,10 +107,11 @@ public class SubjectServiceImpl implements SubjectService {
         List<SubjectDate> subjectDatesSubject = subjectDateRepository.findAllBySubject_Id(subjectId);
 
         for(SubjectDate subjectDate : subjectDatesSubject){
-            if(!subjectDateRepository.findAllByDayOfWeekAndNumOfLessonAndSubject_IdIsNot(
+            if(!subjectDateRepository.findAllByDayOfWeekAndNumOfLessonAndSubject_IdIsNotAndSubject_Teacher(
                     subjectDate.getDayOfWeek(),
                     subjectDate.getNumOfLesson(),
-                    subjectId
+                    subjectId,
+                    teacher
             ).isEmpty()){
                 throw new UnsupportedOperationException("Some");
             }
