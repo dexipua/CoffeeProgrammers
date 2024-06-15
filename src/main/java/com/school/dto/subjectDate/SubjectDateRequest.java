@@ -1,7 +1,7 @@
 package com.school.dto.subjectDate;
 
+import com.school.models.Subject;
 import com.school.models.SubjectDate;
-import com.school.service.SubjectService;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.Data;
@@ -20,11 +20,10 @@ public class SubjectDateRequest {
 
     public static SubjectDate toSubject(
             SubjectDateRequest subjectDateRequest,
-            SubjectService subjectService,
-            long subjectId) {
+            Subject subject) {
 
         return new SubjectDate(
-                subjectService.findById(subjectId),
+                subject,
                 DayOfWeek.of(subjectDateRequest.dayOfWeek),
                 subjectDateRequest.numOfLesson
         );

@@ -34,7 +34,7 @@ public class SubjectDateController {
             @Valid @RequestBody SubjectDateRequest subjectDateRequest,
             @PathVariable("subject_id") long subjectId) {
         return new SubjectDateResponse(subjectDateService.create(
-                SubjectDateRequest.toSubject(subjectDateRequest, subjectService, subjectId)));
+                SubjectDateRequest.toSubject(subjectDateRequest, subjectService.findById(subjectId))));
     }
 
     @PutMapping("/update/{subject_date_id}")
@@ -44,7 +44,7 @@ public class SubjectDateController {
                                                  @PathVariable("subject_date_id") long subjectDateId) {
         long subjectId = subjectDateService.findById(subjectDateId).getId();
         SubjectDate subjectDate = SubjectDateRequest.toSubject(subjectDateRequest,
-                subjectService, subjectId);
+                subjectService.findById(subjectId));
         subjectDate.setId(subjectDateId);
         return new SubjectDateResponse(subjectDateService.update(subjectDate));
     }
