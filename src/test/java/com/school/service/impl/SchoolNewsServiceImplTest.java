@@ -66,4 +66,16 @@ class SchoolNewsServiceImplTest {
         assertEquals(List.of(schoolNews1, schoolNews), schoolNewsService.getAllSchoolNews());
         verify(schoolNewsRepository, times(1)).findAllByOrderByTimeDesc();
     }
+
+    @Test
+    void update() {
+        when(schoolNewsRepository.findById(schoolNews.getId())).thenReturn(Optional.of(schoolNews));
+        SchoolNews schoolNews2 = new SchoolNews("Some text");
+        schoolNews2.setId(1);
+
+        schoolNewsService.update(schoolNews2);
+
+        verify(schoolNewsRepository, times(1)).save(any(SchoolNews.class));
+        verify(schoolNewsRepository, times(1)).findById(schoolNews.getId());
+    }
 }
