@@ -13,7 +13,4 @@ public interface SubjectDateRepository extends JpaRepository<SubjectDate, Long> 
     List<SubjectDate> findAllBySubject_Students_Id(long studentId);
     List<SubjectDate> findAllBySubject_Id(long subjectId);
     List<SubjectDate> findAllByDayOfWeekAndNumOfLessonAndSubject_Teacher(DayOfWeek dayOfWeek, SubjectDate.NumOfLesson numOfLesson, Teacher teacher);
-    List<SubjectDate> findAllByDayOfWeekAndNumOfLessonAndSubject_StudentsContains(DayOfWeek dayOfWeek, SubjectDate.NumOfLesson numOfLesson, Student student);
-    List<SubjectDate> findAllByDayOfWeekAndNumOfLessonAndSubject_TeacherAndIdIsNot(DayOfWeek dayOfWeek, SubjectDate.NumOfLesson numOfLesson, Teacher teacher, long id);
-    List<SubjectDate> findAllByDayOfWeekAndNumOfLessonAndSubject_StudentsContainsAndIdIsNot(DayOfWeek dayOfWeek, SubjectDate.NumOfLesson numOfLesson, Student student, long id);
-}
+    List<SubjectDate> findAllByDayOfWeekAndNumOfLessonAndSubject_StudentsContains(DayOfWeek dayOfWeek, SubjectDate.NumOfLesson numOfLesson, Student student);}

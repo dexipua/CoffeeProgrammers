@@ -7,41 +7,11 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 public class RoleServiceImpl implements RoleService {
 
     private final RoleRepository roleRepository;
-
-    @Override
-    public Role create(Role role) {
-        return roleRepository.save(role);
-    }
-
-    @Override
-    public Role findById(long id) {
-        return roleRepository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException("Role with id " + id + " not found"));
-    }
-
-    @Override
-    public Role update(Role role) {
-        findById(role.getId());
-        return roleRepository.save(role);
-    }
-
-    @Override
-    public void delete(long id) {
-        Role role = findById(id);
-        roleRepository.delete(role);
-    }
-
-    @Override
-    public List<Role> getAll() {
-        return roleRepository.findAll();
-    }
 
     @Override
     public Role findByName(String name) {

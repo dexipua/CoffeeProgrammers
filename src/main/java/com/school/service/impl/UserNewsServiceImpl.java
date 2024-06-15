@@ -3,7 +3,6 @@ package com.school.service.impl;
 import com.school.models.UserNews;
 import com.school.repositories.UserNewsRepository;
 import com.school.service.UserNewsService;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,11 +17,6 @@ public class UserNewsServiceImpl implements UserNewsService {
     @Override
     public UserNews create(UserNews news) {
         return newsRepository.save(news);
-    }
-
-    @Override
-    public UserNews findById(long id) {
-        return newsRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("UserNews with id " + id + " not found"));
     }
 
     @Override
