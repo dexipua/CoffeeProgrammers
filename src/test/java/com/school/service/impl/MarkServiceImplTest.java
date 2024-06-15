@@ -18,7 +18,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -187,6 +190,8 @@ public class MarkServiceImplTest {
 
         subject2.setStudents(Set.of(student1));
 
+        student1.setSubjects(Set.of(subject1, subject2));
+
         mark1.setStudent(student1);
         mark1.setSubject(subject1);
 
@@ -195,6 +200,7 @@ public class MarkServiceImplTest {
 
         // when
         when(markRepository.findAllByStudent_Id(student1.getId())).thenReturn(List.of(mark1, mark2));
+        when(studentService.findById(student1.getId())).thenReturn(student1);
 
         // then
         assertEquals(markService.findAllByStudentId(student1.getId()), Map.of(subject1, List.of(mark1), subject2, List.of(mark2)));
@@ -215,6 +221,7 @@ public class MarkServiceImplTest {
 
         // when
         when(markRepository.findAllBySubject_Id(subject1.getId())).thenReturn(List.of(mark1, mark2));
+
 
         // then
         assertEquals(markService.findAllBySubjectId(subject1.getId()), Map.of(student1, List.of(mark1), student2, List.of(mark2)));
