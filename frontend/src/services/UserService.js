@@ -4,20 +4,6 @@ const API_URL = 'http://localhost:9091';
 
 class UserService {
 
-    async getBookmark(token) {
-        try {
-            const response = await axios.get(`${API_URL}/bookmark`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
-            return response.data;
-        } catch (error) {
-            console.error('Error fetching bookmarks:', error);
-            throw error;
-        }
-    }
-
     async login(username, password) {
         try {
             const

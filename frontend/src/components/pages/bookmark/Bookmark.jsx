@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography} from '@mui/material';
-import UserService from '../../../services/UserService';
 import ApplicationBar from "../../layouts/app_bar/ApplicationBar";
 import Box from "@mui/material/Box";
 import {useNavigate} from "react-router-dom";
+import MarkService from "../../../services/MarkService";
 
 const Bookmark = () => {
     const [marks, setMarks] = useState([]);
@@ -18,7 +18,7 @@ const Bookmark = () => {
                     navigate("*")
                 }
                 const token = localStorage.getItem('jwtToken');
-                const response = await UserService.getBookmark(token);
+                const response = await MarkService.getBookmark(token);
                 console.log(response);
                 setMarks(response);
             } catch (error) {

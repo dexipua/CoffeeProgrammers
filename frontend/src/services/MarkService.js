@@ -45,6 +45,21 @@ class MarkService {
         }
     }
 
+    async getBookmark(token) {
+        const studentId = localStorage.getItem('roleId')
+        try {
+            const response = await axios.get(`${API_URL}/student/${studentId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching bookmarks:', error);
+            throw error;
+        }
+    }
+
     async getBySubjectId(subjectId, token) {
         try {
             const response = await axios.get(`${API_URL}/getAllBySubjectId/${subjectId}`, {
