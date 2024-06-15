@@ -1,11 +1,9 @@
 package com.school.service.impl;
 
 import com.school.dto.subject.SubjectRequest;
-import com.school.models.Student;
-import com.school.models.Subject;
-import com.school.models.Teacher;
-import com.school.models.UserNews;
+import com.school.models.*;
 import com.school.repositories.StudentRepository;
+import com.school.repositories.SubjectDateRepository;
 import com.school.repositories.SubjectRepository;
 import com.school.service.StudentService;
 import com.school.service.SubjectService;
@@ -16,12 +14,14 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class SubjectServiceImpl implements SubjectService {
 
+    private final SubjectDateRepository subjectDateRepository;
     private final SubjectRepository subjectRepository;
     private final TeacherService teacherService;
     private final StudentService studentService;
@@ -89,6 +89,19 @@ public class SubjectServiceImpl implements SubjectService {
     public void setTeacher(long subjectId, long teacherId) {
         Subject subject = findById(subjectId);
         Teacher teacher = teacherService.findById(teacherId);
+
+        List<SubjectDate> subjectDates = new ArrayList<>();
+        for(Subject subject1 : teacher.getSubjects()) {
+            subjectDates.addAll(subjectDateRepository.findAllBySubject_Id(subject1.getId()));
+        }
+        for(SubjectDate subjectDate : subjectDates) {
+            if(!subjectDateRepository.findAllByDayOfWeekAndNumOfLessonAndSubject_Teacher(
+                    subjectDate.getDayOfWeek(),
+                    subjectDate.getNumOfLesson(),
+                    teacher).isEmpty()){
+                throw new EntityExistsException("Subject time with the same option already exists(TEACHER)");
+            }
+        }
 
         userNewsService.create(
                 new UserNews("You have become a teacher of the lesson: " + subject.getName(),
