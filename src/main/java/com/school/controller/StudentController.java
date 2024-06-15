@@ -89,13 +89,13 @@ public class StudentController {
 
     @GetMapping("/getAllByName/")
     @ResponseStatus(HttpStatus.OK)
-    public List<StudentResponseSimple> getByName(
+    public List<StudentResponseWithEmail> getByName(
             @RequestParam("first_name") String firstName,
             @RequestParam("last_name") String lastName
     ) {
         List<Student> students = studentService.findAllByUser_FirstNameAndUser_LastName(firstName, lastName);
         return students.stream()
-                .map(StudentResponseSimple::new)
+                .map(StudentResponseWithEmail::new)
                 .collect(Collectors.toList());
     }
 

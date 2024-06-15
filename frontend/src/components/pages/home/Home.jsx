@@ -83,6 +83,7 @@ const Home = () => {
                 Our community have {studentCount} students!
             </Typography>
             <Box
+                mb={5}
                 mx="auto"
                 maxWidth="1100px"
                 sx={{
@@ -114,12 +115,13 @@ const Home = () => {
                         <Box
                             sx={{
                                 width: '100%',
+                                height: "400px",
                                 display: 'flex',
                                 justifyContent: 'center',
                             }}
                         >
                             {subjects.length > 0 ? (
-                                <SubjectWithTeacherList subjects={subjects} />
+                                <SubjectWithTeacherList subjects={subjects}/>
                             ) : (
                                 <Typography margin="20px" variant="body1" component="h3">
                                     You don't have any subjects yet
@@ -144,9 +146,30 @@ const Home = () => {
                         </Typography>
                         <Box
                             sx={{
-                                width: '350px',
+                                width: '370px',
+                                height: '500px',
                                 display: 'flex',
-                                justifyContent: 'center',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                justifyContent: 'flex-start',
+                                overflowY: 'auto',
+                                overflowX: 'hidden',
+                                scrollbarWidth: 'thin',
+                                scrollbarColor: '#888 #f1f1f1',
+                                '&::-webkit-scrollbar': {
+                                    width: '12px',
+                                },
+                                '&::-webkit-scrollbar-track': {
+                                    backgroundColor: '#f1f1f1',
+                                    borderRadius: '10px',
+                                },
+                                '&::-webkit-scrollbar-thumb': {
+                                    backgroundColor: '#888',
+                                    borderRadius: '10px',
+                                },
+                                '&::-webkit-scrollbar-thumb:hover': {
+                                    backgroundColor: '#555',
+                                },
                             }}
                         >
                             {users.length > 0 ? (
@@ -156,10 +179,9 @@ const Home = () => {
                                 />
                             ) : (
                                 <Typography margin="20px" variant="body1" component="h3">
-                                    You don't have any   {role === "STUDENT" ? "teachers" : "students"} yet
+                                    You don't have any {role === "STUDENT" ? "teachers" : "students"} yet
                                 </Typography>
                             )}
-
                         </Box>
                     </Box>
                 </Box>

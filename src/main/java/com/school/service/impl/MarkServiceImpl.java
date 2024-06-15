@@ -86,9 +86,9 @@ public class MarkServiceImpl implements MarkService {
 
     @Override
     public HashMap<Subject, List<Mark>> findAllByStudentId(long studentId) {
-        studentService.findById(studentId);
         Set<Subject> subjects = studentService.findById(studentId).getSubjects();
         List<Mark> marks = markRepository.findAllByStudent_Id(studentId);
+
         HashMap<Subject, List<Mark>> map = new HashMap<>();
         List<Mark> temp;
         for (Subject subject : subjects) {

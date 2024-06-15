@@ -113,7 +113,7 @@ public class SubjectServiceImpl implements SubjectService {
                     subjectId,
                     teacher
             ).isEmpty()){
-                throw new UnsupportedOperationException("Some");
+                throw new UnsupportedOperationException("Teacher already have subject  with the same time");
             }
         }
 

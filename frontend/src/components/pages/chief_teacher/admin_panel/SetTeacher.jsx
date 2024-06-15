@@ -17,6 +17,7 @@ import {
 import UserSearchBar from "../../../layouts/UserSearchBar";
 import SubjectSearchBar from "../../../layouts/SubjectSearchBar";
 import {Link} from "react-router-dom";
+import ErrorSnackbar from "../../../layouts/ErrorSnackbar";
 
 const SetTeacher = () => {
     const [subjectsWithoutTeachers, setSubjectsWithoutTeachers] = useState([]);
@@ -36,6 +37,9 @@ const SetTeacher = () => {
 
     const [rowsPerPage, setRowsPerPage] = useState(10);
 
+    const [showSnackbar, setShowSnackbar] = useState(false);
+    const [error, setError] = useState(null);
+
 
     const token = localStorage.getItem('jwtToken');
 
@@ -53,7 +57,7 @@ const SetTeacher = () => {
                 setTeachers(teachersResponse);
                 setFilteredTeachers(teachersResponse);
             } catch (error) {
-                console.error('Error fetching subjects or teachers:', error);
+                console.log("Error")
             }
         };
 
@@ -72,7 +76,8 @@ const SetTeacher = () => {
             setSelectedSubjectId('');
             setSelectedTeacherId('');
         } catch (error) {
-            console.error('Error adding teacher to subject:', error);
+            setError(error.response.data.messages);
+            setShowSnackbar(true);
         }
     };
 
@@ -318,6 +323,11 @@ const SetTeacher = () => {
                     />
                 </Box>
             </Box>
+             <ErrorSnackbar
+                  open={showSnackbar}
+                  onClose={() => setShowSnackbar(false)}
+                  message={error}
+             />
         </Box>
     );
 };
