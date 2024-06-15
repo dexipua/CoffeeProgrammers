@@ -37,7 +37,6 @@ const SubjectWithTeacherForProfile = ({ subject }) => {
                 </Typography>
             </Box>
 
-            {/* Ім'я викладача */}
             <Box width="100%" display="flex" alignItems="center" gap={0.5}>
                 <Typography variant="subtitle1" sx={{ margin: 0, fontWeight: 'bold', color: '#333' }}>
                     Teacher:

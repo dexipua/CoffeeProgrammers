@@ -3,13 +3,20 @@ import {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
 import UserService from '../../../services/UserService';
 import ApplicationBar from "../../layouts/app_bar/ApplicationBar";
 import Box from "@mui/material/Box";
+import {useNavigate} from "react-router-dom";
 
 const Bookmark = () => {
     const [marks, setMarks] = useState([]);
+    const role = localStorage.getItem('role')
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchMarks = async () => {
             try {
+                if (role !== "STUDENT") {
+                    navigate("*")
+                }
                 const token = localStorage.getItem('jwtToken');
                 const response = await UserService.getBookmark(token);
                 console.log(response);
@@ -60,10 +67,10 @@ const Bookmark = () => {
             mt="80px"
             sx={{
                 width: "1000px",
-                margin: '80px auto 0', // центрування по горизонталі, зберігає mt="80px"
+                margin: '80px auto 0',
                 border: '1px solid #ddd',
                 borderRadius: '8px',
-                backgroundColor: '#ffffff',
+                backgroundColor: '#FFFFFF',
                 padding: '20px',
             }}
         >

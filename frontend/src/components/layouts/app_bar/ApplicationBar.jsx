@@ -33,16 +33,17 @@ export default function ApplicationBar() {
                         text={"Users"}
                     />
 
-                    <AccountItemButton
-                        link={"/schedule"}
-                        text={"Schedule"}
-                    />
-
                     {role === "STUDENT" ? (
-                        <AccountItemButton
-                            link={"/bookmark"}
-                            text={"Bookmark"}
-                        />
+                        <>
+                            <AccountItemButton
+                                link={"/schedule"}
+                                text={"Schedule"}
+                            />
+                            <AccountItemButton
+                                link={"/bookmark"}
+                                text={"Bookmark"}
+                            />
+                        </>
                     ) : (role === "CHIEF_TEACHER" && (
                         <AccountItemButton
                             link={"/admin_panel"}

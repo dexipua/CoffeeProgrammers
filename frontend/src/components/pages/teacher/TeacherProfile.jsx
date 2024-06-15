@@ -95,9 +95,10 @@ const TeacherProfile = () => {
                                 <Typography mt="10px" mb="10px" variant="h6" component="h3">Students</Typography>
                                 <Box
                                     sx={{
-                                        width: '100%',
+                                        width: '95%',
                                         display: 'flex',
                                         justifyContent: 'center',
+
                                     }}
                                 >
                                     <StudentTable students={studentsOfThisTeacher}/>

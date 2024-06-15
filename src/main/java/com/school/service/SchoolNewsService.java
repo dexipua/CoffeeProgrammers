@@ -6,6 +6,9 @@ import java.util.List;
 
 public interface SchoolNewsService {
     SchoolNews create(SchoolNews news);
+
+    SchoolNews update(SchoolNews news);
+
     SchoolNews findById(long id);
     void delete(long id);
     List<SchoolNews> getAllSchoolNews();

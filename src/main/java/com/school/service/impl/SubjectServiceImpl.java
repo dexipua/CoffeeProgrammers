@@ -104,7 +104,7 @@ public class SubjectServiceImpl implements SubjectService {
         }
 
         userNewsService.create(
-                new UserNews("You have become a teacher of the lesson: " + subject.getName(),
+                new UserNews("You have become a teacher of the subject: " + subject.getName(),
                         teacher.getUser()
                 )
         );
@@ -120,7 +120,7 @@ public class SubjectServiceImpl implements SubjectService {
         Subject subject = findById(subjectId);
 
         userNewsService.create(
-                new UserNews("You have been removed from a lesson: " + subject.getName(),
+                new UserNews("You have been removed from a subject: " + subject.getName(),
                         subject.getTeacher().getUser()
                 )
         );
@@ -143,7 +143,7 @@ public class SubjectServiceImpl implements SubjectService {
 
         student.getSubjects().add(subject);
 
-        userNewsService.create(new UserNews("You have been added to subject " + subject.getName(), student.getUser()));
+        userNewsService.create(new UserNews("You have been added to subject: " + subject.getName(), student.getUser()));
         studentRepository.save(student);
     }
 

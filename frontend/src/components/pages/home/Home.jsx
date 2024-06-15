@@ -11,7 +11,7 @@ import StudentService from "../../../services/StudentService";
 
 
 const Home = () => {
-    const [teachers, setTeachers] = useState([]);
+    const [users, setUsers] = useState([]);
     const [subjects, setSubjects] = useState([]);
     const [studentCount, setStudentCount] = useState(0);
     const [loading, setLoading] = useState(true);
@@ -29,7 +29,7 @@ const Home = () => {
                 ) : (
                     await StudentService.getByTeacherId(roleId, token)
                 )
-                setTeachers(response);
+                setUsers(response);
             } catch (error) {
                 console.error('Error fetching teachers response:', error);
             }
@@ -118,7 +118,13 @@ const Home = () => {
                                 justifyContent: 'center',
                             }}
                         >
-                            <SubjectWithTeacherList subjects={subjects} />
+                            {subjects.length > 0 ? (
+                                <SubjectWithTeacherList subjects={subjects} />
+                            ) : (
+                                <Typography margin="20px" variant="body1" component="h3">
+                                    You don't have any subjects yet
+                                </Typography>
+                            )}
                         </Box>
                     </Box>
 
@@ -143,9 +149,17 @@ const Home = () => {
                                 justifyContent: 'center',
                             }}
                         >
-                            <UserList
-                                role={role}
-                                teachers={teachers} />
+                            {users.length > 0 ? (
+                                <UserList
+                                    role={role}
+                                    teachers={users}
+                                />
+                            ) : (
+                                <Typography margin="20px" variant="body1" component="h3">
+                                    You don't have any   {role === "STUDENT" ? "teachers" : "students"} yet
+                                </Typography>
+                            )}
+
                         </Box>
                     </Box>
                 </Box>

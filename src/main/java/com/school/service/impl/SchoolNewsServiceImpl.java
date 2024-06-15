@@ -27,6 +27,13 @@ public class SchoolNewsServiceImpl implements SchoolNewsService {
     }
 
     @Override
+    public SchoolNews update(SchoolNews news) {
+        SchoolNews schoolNews = findById(news.getId());
+        schoolNews.setText(news.getText());
+        schoolNews.setTime(news.getTime());
+        return schoolNewsRepository.save(schoolNews);
+    }
+    @Override
     public SchoolNews findById(long id) {
         return schoolNewsRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("SchoolNews with id " + id + " not found"));
     }

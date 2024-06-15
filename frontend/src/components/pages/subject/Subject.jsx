@@ -165,7 +165,9 @@ const Subject = () => {
             <Box display="flex" flexDirection="column" alignItems="center">
                 <SubjectTabs
                     tab2={
-                        <SubjectSchedule subjectId={subject.id}/>
+                        <SubjectSchedule
+                            isTeacherOfThisSubject={isTeacherOfThisSubject}
+                            subjectId={subject.id}/>
                     }
                     tab1={
                         <StudentsBox

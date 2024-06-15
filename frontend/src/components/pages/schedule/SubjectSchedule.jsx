@@ -7,7 +7,7 @@ import Loading from "../../layouts/Loading";
 import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import ErrorSnackbar from "../../layouts/ErrorSnackbar";
 
-const SubjectSchedule = ({subjectId}) => {
+const SubjectSchedule = ({subjectId, isTeacherOfThisSubject}) => {
     const [tableData, setTableData] = useState({});
     const [loading, setLoading] = useState(true);
 
@@ -15,7 +15,6 @@ const SubjectSchedule = ({subjectId}) => {
     const [showSnackbar, setShowSnackbar] = useState(false);
 
     const token = localStorage.getItem('jwtToken');
-    const role = localStorage.getItem('role');
     const roleId = localStorage.getItem('roleId');
 
     useEffect(() => {
@@ -98,7 +97,7 @@ const SubjectSchedule = ({subjectId}) => {
         scheduleData.forEach(item => {
             const day = item.dayOfWeek;
             const lesson = item.numOfLesson;
-            const subject = role === "STUDENT" ? (
+            const subjectView = !isTeacherOfThisSubject ? (
                 item.id && (
                     <EventAvailableIcon sx={{
                         color: "#5B5B5BEF",
@@ -119,7 +118,7 @@ const SubjectSchedule = ({subjectId}) => {
                 newTableData[lesson] = {};
             }
 
-            newTableData[lesson][day] = subject;
+            newTableData[lesson][day] = subjectView;
         });
 
         setTableData(newTableData);

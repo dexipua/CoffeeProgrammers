@@ -13,7 +13,7 @@ const SchoolNewsBox = ({role, newsId, text, time, updateFunction, deleteFunction
                 padding: '16px',
                 marginBottom: '6px',
                 marginTop: '6px',
-                backgroundColor: '#ffffff'
+                backgroundColor: '#FFF'
             }}
         >
             <Typography variant="body1" component="h3" gutterBottom>

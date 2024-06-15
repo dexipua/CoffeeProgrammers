@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
-import AddIcon from '@mui/icons-material/Add';
 import IconButton from "@mui/material/IconButton";
 import SchoolNewsCreateDialog from "./SchoolNewsCreateDialog";
+import AddBoxIcon from '@mui/icons-material/AddBox';
 
 function CreateNewsAddButton({onCreate}) {
     const [open, setOpen] = useState(false);
@@ -19,17 +19,14 @@ function CreateNewsAddButton({onCreate}) {
             <IconButton
                 aria-label="Create news"
                 onClick={handleOpenDialog}
+                color={"default"}
                 sx={{
-                    color: 'green',
+                    color: '#1c1eab',
                     minWidth: 'unset',
-                    width: 'auto',
-                    p: 0,
-                    '&:hover': {
-                        color: ''
-                    }
+                    width: 'auto'
                 }}
             >
-                <AddIcon sx={{ fontSize: 35 }} />
+                <AddBoxIcon sx={{ fontSize: 35 }} />
             </IconButton>
             <SchoolNewsCreateDialog
                 open={open}

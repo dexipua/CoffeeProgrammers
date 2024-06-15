@@ -10,7 +10,7 @@ const UserNewsBox = ({ text, time}) => {
                 padding: '16px',
                 marginBottom: '6px',
                 marginTop: '6px',
-                backgroundColor: '#ffffff'
+                backgroundColor: '#f5f5f5'
             }}
         >
 

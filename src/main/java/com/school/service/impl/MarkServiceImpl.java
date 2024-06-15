@@ -55,7 +55,7 @@ public class MarkServiceImpl implements MarkService {
         Mark mark = MarkRequest.toMark(markRequest);
         mark.setSubject(subjectService.findById(subjectId));
         mark.setStudent(studentService.findById(studentId));
-        userNewsService.create(new UserNews("You have earn mark " + mark.getValue() + "in subject " + subject.getName() , student.getUser()));
+        userNewsService.create(new UserNews("You got a mark " + mark.getValue() + " in the subject " + subject.getName() , student.getUser()));
         return markRepository.save(mark);
     }
 
@@ -70,7 +70,7 @@ public class MarkServiceImpl implements MarkService {
         Mark markToUpdate = findById(markToUpdateId);
         markToUpdate.setValue(markRequest.getValue());
         markToUpdate.setTime(LocalDateTime.now());
-        userNewsService.create(new UserNews("Your mark " + markToUpdate.getValue() + "in subject " +
+        userNewsService.create(new UserNews("Your mark " + markToUpdate.getValue() + "in the subject " +
                 markToUpdate.getSubject().getName() + "have been updated",
                 markToUpdate.getStudent().getUser()));
         return markRepository.save(markToUpdate);

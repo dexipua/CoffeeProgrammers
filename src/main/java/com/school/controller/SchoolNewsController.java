@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +27,20 @@ public class SchoolNewsController {
     public SchoolNewsResponse create(@Valid @RequestBody SchoolNewsRequest schoolNewsRequest) {
         SchoolNews schoolNews = SchoolNewsRequest.toSchoolNews(schoolNewsRequest);
         return new SchoolNewsResponse(schoolNewsService.create(schoolNews));
+    }
+
+    @PutMapping("/update/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public SchoolNewsResponse updateSchoolNews(
+            @PathVariable long id,
+            @Valid @RequestBody SchoolNewsRequest schoolNewsRequest) { //TODO
+        SchoolNews newsToUpdate = new SchoolNews();
+        newsToUpdate.setId(id);
+        newsToUpdate.setText(schoolNewsRequest.getText());
+        newsToUpdate.setTime(LocalDateTime.now());
+
+        SchoolNews updatedNews = schoolNewsService.update(newsToUpdate);
+        return new SchoolNewsResponse(updatedNews);
     }
 
     @GetMapping("/getAll")

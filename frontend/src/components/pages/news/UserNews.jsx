@@ -3,6 +3,7 @@ import UserNewsService from '../../../services/UserNewsService';
 import ApplicationBar from "../../layouts/app_bar/ApplicationBar";
 import UserNewsBox from '../../common/news/user_news/UserNewsBox';
 import {Box, Container, Grid} from '@mui/material';
+import Typography from "@mui/material/Typography";
 
 const UserNews = () => {
     const [newsList, setNewsList] = useState([]);
@@ -24,7 +25,7 @@ const UserNews = () => {
 
     return (
         <Container>
-            <ApplicationBar />
+            <ApplicationBar/>
             <Box
                 display="flex"
                 flexDirection="column"
@@ -36,17 +37,22 @@ const UserNews = () => {
                         border: '1px solid #ccc',
                         borderRadius: '8px',
                         padding: '16px',
-                        backgroundColor: '#f8f8f8',
-                        width: '100%',
+                        backgroundColor: '#fff',
+                        width: '90%',
+                        minWidth: "700px",
                         maxWidth: '800px',
                     }}
                 >
                     <Grid container justifyContent="center">
-                        {newsList.map((newsItem) => (
+                        {newsList.length > 0 ? newsList.map((newsItem) => (
                             <Grid item xs={12} key={newsItem.id}>
-                                <UserNewsBox text={newsItem.text} time={newsItem.time} />
+                                <UserNewsBox text={newsItem.text} time={newsItem.time}/>
                             </Grid>
-                        ))}
+                        )) : (
+                            <Typography variant="body1" component="h3" gutterBottom>
+                                No news at this time
+                            </Typography>
+                        )}
                     </Grid>
                 </Box>
             </Box>

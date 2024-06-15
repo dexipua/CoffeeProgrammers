@@ -21,7 +21,9 @@ const NotFound = () => {
                 Page Not Found
             </Typography>
             <Link to="/home" style={{ textDecoration: 'none', color: '#1976d2' }}>
-                Go to Home
+                <Typography variant="body1" component="h2" gutterBottom>
+                    Go to home
+                </Typography>
             </Link>
         </Box>
     );
