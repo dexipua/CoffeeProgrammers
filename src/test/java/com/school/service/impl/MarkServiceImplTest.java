@@ -18,7 +18,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -185,6 +188,7 @@ public class MarkServiceImplTest {
         // given
         subject1.setStudents(Set.of(student1));
         subject2.setStudents(Set.of(student1));
+        student1.setSubjects(Set.of(subject1, subject2));
 
         mark1.setStudent(student1);
         mark1.setSubject(subject1);
@@ -192,15 +196,14 @@ public class MarkServiceImplTest {
         mark2.setStudent(student1);
         mark2.setSubject(subject2);
 
-        HashMap<Subject, List<Mark>> map = new HashMap<>();
-        map.put(subject1, List.of(mark1));
-        map.put(subject2,  List.of(mark2));
         // when
         when(markRepository.findAllByStudent_Id(student1.getId())).thenReturn(List.of(mark1, mark2));
         when(studentService.findById(student1.getId())).thenReturn(student1);
+
         // then
-        assertEquals(map, markService.findAllByStudentId(student1.getId()));
-        //verify(markRepository, times(1)).findAllByStudent_Id(student1.getId());
+        assertEquals(markService.findAllByStudentId(student1.getId()), Map.of(subject1, List.of(mark1), subject2, List.of(mark2)));
+
+        verify(markRepository, times(1)).findAllByStudent_Id(student1.getId());
     }
 
     @Test
