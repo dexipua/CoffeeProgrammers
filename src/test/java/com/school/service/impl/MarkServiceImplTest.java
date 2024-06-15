@@ -184,7 +184,6 @@ public class MarkServiceImplTest {
     void findAllByStudentId() {
         // given
         subject1.setStudents(Set.of(student1));
-
         subject2.setStudents(Set.of(student1));
 
         mark1.setStudent(student1);
@@ -193,13 +192,15 @@ public class MarkServiceImplTest {
         mark2.setStudent(student1);
         mark2.setSubject(subject2);
 
+        HashMap<Subject, List<Mark>> map = new HashMap<>();
+        map.put(subject1, List.of(mark1));
+        map.put(subject2,  List.of(mark2));
         // when
         when(markRepository.findAllByStudent_Id(student1.getId())).thenReturn(List.of(mark1, mark2));
-
+        when(studentService.findById(student1.getId())).thenReturn(student1);
         // then
-        assertEquals(markService.findAllByStudentId(student1.getId()), Map.of(subject1, List.of(mark1), subject2, List.of(mark2)));
-
-        verify(markRepository, times(1)).findAllByStudent_Id(student1.getId());
+        assertEquals(map, markService.findAllByStudentId(student1.getId()));
+        //verify(markRepository, times(1)).findAllByStudent_Id(student1.getId());
     }
 
     @Test

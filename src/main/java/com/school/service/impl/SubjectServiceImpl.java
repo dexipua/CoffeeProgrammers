@@ -95,10 +95,9 @@ public class SubjectServiceImpl implements SubjectService {
             subjectDates.addAll(subjectDateRepository.findAllBySubject_Id(subject1.getId()));
         }
         for(SubjectDate subjectDate : subjectDates) {
-            if(!subjectDateRepository.findAllByDayOfWeekAndNumOfLessonAndSubject_Teacher(
+            if(!subjectDateRepository.findAllByDayOfWeekAndNumOfLesson(
                     subjectDate.getDayOfWeek(),
-                    subjectDate.getNumOfLesson(),
-                    teacher).isEmpty()){
+                    subjectDate.getNumOfLesson()).isEmpty()){
                 throw new UnsupportedOperationException("Can't set teacher for this subject because dates of lesson are same");
             }
         }
