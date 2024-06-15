@@ -236,7 +236,7 @@ class StudentControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        List<StudentResponseSimple> expectedResponseBody = List.of(new StudentResponseSimple(student));
+        List<StudentResponseWithEmail> expectedResponseBody = List.of(new StudentResponseWithEmail(student));
         String actualResponseBody = mvcResult.getResponse().getContentAsString();
 
         assertThat(actualResponseBody).isEqualToIgnoringWhitespace(
@@ -266,8 +266,6 @@ class StudentControllerTest {
     void findAllBySubjectsIdIsNot() throws Exception{
         student.setSubjects(new HashSet<>(Set.of(subject)));
         student2.setSubjects(new HashSet<>(Set.of(subject2)));
-        List<Student> students = List.of(student, student2);
-
 
         when(studentService.findAllBySubjectsIdIsNot(subject2.getId())).thenReturn(List.of(student));
 
@@ -278,7 +276,7 @@ class StudentControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        List<StudentResponseWithEmail> expectedResponseBody = new ArrayList<>(Arrays.asList(new StudentResponseWithEmail(student)));
+        List<StudentResponseWithEmail> expectedResponseBody = new ArrayList<>(List.of(new StudentResponseWithEmail(student)));
         String actualResponseBody = mvcResult.getResponse().getContentAsString();
 
         assertThat(actualResponseBody).isEqualToIgnoringWhitespace(
