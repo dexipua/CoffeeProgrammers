@@ -33,9 +33,9 @@ class SubjectDateRepositoryTest {
         student.setSubjects(Set.of(subject));
         subjectRepository.save(subject);
         studentRepository.save(student);
-        SubjectDate subjectDate = new SubjectDate(subject, DayOfWeek.MONDAY, 1);
-        SubjectDate subjectDate2 = new SubjectDate(subject, DayOfWeek.SUNDAY, 2);
-        SubjectDate subjectDate3 = new SubjectDate(subject, DayOfWeek.SATURDAY, 3);
+        SubjectDate subjectDate = new SubjectDate(subject, DayOfWeek.MONDAY, SubjectDate.NumOfLesson.FIRST);
+        SubjectDate subjectDate2 = new SubjectDate(subject, DayOfWeek.SUNDAY, SubjectDate.NumOfLesson.SECOND);
+        SubjectDate subjectDate3 = new SubjectDate(subject, DayOfWeek.SATURDAY, SubjectDate.NumOfLesson.THIRD);
         subjectDateRepository.save(subjectDate);
         subjectDateRepository.save(subjectDate2);
         subjectDateRepository.save(subjectDate3);

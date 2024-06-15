@@ -15,8 +15,8 @@ import TablePagination from "@mui/material/TablePagination";
 import TablePaginationActions from "../../../layouts/TablePaginationActions";
 import UserSearchBar from "../../../layouts/UserSearchBar";
 import Typography from "@mui/material/Typography";
-import Snackbar from '@mui/material/Snackbar'
 import {Link} from "react-router-dom";
+import ErrorSnackbar from "../../../layouts/ErrorSnackbar";
 
 const DeleteUser = () => {
     const [role, setRole] = useState('STUDENT');
@@ -126,7 +126,7 @@ const DeleteUser = () => {
                         <TableCell align="center" style={cellBorderStyle}>
                             <Link to={
                                 role === "STUDENT" ? `/students/${user.id}` : `/teachers/${user.id}`}
-                                  style={{color: 'inherit' }}
+                                  style={{color: 'inherit'}}
                             >
                                 {user.firstName} {user.lastName}
                             </Link>
@@ -247,11 +247,10 @@ const DeleteUser = () => {
                     ActionsComponent={TablePaginationActions}
                 />
             </Box>
-            <Snackbar
+            <ErrorSnackbar
                 open={showSnackbar}
-                autoHideDuration={3000}
-                onClose={() => {setShowSnackbar(false)}}
-                message="You can't delete the chief teacher"
+                onClose={() => setShowSnackbar(false)}
+                message={"You can't delete the chief teacher"}
             />
         </>
     );

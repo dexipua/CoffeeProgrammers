@@ -2,6 +2,7 @@ import React from "react";
 import {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow} from "@mui/material";
 import TablePaginationActions from "../../layouts/TablePaginationActions";
 import {Link} from "react-router-dom";
+import Box from "@mui/material/Box";
 
 function StudentTable({students}) {
     const [page, setPage] = React.useState(0);
@@ -74,9 +75,9 @@ function StudentTable({students}) {
     };
 
     return (
-        <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+        <Box width={"100%"} style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
             <TableContainer component={Paper}>
-                <Table sx={{minWidth: 700}} aria-label="custom pagination table">
+                <Table aria-label="custom pagination table">
                     <TableHead>{renderHead()}</TableHead>
                     <TableBody>{renderBody()}</TableBody>
                 </Table>
@@ -93,7 +94,7 @@ function StudentTable({students}) {
                     ActionsComponent={TablePaginationActions}
                 />
             </div>
-        </div>
+        </Box>
     );
 }
 
