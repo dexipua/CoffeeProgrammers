@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,24 +23,11 @@ public class SchoolNewsController {
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER')")
-    public SchoolNewsResponse create(@Valid @RequestBody SchoolNewsRequest schoolNewsRequest) { //TODO
+    public SchoolNewsResponse create(@Valid @RequestBody SchoolNewsRequest schoolNewsRequest) {
         SchoolNews schoolNews = SchoolNewsRequest.toSchoolNews(schoolNewsRequest);
         return new SchoolNewsResponse(schoolNewsService.create(schoolNews));
     }
 
-    @PutMapping("/update/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public SchoolNewsResponse updateSchoolNews(
-            @PathVariable long id,
-            @Valid @RequestBody SchoolNewsRequest schoolNewsRequest) { //TODO
-        SchoolNews newsToUpdate = new SchoolNews();
-        newsToUpdate.setId(id);
-        newsToUpdate.setText(schoolNewsRequest.getText());
-        newsToUpdate.setTime(LocalDateTime.now());
-
-        SchoolNews updatedNews = schoolNewsService.update(newsToUpdate);
-        return new SchoolNewsResponse(updatedNews);
-    }
     @GetMapping("/getAll")
     @ResponseStatus(HttpStatus.OK)
     public List<SchoolNewsResponse> getAll() {
@@ -58,11 +44,5 @@ public class SchoolNewsController {
     @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER')")
     public void deleteSchoolNews(@PathVariable long school_news_id) {
         schoolNewsService.delete(school_news_id);
-    }
-
-    @GetMapping("/getById/{school_news_id}")
-    @ResponseStatus(HttpStatus.OK)
-    public SchoolNewsResponse getById(@PathVariable long school_news_id) {
-        return new SchoolNewsResponse(schoolNewsService.findById(school_news_id));
     }
 }

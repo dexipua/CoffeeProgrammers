@@ -2,11 +2,9 @@ package com.school.controller;
 
 import com.school.dto.mark.MarkRequest;
 import com.school.dto.mark.MarkResponseAll;
-import com.school.dto.mark.MarkResponseForStudent;
 import com.school.dto.mark.MarkResponseForSubject;
 import com.school.models.Mark;
 import com.school.models.Student;
-import com.school.models.Subject;
 import com.school.service.impl.MarkServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -37,17 +35,6 @@ public class MarkController {
         return new MarkResponseAll(markService.create(markRequest, subjectId, studentId));
     }
 
-    @GetMapping("/getById/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize(
-            "@userSecurity.checkUserByMarkByStudent(#auth, #id) or " +
-                    "@userSecurity.checkUserByMarkByTeacher(#auth, #id)")
-    public MarkResponseAll getById(
-            @PathVariable long id,
-            Authentication auth) {
-        return new MarkResponseAll(markService.findById(id));
-    }
-
     @PutMapping("/update/{id}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("@userSecurity.checkUserByMarkByTeacher(#auth, #id)")
@@ -67,18 +54,6 @@ public class MarkController {
             Authentication auth
     ) {
         markService.delete(id);
-    }
-
-    @GetMapping("/student/{student_id}")
-    @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("@userSecurity.checkUserByStudent(#auth, #student_id)")
-    public List<MarkResponseForStudent> getAllByStudentId(
-            @PathVariable long student_id, Authentication auth
-    ) {
-        HashMap<Subject, List<Mark>> marks = markService.findAllByStudentId(student_id);
-        return marks.entrySet().stream()
-                .map(entry -> new MarkResponseForStudent(entry.getKey(), entry.getValue()))
-                .collect(Collectors.toList());
     }
 
     @GetMapping("/getAllBySubjectId/{subject_id}")

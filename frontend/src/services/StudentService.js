@@ -73,23 +73,6 @@ class StudentService {
         }
     }
 
-    async getBySubjectName(subjectName, token) {
-        try {
-            const response = await axios.get(`${API_URL}/getAllBySubjectName`, {
-                params: {
-                    subject_name: subjectName
-                },
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
-            return response.data;
-        } catch (error) {
-            console.error('Error getBySubjectName:', error);
-            throw error;
-        }
-    }
-
     async getByTeacherId(teacherId, token) {
         try {
             const response = await axios.get(`${API_URL}/getAllByTeacherId/${teacherId}`, {

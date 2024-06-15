@@ -8,7 +8,6 @@ import java.util.TreeMap;
 
 public interface SubjectDateService {
     SubjectDate create(SubjectDate subjectDate);
-    SubjectDate update(SubjectDate subjectDate);
     void delete(SubjectDate subjectDate);
     void deleteAllBySubjectId(long subjectId);
     SubjectDate findById(long id);

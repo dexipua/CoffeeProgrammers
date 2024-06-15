@@ -38,30 +38,12 @@ public class SubjectDateController {
                 SubjectDateRequest.toSubject(subjectDateRequest, subjectService.findById(subjectId))));
     }
 
-    @PutMapping("/update/{subject_date_id}")
-    @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER')")
-    public SubjectDateResponse updateSubjectDate(@Valid @RequestBody SubjectDateRequest subjectDateRequest,
-                                                 @PathVariable("subject_date_id") long subjectDateId) {
-        long subjectId = subjectDateService.findById(subjectDateId).getId();
-        SubjectDate subjectDate = SubjectDateRequest.toSubject(subjectDateRequest,
-                subjectService.findById(subjectId));
-        subjectDate.setId(subjectDateId);
-        return new SubjectDateResponse(subjectDateService.update(subjectDate));
-    }
-
 
     @DeleteMapping("/delete/{subject_date_id}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER')")
     public void deleteSubjectDate(@PathVariable("subject_date_id") long subjectDateId) {
         subjectDateService.delete(subjectDateService.findById(subjectDateId));
-    }
-
-    @GetMapping("/getById/{subject_date_id}")
-    @ResponseStatus(HttpStatus.OK)
-    public SubjectDateResponse getById(@PathVariable("subject_date_id") long subjectDateId) {
-        return new SubjectDateResponse(subjectDateService.findById(subjectDateId));
     }
 
     @GetMapping("/getAllByStudent/{student_id}")

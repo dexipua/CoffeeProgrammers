@@ -17,20 +17,6 @@ class SubjectDateService {
         }
     }
 
-    async update(subjectDateId, subjectDateRequest, token) {
-        try {
-            const response = await axios.put(`${API_URL}/update/${subjectDateId}`, subjectDateRequest, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
-            return response.data;
-        } catch (error) {
-            console.error('Error update:', error);
-            throw error;
-        }
-    }
-
     async delete(subjectDateId, token) {
         try {
             await axios.delete(`${API_URL}/delete/${subjectDateId}`, {
@@ -40,20 +26,6 @@ class SubjectDateService {
             });
         } catch (error) {
             console.error('Error delete:', error);
-            throw error;
-        }
-    }
-
-    async getById(subjectDateId, token) {
-        try {
-            const response = await axios.get(`${API_URL}/getById/${subjectDateId}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
-            return response.data;
-        } catch (error) {
-            console.error('Error getById:', error);
             throw error;
         }
     }

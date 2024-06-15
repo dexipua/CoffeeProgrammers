@@ -49,32 +49,6 @@ public class SubjectDateServiceImpl implements SubjectDateService {
     }
 
     @Override
-    public SubjectDate update(SubjectDate subjectDate) {
-        if(!subjectDateRepository.findAllByDayOfWeekAndNumOfLessonAndSubject_TeacherAndIdIsNot(
-                subjectDate.getDayOfWeek(),
-                subjectDate.getNumOfLesson(),
-                subjectDate.getSubject().getTeacher(),
-                subjectDate.getId()).isEmpty()){
-            throw new EntityExistsException("Subject time with the same option already exists(TEACHER)");
-        }
-        for (Student student : subjectDate.getSubject().getStudents()){
-            if (!subjectDateRepository.findAllByDayOfWeekAndNumOfLessonAndSubject_StudentsContainsAndIdIsNot(
-                    subjectDate.getDayOfWeek(),
-                    subjectDate.getNumOfLesson(),
-                    student,
-                    subjectDate.getId()
-            ).isEmpty()){
-                throw new EntityExistsException("Subject time with the same option already exists(STUDENT)");
-            }
-        }
-        for(Student student : subjectDate.getSubject().getStudents()) {
-            userNewsService.create(new UserNews(subjectDate.getSubject().getName() + "have been reset at time "
-                    + subjectDate.getDayOfWeek().toString() + " " + subjectDate.getNumOfLesson().toString(), student.getUser()));
-        }
-        return subjectDateRepository.save(subjectDate);
-    }
-
-    @Override
     public void delete(SubjectDate subjectDate) {
         findById(subjectDate.getId());
         subjectDateRepository.delete(subjectDate);

@@ -62,16 +62,6 @@ public class TeacherController {
                 studentService.findStudentsByTeacherId(teacherId));
     }
 
-    @GetMapping("/getAllBySubjectName/")
-    @ResponseStatus(HttpStatus.OK)
-    public List<TeacherResponseSimple> getBySubjectName(
-           @RequestParam("subject_name")  String subjectName) {
-        List<Teacher> teachers = teacherService.findBySubjectName(subjectName);
-        return teachers.stream()
-                .map(TeacherResponseSimple::new)
-                .collect(Collectors.toList());
-    }
-
     @DeleteMapping("/delete/{teacher_id}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_CHIEF_TEACHER')")

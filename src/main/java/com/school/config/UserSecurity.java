@@ -31,9 +31,6 @@ public class UserSecurity {
     public boolean checkUserBySubject(Authentication authentication, long subjectId){
         return checkUser(authentication, subjectService.findById(subjectId).getTeacher().getUser().getId());
     }
-    public boolean checkUserByMarkByStudent(Authentication authentication, long markId){
-        return checkUser(authentication, markService.findById(markId).getStudent().getUser().getId());
-    }
     public boolean checkUserByMarkByTeacher(Authentication authentication, long markId){
         return checkUser(authentication, markService.findById(markId).getSubject().getTeacher().getUser().getId());
     }

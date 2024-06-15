@@ -18,20 +18,6 @@ class MarkService {
         }
     }
 
-    async getById(id, token) {
-        try {
-            const response = await axios.get(`${API_URL}/getById/${id}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
-            return response.data;
-        } catch (error) {
-            console.error('Error getByMarkId:', error);
-            throw error;
-        }
-    }
-
     async update(id, markRequest, token) {
         try {
             const response = await axios.put(`${API_URL}/update/${id}`, markRequest, {
@@ -55,20 +41,6 @@ class MarkService {
             });
         } catch (error) {
             console.error('Error deleteMark:', error);
-            throw error;
-        }
-    }
-
-    async getByStudentId(studentId, token) {
-        try {
-            const response = await axios.get(`${API_URL}/getAllByStudentId/${studentId}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
-            return response.data;
-        } catch (error) {
-            console.error('Error getById:', error);
             throw error;
         }
     }

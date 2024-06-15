@@ -78,17 +78,6 @@ public class StudentController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/getAllBySubjectName/")
-    @ResponseStatus(HttpStatus.OK)
-    public List<StudentResponseSimple> getBySubjectName(
-            @RequestParam("subject_name") String subjectName
-    ) {
-        List<Student> students = studentService.findBySubjectName(subjectName);
-        return students.stream()
-                .map(StudentResponseSimple::new)
-                .collect(Collectors.toList());
-    }
-
     @GetMapping("/getAllByTeacherId/{teacher_id}")
     @ResponseStatus(HttpStatus.OK)
     public List<StudentResponseWithEmail> getByTeacherId(@PathVariable("teacher_id") long teacherId) {

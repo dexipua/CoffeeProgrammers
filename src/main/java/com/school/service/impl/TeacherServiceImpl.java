@@ -66,11 +66,6 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public List<Teacher> findBySubjectName(String subjectName) {
-        return teacherRepository.findBySubjectNameIgnoreCase(subjectName);
-    }
-
-    @Override
     public List<Teacher> findAllByUser_FirstNameAndAndUser_LastName(String firstName, String lastName) {
         return teacherRepository.findAllByUser_FirstNameContainingIgnoreCaseAndUser_LastNameContainingIgnoreCase(firstName, lastName);
     }

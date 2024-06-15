@@ -12,7 +12,6 @@ public interface StudentService {
     Student update(long studentToUpdateId, UserRequestUpdate userRequest);
     void deleteById(long id);
     List<Student> findAllOrderedByName();
-    List<Student> findBySubjectName(String subName);
     List<Student> findStudentsByTeacherId(long teacherId);
 
     List<Student> findAllByUser_FirstNameAndUser_LastName(

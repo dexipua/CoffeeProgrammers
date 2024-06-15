@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="SqlDialectMappings">
-    <file url="file://$PROJECT_DIR$/src/main/resources/db/migrations/V00001_base.sql" dialect="H2" />
     <file url="file://$PROJECT_DIR$/src/main/resources/db/migrations/V00002__create_table_roles.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/src/main/resources/db/migrations/V00008__insert_information_in_roles_table.sql" dialect="PostgreSQL" />
   </component>
