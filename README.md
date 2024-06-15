@@ -110,7 +110,7 @@ To run the School Management System:
 
 ## Contribution Guidelines
 
-1. Work the repository.
+1. Fork the repository.
 2. Create a new branch for your feature or bugfix:
 
    ```git checkout -b feature-name```
