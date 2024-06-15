@@ -187,9 +187,7 @@ public class MarkServiceImplTest {
     void findAllByStudentId() {
         // given
         subject1.setStudents(Set.of(student1));
-
         subject2.setStudents(Set.of(student1));
-
         student1.setSubjects(Set.of(subject1, subject2));
 
         mark1.setStudent(student1);
@@ -221,7 +219,6 @@ public class MarkServiceImplTest {
 
         // when
         when(markRepository.findAllBySubject_Id(subject1.getId())).thenReturn(List.of(mark1, mark2));
-
 
         // then
         assertEquals(markService.findAllBySubjectId(subject1.getId()), Map.of(student1, List.of(mark1), student2, List.of(mark2)));
