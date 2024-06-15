@@ -16,8 +16,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,7 +43,7 @@ public class MarkServiceImpl implements MarkService {
         markRepository.deleteAllBySubjectId(id);
     }
 
-    @Override //TODO
+    @Override
     public Mark create(
             MarkRequest markRequest,
             long subjectId,
@@ -83,16 +85,18 @@ public class MarkServiceImpl implements MarkService {
     }
 
     @Override
-    public HashMap<Subject, List<Mark>> findAllByStudentId(long studentId) { //TODO: empty
+    public HashMap<Subject, List<Mark>> findAllByStudentId(long studentId) {
         studentService.findById(studentId);
-
+        Set<Subject> subjects = studentService.findById(studentId).getSubjects();
         List<Mark> marks = markRepository.findAllByStudent_Id(studentId);
-        return marks.stream()
-                .collect(Collectors.groupingBy(
-                        Mark::getSubject,
-                        HashMap::new,
-                        Collectors.toList())
-                );
+        HashMap<Subject, List<Mark>> map = new HashMap<>();
+        List<Mark> temp;
+        for (Subject subject : subjects) {
+            temp = map.getOrDefault(subject, new ArrayList<>());
+            temp.addAll(marks.stream().filter(mark -> mark.getSubject().getId() == subject.getId()).toList());
+            map.put(subject, temp);
+        }
+        return map;
     }
 
     @Override
