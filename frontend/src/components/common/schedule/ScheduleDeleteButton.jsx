@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {Button} from '@mui/material';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import EventBusyIcon from '@mui/icons-material/EventBusy';
-import ConfirmDialog from "../layouts/ConfirmDialog";
+import ConfirmDialog from "../../layouts/ConfirmDialog";
 
 const ScheduleDeleteButton = ({onDelete}) => {
     const [hovered, setHovered] = useState(false);
@@ -27,7 +27,7 @@ const ScheduleDeleteButton = ({onDelete}) => {
                 onClose={() => {
                     setOpenDialog(false)
                 }}
-                text={"Do you really want to delete this date?"}
+                text={"You really want to delete the subject from this date?"}
                 someFunction={onDelete}
             />
         </>

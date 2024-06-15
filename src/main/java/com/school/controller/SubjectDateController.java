@@ -33,6 +33,7 @@ public class SubjectDateController {
     public SubjectDateResponse createSubjectDate(
             @Valid @RequestBody SubjectDateRequest subjectDateRequest,
             @PathVariable("subject_id") long subjectId) {
+
         return new SubjectDateResponse(subjectDateService.create(
                 SubjectDateRequest.toSubject(subjectDateRequest, subjectService.findById(subjectId))));
     }
@@ -84,7 +85,7 @@ public class SubjectDateController {
     @GetMapping("/getAllBySubject/{subject_id}")
     @ResponseStatus(HttpStatus.OK)
     public List<SubjectDateResponseBySubjectId> getAllBySubjectId(@PathVariable("subject_id") int subject_id) {
-        TreeMap<DayOfWeek, TreeMap<SubjectDate.NumOfLesson, Boolean>> treeMap =
+        TreeMap<DayOfWeek, TreeMap<SubjectDate.NumOfLesson, Long>> treeMap =
                 subjectDateService.findAllBySubject_Id(subject_id);
         List<SubjectDateResponseBySubjectId> subjectDateResponseBySubjectIds = new ArrayList<>();
         treeMap.forEach((key, value) -> value.entrySet().stream()

@@ -7,14 +7,13 @@ import java.time.DayOfWeek;
 
 @Data
 public class SubjectDateResponseBySubjectId {
-    private long id;
+    private Long id;
     private String dayOfWeek;
     private String numOfLesson;
-    private boolean isPresent;
-    public SubjectDateResponseBySubjectId(DayOfWeek dayOfWeek, SubjectDate.NumOfLesson numOfLesson, boolean isPresent) {
+    public SubjectDateResponseBySubjectId(DayOfWeek dayOfWeek, SubjectDate.NumOfLesson numOfLesson, Long id) {
+        this.id = id;
         this.dayOfWeek = dayOfWeek.toString();
         this.numOfLesson = numOfLesson.toString();
 
-        this.isPresent = isPresent;
     }
 }
