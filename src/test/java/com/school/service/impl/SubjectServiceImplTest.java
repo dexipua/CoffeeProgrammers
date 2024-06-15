@@ -1,11 +1,9 @@
 package com.school.service.impl;
 
 import com.school.dto.subject.SubjectRequest;
-import com.school.models.Student;
-import com.school.models.Subject;
-import com.school.models.Teacher;
-import com.school.models.User;
+import com.school.models.*;
 import com.school.repositories.StudentRepository;
+import com.school.repositories.SubjectDateRepository;
 import com.school.repositories.SubjectRepository;
 import com.school.service.StudentService;
 import com.school.service.TeacherService;
@@ -20,6 +18,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.DayOfWeek;
 import java.util.*;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -43,6 +42,8 @@ class SubjectServiceImplTest {
 
     @InjectMocks
     private SubjectServiceImpl subjectService;
+    @Mock
+    private SubjectDateRepository subjectDateRepository;
 
     private Subject subject1;
     private Subject subject2;
@@ -171,15 +172,44 @@ class SubjectServiceImplTest {
     }
 
     @Test
-    void setTeacher() {
+    void setTeacherEmpty() {
+        // given
+        teacher.setSubjects(new HashSet<>(Set.of(subject1)));
+        SubjectDate subjectDate1 = new SubjectDate(subject1, DayOfWeek.MONDAY, SubjectDate.NumOfLesson.FIRST);
         // when
-        when(subjectRepository.findById(subject1.getId())).thenReturn(Optional.of(subject1));
+        when(subjectRepository.findById(subject2.getId())).thenReturn(Optional.of(subject2));
         when(teacherService.findById(teacher.getId())).thenReturn(teacher);
+        when(subjectDateRepository.findAllBySubject_Id(subject1.getId())).thenReturn(List.of(subjectDate1));
+        when(subjectDateRepository.findAllByDayOfWeekAndNumOfLessonAndSubject_Teacher(subjectDate1.getDayOfWeek(), subjectDate1.getNumOfLesson(), teacher)).thenReturn(List.of());
         // then
-        subjectService.setTeacher(subject1.getId(), teacher.getId());
-        verify(subjectRepository, times(1)).save(subject1);
+        subjectService.setTeacher(subject2.getId(), teacher.getId());
+        verify(subjectDateRepository, times(1)).findAllBySubject_Id(subject1.getId());
         verify(teacherService, times(1)).findById(teacher.getId());
-        verify(subjectRepository, times(1)).findById(subject1.getId());
+        verify(userNewsService, times(1)).create(any(UserNews.class));
+        verify(subjectRepository, times(1)).findById(subject2.getId());
+        verify(subjectDateRepository, times(1)).findAllByDayOfWeekAndNumOfLessonAndSubject_Teacher(subjectDate1.getDayOfWeek(), subjectDate1.getNumOfLesson(), teacher);
+        verify(subjectRepository, times(1)).save(any(Subject.class));
+    }
+
+
+    @Test
+    void setTeacher() {
+        // given
+        teacher.setSubjects(new HashSet<>(Set.of(subject1)));
+        SubjectDate subjectDate1 = new SubjectDate(subject1, DayOfWeek.MONDAY, SubjectDate.NumOfLesson.FIRST);
+        SubjectDate subjectDate2 = new SubjectDate(subject2, DayOfWeek.MONDAY, SubjectDate.NumOfLesson.FIRST);
+        // when
+        when(subjectRepository.findById(subject2.getId())).thenReturn(Optional.of(subject2));
+        when(teacherService.findById(teacher.getId())).thenReturn(teacher);
+        when(subjectDateRepository.findAllBySubject_Id(subject1.getId())).thenReturn(List.of(subjectDate1));
+        when(subjectDateRepository.findAllByDayOfWeekAndNumOfLessonAndSubject_Teacher(subjectDate1.getDayOfWeek(), subjectDate1.getNumOfLesson(), teacher)).thenReturn(List.of(subjectDate2));
+        // then
+        assertThrowsExactly(UnsupportedOperationException.class, () -> subjectService.setTeacher(subject2.getId(), teacher.getId()));
+        verify(subjectDateRepository, times(1)).findAllBySubject_Id(subject1.getId());
+        verify(teacherService, times(1)).findById(teacher.getId());
+        verify(subjectRepository, times(1)).findById(subject2.getId());
+        verify(subjectDateRepository, times(1)).findAllByDayOfWeekAndNumOfLessonAndSubject_Teacher(subjectDate1.getDayOfWeek(), subjectDate1.getNumOfLesson(), teacher);
+        verify(subjectRepository, never()).save(any(Subject.class));
     }
 
     @Test

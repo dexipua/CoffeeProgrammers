@@ -99,7 +99,7 @@ public class SubjectServiceImpl implements SubjectService {
                     subjectDate.getDayOfWeek(),
                     subjectDate.getNumOfLesson(),
                     teacher).isEmpty()){
-                throw new EntityExistsException("Subject time with the same option already exists(TEACHER)");
+                throw new UnsupportedOperationException("Can't set teacher for this subject because dates of lesson are same");
             }
         }
 

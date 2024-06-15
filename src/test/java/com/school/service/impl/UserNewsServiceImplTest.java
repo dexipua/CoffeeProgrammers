@@ -35,6 +35,12 @@ class UserNewsServiceImplTest {
     }
 
     @Test
+    void delete() {
+        userNewsService.deleteAllByUserId(user.getId());
+        verify(userNewsRepository, times(1)).deleteAllByUser_Id(user.getId());
+    }
+
+    @Test
     void create() {
         when(userNewsRepository.save(userNews)).thenReturn(userNews);
         userNewsService.create(userNews);
