@@ -7,8 +7,8 @@ ___
 New School is a project that serves as an online course platform with
 students, teachers, and chief-teachers. Students can view the information
 they have access to, teachers can add grades and manage students in their
-subjects, and chief-teacher can create and delete users, subjects, and assign
-teachers to subjects.
+subjects and can add timetable for their subjects, and chief-teacher can 
+create and delete users, subjects, and assign teachers to subjects.
 
 ## User Roles and Permissions
 
@@ -25,6 +25,7 @@ teachers to subjects.
 - Good for online courses
 - Real-time changes
 - Adding new features in feature
+- Can work with timetable
 
 ---
 
