@@ -74,26 +74,33 @@ To run the School Management System:
 ## Installation Instructions
 
 1. Clone the repository:
+
    ```git clone https://github.com/dexipua/CoffeeProgrammers.git```
 
 2. Navigate to the project directory:
+
    ```cd CoffeeProgrammers```
 
 3. Build the project:
+
    ```mvn clean install```
 
 
 ## Usage Instructions
 
 1. Start the backend server:
+
    ```mvn spring-boot:run```
 
 2. Navigate to the frontend directory:
+
    ```cd frontend```
 
 3. Before this if you have something on port 3000 use:
+
    ```npx kill-port 3000```
 4. Install dependencies and start the frontend server:
+
    ```npm install```
    ```npm start```
 
@@ -105,12 +112,15 @@ To run the School Management System:
 
 1. Fork the repository.
 2. Create a new branch for your feature or bugfix:
+
    ```git checkout -b feature-name```
 
 3. Commit your changes:
+
    ```git commit -m "Description of your changes"```
 
 4. Push to your branch:
+
    ```git push origin feature-name```
 
 5. Create a pull request.
