@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
+import java.util.List;
 import java.util.TreeMap;
 
 @Service
@@ -110,19 +111,20 @@ public class SubjectDateServiceImpl implements SubjectDateService {
         return result;
     }
     @Override
-    public TreeMap<DayOfWeek, TreeMap<SubjectDate.NumOfLesson, Boolean>> findAllBySubject_Id(long subjectId) {
-        TreeMap<DayOfWeek, TreeMap<SubjectDate.NumOfLesson, Boolean>> result = new TreeMap<>();
-        TreeMap<SubjectDate.NumOfLesson, Boolean> tempMap;
+    public TreeMap<DayOfWeek, TreeMap<SubjectDate.NumOfLesson, Long>> findAllBySubject_Id(long subjectId) {
+        TreeMap<DayOfWeek, TreeMap<SubjectDate.NumOfLesson, Long>> result = new TreeMap<>();
+        TreeMap<SubjectDate.NumOfLesson, Long> tempMap;
         for(DayOfWeek dayOfWeek : DayOfWeek.values()) {
-            TreeMap<SubjectDate.NumOfLesson, Boolean> temp = result.getOrDefault(dayOfWeek, new TreeMap<>());
+            TreeMap<SubjectDate.NumOfLesson, Long> temp = result.getOrDefault(dayOfWeek, new TreeMap<>());
             for(SubjectDate.NumOfLesson numOfLesson : SubjectDate.NumOfLesson.values()) {
-                temp.put(numOfLesson, false);
+                temp.put(numOfLesson, null);
             }
             result.put(dayOfWeek, temp);
         }
-        for(SubjectDate subjectDate : subjectDateRepository.findAllBySubject_Id(subjectId)) {
+        List<SubjectDate> findAllBySubjectId = subjectDateRepository.findAllBySubject_Id(subjectId);
+        for (SubjectDate subjectDate : findAllBySubjectId) {
             tempMap = result.getOrDefault(subjectDate.getDayOfWeek(), new TreeMap<>());
-            tempMap.put(subjectDate.getNumOfLesson(), true);
+            tempMap.put(subjectDate.getNumOfLesson(), subjectDate.getId());
             result.put(subjectDate.getDayOfWeek(), tempMap);
         }
         return result;

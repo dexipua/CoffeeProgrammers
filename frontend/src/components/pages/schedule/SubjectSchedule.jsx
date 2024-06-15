@@ -13,13 +13,11 @@ import {
     Typography
 } from '@mui/material';
 import SubjectDateService from "../../../services/SubjectDateService";
-import Button from "@mui/material/Button";
-import EditCalendarIcon from '@mui/icons-material/EditCalendar';
-import ScheduleDeleteButton from "../../common/ScheduleDeleteButton";
+import ScheduleDeleteButton from "../../common/schedule/ScheduleDeleteButton";
+import ScheduleCreateButton from "../../common/schedule/ScheduleCreateButton";
 
 const SubjectSchedule = ({subjectId}) => {
-    const [schedule, setSchedule] = useState([]);
-
+    const [tableData, setTableData] = useState({});
     const [loading, setLoading] = useState(true);
 
     const token = localStorage.getItem('jwtToken');
@@ -30,7 +28,7 @@ const SubjectSchedule = ({subjectId}) => {
             try {
                 const response = await SubjectDateService.getAllBySubjectId(subjectId, token);
                 console.log('Fetched schedule:', response);
-                setSchedule(response);
+                generateTableData(response);
             } catch (error) {
                 console.error('Error fetching student schedule:', error);
             } finally {
@@ -38,56 +36,94 @@ const SubjectSchedule = ({subjectId}) => {
             }
         };
         fetchData();
-    }, [roleId, token]);
+    }, [subjectId, roleId, token]);
 
     const daysOfWeek = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"];
     const numOfLessons = ["FIRST", "SECOND", "THIRD", "FOURTH", "FIFTH", "SIXTH", "SEVENTH", "EIGHTH"];
 
-    const handleDelete = async (subjectDateId, dayOfWeek, numOfLesson) => {
-        await SubjectDateService.delete(subjectDateId, token)
-    }
-    const generateTableData = () => {
-        const tableData = {};
+    const handleCreate = async (dayOfWeek, numOfLesson) => {
+        try {
+            const response = await SubjectDateService.create(
+                {
+                    dayOfWeek: dayOfWeek,
+                    numOfLesson: numOfLesson
+                },
+                subjectId,
+                token
+            );
 
-        schedule.forEach(item => {
+            // Update tableData with the newly created subject
+            setTableData(prevTableData => {
+                const newLessonData = {
+                    ...prevTableData[numOfLesson],
+                    [dayOfWeek]: (
+                        <ScheduleDeleteButton
+                            key={response.id}
+                            onDelete={() => handleDelete(response.id, dayOfWeek, numOfLesson)}
+                        />
+                    )
+                };
+
+                return {
+                    ...prevTableData,
+                    [numOfLesson]: newLessonData
+                };
+            });
+        } catch (error) {
+            console.error('Error creating subject date:', error);
+        }
+    }
+
+    const handleDelete = async (subjectDateId, dayOfWeek, numOfLesson) => {
+        try {
+            await SubjectDateService.delete(subjectDateId, token);
+
+            setTableData(prevTableData => {
+                const newLessonData = {
+                    ...prevTableData[numOfLesson],
+                    [dayOfWeek]: (
+                        <ScheduleCreateButton
+                            onCreate={() => handleCreate(dayOfWeek, numOfLesson)}
+                        />
+                    )
+                };
+
+                return {
+                    ...prevTableData,
+                    [numOfLesson]: newLessonData
+                };
+            });
+        } catch (error) {
+            console.error('Error deleting subject date:', error);
+        }
+    }
+
+    const generateTableData = (scheduleData) => {
+        const newTableData = {};
+
+        scheduleData.forEach(item => {
             const day = item.dayOfWeek;
             const lesson = item.numOfLesson;
-            const subject = item.present ? (
+            const subject = item.id ? (
                 <ScheduleDeleteButton
                     onDelete={() => handleDelete(item.id, item.dayOfWeek, item.numOfLesson)}
                 />
             ) : (
-                <Button
-                    sx={{
-                        color: "#5B5B5BEF",
-                        width: '40px',
-                        height: '50px',
-                        opacity: 0,
-                        transition: 'opacity 0.3s ease',
-                        ':hover': {
-                            opacity: 1,
-                        },
-
-                    }}
-                >
-                    <EditCalendarIcon/>
-                </Button>
+                <ScheduleCreateButton
+                    onCreate={() => handleCreate(item.dayOfWeek, item.numOfLesson)}
+                />
             )
 
-
-            if (!tableData[lesson]) {
-                tableData[lesson] = {};
+            if (!newTableData[lesson]) {
+                newTableData[lesson] = {};
             }
 
-            tableData[lesson][day] = subject;
+            newTableData[lesson][day] = subject;
         });
 
-        return tableData;
+        setTableData(newTableData);
     };
 
-    const tableData = generateTableData();
-
-    console.log(tableData)
     const getRowColor = (index) => {
         return index % 2 === 0 ? '#f0f0f0' : 'white';
     };
@@ -110,10 +146,6 @@ const SubjectSchedule = ({subjectId}) => {
         );
     };
 
-    const handleButtonClick = (lesson, day) => {
-        console.log(`Button clicked for lesson: ${lesson}, day: ${day}`);
-        // Add your button click logic here
-    };
 
     const renderBody = () => {
         if (!numOfLessons.length || !daysOfWeek.length) {

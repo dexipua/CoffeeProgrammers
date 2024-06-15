@@ -12,6 +12,6 @@ public interface SubjectDateService {
     void delete(SubjectDate subjectDate);
     void deleteAllBySubjectId(long subjectId);
     SubjectDate findById(long id);
-    TreeMap<DayOfWeek, TreeMap<SubjectDate.NumOfLesson, Boolean>> findAllBySubject_Id(long subjectId);
+    TreeMap<DayOfWeek, TreeMap<SubjectDate.NumOfLesson, Long>> findAllBySubject_Id(long subjectId);
     TreeMap<DayOfWeek, TreeMap<SubjectDate.NumOfLesson, Subject>> findAllBySubject_Students_Id(long studentId);
 }

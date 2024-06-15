@@ -27,10 +27,10 @@ public class SubjectDate {
     @JoinColumn(name = "subject_id")
     private Subject subject;
 
-    public SubjectDate(Subject subject, DayOfWeek dayOfWeek, int numOfLesson) {
+    public SubjectDate(Subject subject, DayOfWeek dayOfWeek, NumOfLesson numOfLesson) {
         this.subject = subject;
         this.dayOfWeek = dayOfWeek;
-        this.numOfLesson = NumOfLesson.values()[numOfLesson - 1];
+        this.numOfLesson = numOfLesson;
     }
 
     public enum NumOfLesson {
