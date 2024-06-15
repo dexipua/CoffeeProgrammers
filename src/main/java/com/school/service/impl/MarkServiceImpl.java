@@ -41,7 +41,7 @@ public class MarkServiceImpl implements MarkService {
         markRepository.deleteAllBySubjectId(id);
     }
 
-    @Override //TODO
+    @Override
     public Mark create(
             MarkRequest markRequest,
             long subjectId,
