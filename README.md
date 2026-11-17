@@ -1,5 +1,7 @@
 # School management system
 
+[![CI](https://github.com/dexipua/CoffeeProgrammers/actions/workflows/ci.yml/badge.svg)](https://github.com/dexipua/CoffeeProgrammers/actions/workflows/ci.yml)
+
 Grades, subjects, schedules and school news in one web app. Built by team **CoffeeProgrammers** for the
 All-Ukrainian Team Programming Tournament 2024, where the team took **2nd place**.
 
