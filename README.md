@@ -1,8 +1,25 @@
-# School
+# School management system
+
+Grades, subjects, schedules and school news in one web app. Built by team **CoffeeProgrammers** for the
+All-Ukrainian Team Programming Tournament 2024, where the team took **2nd place**.
 
 ## Overview
 
 The School is a Java-based application developed using the Spring framework. It provides functionalities to manage various aspects of a school environment, including grades, school news, students, subjects, schedules, teachers, and user-specific news.
+
+## Team and my role
+
+Team: [Artem Moseichenko](https://github.com/dexipua) (team lead), [Yaroslav Holobyn](https://github.com/Yaroslav-Holobyn),
+[Vladyslav](https://github.com/Vladobrod), [Vadym Honcharuk](https://github.com/VadymHoncharuk).
+
+**Artem Moseichenko, team lead and backend developer** (the most commits in the team):
+
+- Planned the project, designed the architecture and database schema, split the tasks and reviewed code.
+- Wrote most of the backend: services, REST controllers, repositories and models for students, teachers,
+  subjects, grades and class schedules.
+- Built authentication with Spring Security and JWT.
+- Wrote backend tests and Flyway database migrations.
+- Built frontend pages for search and admin features.
 
 ## Key Roles and Functionalities
 
@@ -65,11 +82,10 @@ To run the School Management System:
 
 ## Technologies Used
 
-- Java: 19
-- Spring Boot: 3.2.5
-- React: 18.0.0
-- MUI: library of React components
-- H2: database for our project
+- **Backend:** Java 19, Spring Boot 3.2 (Web, Data JPA, Security, Validation), JWT, Lombok, Flyway
+- **Database:** H2
+- **Frontend:** React 18, MUI, axios, React Router
+- **Testing:** JUnit, Spring Boot Test
 
 ## Installation Instructions
 
