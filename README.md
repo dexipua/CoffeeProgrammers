@@ -14,10 +14,10 @@ The School is a Java-based application developed using the Spring framework. It 
 Team: [Artem Moseichenko](https://github.com/dexipua) (team lead), [Yaroslav Holobyn](https://github.com/Yaroslav-Holobyn),
 [Vladyslav](https://github.com/Vladobrod), [Vadym Honcharuk](https://github.com/VadymHoncharuk).
 
-**Artem Moseichenko, team lead and backend developer** (the most commits in the team):
+**Artem Moseichenko, team lead and backend developer** (the most commits in the team, about 40% of the backend code):
 
 - Planned the project, designed the architecture and database schema, split the tasks and reviewed code.
-- Wrote most of the backend: services, REST controllers, repositories and models for students, teachers,
+- Wrote a large share of the backend: services, REST controllers, repositories and models for students, teachers,
   subjects, grades and class schedules.
 - Built authentication with Spring Security and JWT.
 - Wrote backend tests and Flyway database migrations.
